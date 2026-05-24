@@ -1,0 +1,11 @@
+com\qrcredit\dao\UserDAO.class
+com\qrcredit\controller\ProfileServlet.class
+com\qrcredit\dao\DBUtil.class
+com\qrcredit\model\Profile.class
+com\qrcredit\controller\AuthServlet.class
+com\qrcredit\controller\SearchServlet.class
+com\qrcredit\controller\QRCodeServlet.class
+com\qrcredit\model\User.class
+com\qrcredit\dao\AuditLogDAO.class
+com\qrcredit\dao\ProfileDAO.class
+com\qrcredit\model\AuditLog.class
