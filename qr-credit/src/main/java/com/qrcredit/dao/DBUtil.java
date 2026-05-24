@@ -46,14 +46,19 @@ public class DBUtil {
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN region TEXT"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN ward TEXT"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN phone TEXT"); } catch (Exception e) {}
-
+            try { stmt.execute("ALTER TABLE profiles ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE"); } catch (Exception e) {}
+            try { stmt.execute("ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'ACTIVE'"); } catch (Exception e) {}
             
             stmt.execute("CREATE TABLE IF NOT EXISTS audit_trail (id SERIAL PRIMARY KEY, profile_id TEXT, user_id INTEGER, old_status TEXT, new_status TEXT, updated_at TIMESTAMP)");
             
             // Thêm dữ liệu mẫu (PostgreSQL dùng ON CONFLICT thay vì INSERT OR IGNORE)
+            stmt.execute("INSERT INTO users (username, password, role, fullname, status) VALUES ('admin', 'admin123', 'ADMIN', 'Super Admin', 'ACTIVE') ON CONFLICT (username) DO NOTHING");
             stmt.execute("INSERT INTO users (username, password, role, fullname) VALUES ('gdv1', '123456', 'GDV', 'Giao dịch viên 1') ON CONFLICT (username) DO NOTHING");
             stmt.execute("INSERT INTO users (username, password, role, fullname) VALUES ('thamdinh', '123456', 'THAM_DINH', 'Cán bộ Thẩm định') ON CONFLICT (username) DO NOTHING");
             stmt.execute("INSERT INTO users (username, password, role, fullname) VALUES ('lanhdao', '123456', 'LANH_DAO', 'Lãnh đạo Chi nhánh') ON CONFLICT (username) DO NOTHING");
+            
+            // Cập nhật lại status mặc định cho những user cũ (chưa có status)
+            stmt.execute("UPDATE users SET status = 'ACTIVE' WHERE status IS NULL");
         } catch (Exception e) {
             e.printStackTrace();
         }

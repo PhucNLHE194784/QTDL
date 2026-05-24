@@ -83,50 +83,118 @@
             </div>
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header text-primary"><i class="fa-solid fa-list me-2"></i>Danh Sách Tài Khoản Hệ Thống</div>
+                    <div class="card-header text-primary border-bottom-0"><i class="fa-solid fa-list me-2"></i>Danh Sách Tài Khoản Hệ Thống</div>
                     <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Họ và Tên</th>
-                                        <th>Tên Đăng Nhập</th>
-                                        <th>Phân Quyền</th>
-                                        <th class="text-end">Thao Tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach var="u" items="${users}">
-                                        <tr>
-                                            <td class="fw-bold">${u.id}</td>
-                                            <td class="fw-semibold text-dark">${u.fullname}</td>
-                                            <td><span class="badge bg-light text-dark border">${u.username}</span></td>
-                                            <td>
-                                                <c:choose>
-                                                    <c:when test="${u.role eq 'LANH_DAO'}"><span class="badge bg-danger">LÃNH ĐẠO</span></c:when>
-                                                    <c:when test="${u.role eq 'THAM_DINH'}"><span class="badge bg-warning text-dark">THẨM ĐỊNH</span></c:when>
-                                                    <c:otherwise><span class="badge bg-primary">GIAO DỊCH VIÊN</span></c:otherwise>
-                                                </c:choose>
-                                            </td>
-                                            <td class="text-end">
-                                                <c:if test="${u.username ne user.username}">
-                                                    <form action="users" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?');">
-                                                        <input type="hidden" name="action" value="delete">
-                                                        <input type="hidden" name="id" value="${u.id}">
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i> Xóa</button>
-                                                    </form>
-                                                </c:if>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                </tbody>
-                            </table>
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs px-3" id="userTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active fw-bold text-success" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-selected="true"><i class="fa-solid fa-user-check me-1"></i>Đang Hoạt Động</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-bold text-danger" id="locked-tab" data-bs-toggle="tab" data-bs-target="#locked" type="button" role="tab" aria-selected="false"><i class="fa-solid fa-user-lock me-1"></i>Đã Khóa / Xóa</button>
+                            </li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content" id="userTabsContent">
+                            <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Họ và Tên</th>
+                                                <th>Tên Đăng Nhập</th>
+                                                <th>Phân Quyền</th>
+                                                <th class="text-end" style="width: 25%;">Thao Tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach var="u" items="${users}">
+                                                <tr>
+                                                    <td class="fw-bold">${u.id}</td>
+                                                    <td class="fw-semibold text-dark">${u.fullname}</td>
+                                                    <td><span class="badge bg-light text-dark border">${u.username}</span></td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${u.role eq 'ADMIN'}"><span class="badge bg-danger">SUPER ADMIN</span></c:when>
+                                                            <c:when test="${u.role eq 'LANH_DAO'}"><span class="badge bg-warning text-dark">LÃNH ĐẠO</span></c:when>
+                                                            <c:when test="${u.role eq 'THAM_DINH'}"><span class="badge bg-info text-dark">THẨM ĐỊNH</span></c:when>
+                                                            <c:otherwise><span class="badge bg-primary">GIAO DỊCH VIÊN</span></c:otherwise>
+                                                        </c:choose>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <c:if test="${u.role ne 'ADMIN'}">
+                                                            <div class="btn-group" role="group">
+                                                                <form action="users" method="post" class="d-inline" onsubmit="return confirm('Khóa tạm thời tài khoản này?');">
+                                                                    <input type="hidden" name="action" value="lock_temp">
+                                                                    <input type="hidden" name="id" value="${u.id}">
+                                                                    <button type="submit" class="btn btn-sm btn-outline-warning" title="Khóa tạm"><i class="fa-solid fa-lock"></i></button>
+                                                                </form>
+                                                                <form action="users" method="post" class="d-inline" onsubmit="return confirm('Khóa vĩnh viễn tài khoản này?');">
+                                                                    <input type="hidden" name="action" value="lock_perm">
+                                                                    <input type="hidden" name="id" value="${u.id}">
+                                                                    <button type="submit" class="btn btn-sm btn-outline-secondary" title="Khóa vĩnh viễn"><i class="fa-solid fa-ban"></i></button>
+                                                                </form>
+                                                                <form action="users" method="post" class="d-inline" onsubmit="return confirm('Đưa tài khoản này vào thùng rác?');">
+                                                                    <input type="hidden" name="action" value="soft_delete">
+                                                                    <input type="hidden" name="id" value="${u.id}">
+                                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa"><i class="fa-solid fa-trash"></i></button>
+                                                                </form>
+                                                            </div>
+                                                        </c:if>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="locked" role="tabpanel" aria-labelledby="locked-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Họ và Tên</th>
+                                                <th>Tên Đăng Nhập</th>
+                                                <th>Trạng Thái</th>
+                                                <th class="text-end">Thao Tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach var="u" items="${lockedUsers}">
+                                                <tr>
+                                                    <td class="fw-semibold text-dark">${u.fullname}</td>
+                                                    <td><span class="badge bg-light text-dark border">${u.username}</span></td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${u.status eq 'LOCKED_TEMP'}"><span class="badge badge-soft-warning"><i class="fa-solid fa-lock me-1"></i>Khóa tạm</span></c:when>
+                                                            <c:when test="${u.status eq 'LOCKED_PERM'}"><span class="badge badge-soft-danger"><i class="fa-solid fa-ban me-1"></i>Khóa vĩnh viễn</span></c:when>
+                                                            <c:when test="${u.status eq 'DELETED'}"><span class="badge badge-soft-danger"><i class="fa-solid fa-trash me-1"></i>Đã xóa</span></c:when>
+                                                        </c:choose>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <form action="users" method="post" class="d-inline" onsubmit="return confirm('Khôi phục hoạt động cho tài khoản này?');">
+                                                            <input type="hidden" name="action" value="restore">
+                                                            <input type="hidden" name="id" value="${u.id}">
+                                                            <button type="submit" class="btn btn-sm btn-outline-success"><i class="fa-solid fa-unlock me-1"></i>Mở khóa/Khôi phục</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

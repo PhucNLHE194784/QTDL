@@ -16,7 +16,7 @@ public class UserDAO {
                 if (rs.next()) {
                     return new User(rs.getInt("id"), rs.getString("username"),
                                     rs.getString("password"), rs.getString("role"),
-                                    rs.getString("fullname"));
+                                    rs.getString("fullname"), rs.getString("status"));
                 }
             }
         } catch (Exception e) {
@@ -26,7 +26,7 @@ public class UserDAO {
     }
 
     public boolean createUser(User u) {
-        String sql = "INSERT INTO users (username, password, role, fullname) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, password, role, fullname, status) VALUES (?, ?, ?, ?, 'ACTIVE')";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, u.getUsername());
@@ -42,14 +42,14 @@ public class UserDAO {
 
     public java.util.List<User> getAllUsers() {
         java.util.List<User> list = new java.util.ArrayList<>();
-        String sql = "SELECT * FROM users ORDER BY id ASC";
+        String sql = "SELECT * FROM users WHERE status = 'ACTIVE' OR status IS NULL ORDER BY id ASC";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(new User(rs.getInt("id"), rs.getString("username"),
                                   rs.getString("password"), rs.getString("role"),
-                                  rs.getString("fullname")));
+                                  rs.getString("fullname"), rs.getString("status")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,7 +57,38 @@ public class UserDAO {
         return list;
     }
 
+    public java.util.List<User> getLockedOrDeletedUsers() {
+        java.util.List<User> list = new java.util.ArrayList<>();
+        String sql = "SELECT * FROM users WHERE status IN ('LOCKED_TEMP', 'LOCKED_PERM', 'DELETED') ORDER BY id ASC";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new User(rs.getInt("id"), rs.getString("username"),
+                                  rs.getString("password"), rs.getString("role"),
+                                  rs.getString("fullname"), rs.getString("status")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public boolean updateStatus(int id, String newStatus) {
+        String sql = "UPDATE users SET status = ? WHERE id = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newStatus);
+            ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean deleteUser(int id) {
+        // Chuyển thành Hard Delete (Hoặc giữ nguyên vì giờ đã có Soft Delete là status='DELETED')
         String sql = "DELETE FROM users WHERE id = ?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

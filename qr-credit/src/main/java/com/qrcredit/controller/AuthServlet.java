@@ -17,13 +17,21 @@ public class AuthServlet extends HttpServlet {
         if ("login".equals(action)) {
             User user = userDAO.login(request.getParameter("username"), request.getParameter("password"));
             if (user != null) {
-                request.getSession().setAttribute("user", user);
-                String redirect = (String) request.getSession().getAttribute("redirectAfterLogin");
-                if (redirect != null) {
-                    request.getSession().removeAttribute("redirectAfterLogin");
-                    response.sendRedirect(redirect);
+                if ("ACTIVE".equals(user.getStatus())) {
+                    request.getSession().setAttribute("user", user);
+                    String redirect = (String) request.getSession().getAttribute("redirectAfterLogin");
+                    if (redirect != null) {
+                        request.getSession().removeAttribute("redirectAfterLogin");
+                        response.sendRedirect(redirect);
+                    } else {
+                        response.sendRedirect("dashboard.jsp");
+                    }
+                } else if ("DELETED".equals(user.getStatus())) {
+                    request.setAttribute("error", "Tài khoản của bạn đã bị xóa khỏi hệ thống.");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
                 } else {
-                    response.sendRedirect("dashboard.jsp");
+                    request.setAttribute("error", "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Admin!");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
                 }
             } else {
                 request.setAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");

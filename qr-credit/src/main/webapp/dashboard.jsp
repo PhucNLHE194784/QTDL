@@ -66,8 +66,11 @@
                     <div class="fw-bold" style="font-size: 0.95rem;">${user.fullname}</div>
                     <div style="font-size: 0.8rem; opacity: 0.8;"><i class="fa-solid fa-id-badge me-1"></i>${user.role}</div>
                 </div>
-                <c:if test="${user.role eq 'LANH_DAO'}">
+                <c:if test="${user.role eq 'ADMIN'}">
                     <a href="users" class="btn btn-outline-light btn-sm fw-bold px-3 me-2" style="border-radius: 8px;"><i class="fa-solid fa-users me-1"></i>Nhân sự</a>
+                </c:if>
+                <c:if test="${user.role eq 'ADMIN' || user.role eq 'LANH_DAO'}">
+                    <a href="recycle_bin.jsp" class="btn btn-outline-warning btn-sm fw-bold px-3 me-2" style="border-radius: 8px;"><i class="fa-solid fa-trash-can me-1"></i>Thùng rác</a>
                 </c:if>
                 <a href="auth?action=logout" class="btn btn-light btn-sm fw-bold text-primary px-3" style="border-radius: 8px;"><i class="fa-solid fa-power-off me-1"></i>Thoát</a>
             </div>
@@ -217,7 +220,14 @@
                                         <div class="small text-muted"><fmt:formatDate value="${p.lastUpdated}" pattern="HH:mm:ss" /></div>
                                     </td>
                                     <td class="text-end">
-                                        <a href="profile?id=${p.id}" class="btn btn-outline-primary btn-action"><i class="fa-regular fa-eye me-1"></i>Xem</a>
+                                        <a href="profile?id=${p.id}" class="btn btn-outline-primary btn-sm btn-action mb-1"><i class="fa-regular fa-eye me-1"></i>Xem</a>
+                                        <c:if test="${user.role eq 'ADMIN' || user.role eq 'LANH_DAO'}">
+                                            <form action="profile" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn đưa hồ sơ này vào thùng rác?');">
+                                                <input type="hidden" name="action" value="soft_delete">
+                                                <input type="hidden" name="id" value="${p.id}">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm btn-action mb-1"><i class="fa-solid fa-trash me-1"></i>Xóa</button>
+                                            </form>
+                                        </c:if>
                                     </td>
                                 </tr>
                             </c:forEach>

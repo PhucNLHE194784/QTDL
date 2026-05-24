@@ -15,13 +15,15 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
-        if (user == null || !"LANH_DAO".equals(user.getRole())) {
+        if (user == null || !"ADMIN".equals(user.getRole())) {
             response.sendRedirect("dashboard.jsp");
             return;
         }
         
         List<User> users = userDAO.getAllUsers();
+        List<User> lockedUsers = userDAO.getLockedOrDeletedUsers();
         request.setAttribute("users", users);
+        request.setAttribute("lockedUsers", lockedUsers);
         request.getRequestDispatcher("users.jsp").forward(request, response);
     }
 
@@ -29,7 +31,7 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         User user = (User) request.getSession().getAttribute("user");
-        if (user == null || !"LANH_DAO".equals(user.getRole())) {
+        if (user == null || !"ADMIN".equals(user.getRole())) {
             response.sendRedirect("dashboard.jsp");
             return;
         }
@@ -40,12 +42,25 @@ public class UserServlet extends HttpServlet {
                 request.getParameter("username"),
                 request.getParameter("password"),
                 request.getParameter("role"),
-                request.getParameter("fullname")
+                request.getParameter("fullname"),
+                "ACTIVE"
             );
             userDAO.createUser(newUser);
         } else if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             userDAO.deleteUser(id);
+        } else if ("lock_temp".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            userDAO.updateStatus(id, "LOCKED_TEMP");
+        } else if ("lock_perm".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            userDAO.updateStatus(id, "LOCKED_PERM");
+        } else if ("soft_delete".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            userDAO.updateStatus(id, "DELETED");
+        } else if ("unlock".equals(action) || "restore".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            userDAO.updateStatus(id, "ACTIVE");
         }
         
         response.sendRedirect("users");

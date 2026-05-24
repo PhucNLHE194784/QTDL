@@ -12,11 +12,12 @@ public class Profile {
     private String region;
     private String ward;
     private String phone;
+    private boolean isDeleted;
     private Date lastUpdated;
 
     public Profile() {}
 
-    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String region, String ward, String phone, Date lastUpdated) {
+    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String region, String ward, String phone, boolean isDeleted, Date lastUpdated) {
         this.id = id;
         this.customerName = customerName;
         this.cccd = cccd;
@@ -26,6 +27,7 @@ public class Profile {
         this.region = region;
         this.ward = ward;
         this.phone = phone;
+        this.isDeleted = isDeleted;
         this.lastUpdated = lastUpdated;
     }
 
@@ -61,6 +63,8 @@ public class Profile {
     public void setWard(String ward) { this.ward = ward; }
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+    public boolean isDeleted() { return isDeleted; }
+    public void setDeleted(boolean isDeleted) { this.isDeleted = isDeleted; }
     public Date getLastUpdated() { return lastUpdated; }
     public void setLastUpdated(Date lastUpdated) { this.lastUpdated = lastUpdated; }
 }

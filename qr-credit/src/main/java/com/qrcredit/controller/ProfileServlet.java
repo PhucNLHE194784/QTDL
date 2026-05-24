@@ -94,6 +94,26 @@ public class ProfileServlet extends HttpServlet {
                 }
             }
             response.sendRedirect("profile?id=" + id);
+        } else if ("soft_delete".equals(action)) {
+            if ("ADMIN".equals(user.getRole()) || "LANH_DAO".equals(user.getRole())) {
+                String id = request.getParameter("id");
+                profileDAO.softDeleteProfile(id);
+                auditLogDAO.logAction(id, user.getId(), "Đang hoạt động", "Đã xóa (Thùng rác)");
+            }
+            response.sendRedirect("dashboard.jsp");
+        } else if ("restore".equals(action)) {
+            if ("ADMIN".equals(user.getRole()) || "LANH_DAO".equals(user.getRole())) {
+                String id = request.getParameter("id");
+                profileDAO.restoreProfile(id);
+                auditLogDAO.logAction(id, user.getId(), "Đã xóa (Thùng rác)", "Khôi phục");
+            }
+            response.sendRedirect("recycle_bin.jsp");
+        } else if ("hard_delete".equals(action)) {
+            if ("ADMIN".equals(user.getRole())) {
+                String id = request.getParameter("id");
+                profileDAO.hardDeleteProfile(id);
+            }
+            response.sendRedirect("recycle_bin.jsp");
         }
     }
 }
