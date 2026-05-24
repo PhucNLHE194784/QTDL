@@ -184,32 +184,36 @@
                 $(this).val(val);
             });
 
-            // Tải API Tỉnh/Thành
+            // Tải API Tỉnh/Thành từ nguồn cực kỳ ổn định
             let provincesData = [];
             $.ajax({
-                url: 'https://provinces.open-api.vn/api/?depth=3',
+                url: 'https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json',
                 method: 'GET',
+                dataType: 'json',
                 success: function(data) {
                     provincesData = data;
                     let provinceHtml = '<option value="">-- Chọn Tỉnh/Thành --</option>';
                     data.forEach(p => {
-                        provinceHtml += `<option value="${p.name}" data-code="${p.code}">${p.name}</option>`;
+                        provinceHtml += `<option value="${p.Name}" data-id="${p.Id}">${p.Name}</option>`;
                     });
                     $('#province').html(provinceHtml);
+                },
+                error: function(err) {
+                    console.error("Lỗi tải Tỉnh/Thành", err);
                 }
             });
 
             $('#province').on('change', function() {
-                var code = $(this).find('option:selected').data('code');
+                var code = $(this).find('option:selected').data('id');
                 $('#district').html('<option value="">-- Chọn Quận/Huyện --</option>').prop('disabled', true);
                 $('#ward').html('<option value="">-- Chọn Phường/Xã --</option>').prop('disabled', true);
                 
                 if (code) {
-                    var province = provincesData.find(p => p.code === code);
-                    if (province && province.districts) {
+                    var province = provincesData.find(p => p.Id == code);
+                    if (province && province.Districts) {
                         let districtHtml = '<option value="">-- Chọn Quận/Huyện --</option>';
-                        province.districts.forEach(d => {
-                            districtHtml += `<option value="${d.name}" data-code="${d.code}">${d.name}</option>`;
+                        province.Districts.forEach(d => {
+                            districtHtml += `<option value="${d.Name}" data-id="${d.Id}">${d.Name}</option>`;
                         });
                         $('#district').html(districtHtml).prop('disabled', false);
                     }
@@ -217,17 +221,17 @@
             });
 
             $('#district').on('change', function() {
-                var provinceCode = $('#province').find('option:selected').data('code');
-                var districtCode = $(this).find('option:selected').data('code');
+                var provinceCode = $('#province').find('option:selected').data('id');
+                var districtCode = $(this).find('option:selected').data('id');
                 $('#ward').html('<option value="">-- Chọn Phường/Xã --</option>').prop('disabled', true);
                 
                 if (districtCode) {
-                    var province = provincesData.find(p => p.code === provinceCode);
-                    var district = province.districts.find(d => d.code === districtCode);
-                    if (district && district.wards) {
+                    var province = provincesData.find(p => p.Id == provinceCode);
+                    var district = province.Districts.find(d => d.Id == districtCode);
+                    if (district && district.Wards) {
                         let wardHtml = '<option value="">-- Chọn Phường/Xã --</option>';
-                        district.wards.forEach(w => {
-                            wardHtml += `<option value="${w.name}">${w.name}</option>`;
+                        district.Wards.forEach(w => {
+                            wardHtml += `<option value="${w.Name}">${w.Name}</option>`;
                         });
                         $('#ward').html(wardHtml).prop('disabled', false);
                     }
