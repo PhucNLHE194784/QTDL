@@ -14,12 +14,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f4f6f9; }
-        .form-card { border: none; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
-        .form-control, .form-select { border-radius: 10px; padding: 12px; background-color: #f8f9fa; border: 1px solid #e9ecef; }
-        .form-control:focus, .form-select:focus { box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.2); border-color: #2e7d32; background-color: #fff; }
-        .btn-create { border-radius: 10px; padding: 12px; font-weight: 600; font-size: 1.1rem; background: linear-gradient(45deg, #2e7d32, #43a047); border: none; }
-        .btn-create:hover { background: linear-gradient(45deg, #1b5e20, #2e7d32); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4); }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); min-height: 100vh; }
+        .form-card { 
+            border: none; 
+            border-radius: 20px; 
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05), 0 5px 15px rgba(0,0,0,0.03); 
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        .form-control, .form-select { 
+            border-radius: 12px; 
+            padding: 14px; 
+            background-color: #f8fafc; 
+            border: 1px solid #e2e8f0; 
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus { 
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1); 
+            border-color: #2e7d32; 
+            background-color: #fff; 
+            transform: translateY(-1px);
+        }
+        .btn-create { 
+            border-radius: 12px; 
+            padding: 14px; 
+            font-weight: 600; 
+            font-size: 1.1rem; 
+            background: linear-gradient(135deg, #2e7d32, #1b5e20); 
+            border: none; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+        .btn-create:hover { 
+            background: linear-gradient(135deg, #1b5e20, #144d18); 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4); 
+        }
+        .form-label { font-weight: 600; color: #475569; font-size: 0.9rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .section-title { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -35,69 +68,49 @@
                     <div class="card-body p-4 p-md-5">
                         <form action="profile" method="post">
                             <input type="hidden" name="action" value="create">
+                            <div class="section-title"><i class="fa-solid fa-user me-2 text-success"></i>Thông Tin Khách Hàng</div>
                             <div class="row">
                                 <div class="col-md-4 mb-4">
-                                    <label class="form-label fw-semibold text-secondary">Tên khách hàng</label>
-                                    <input type="text" name="customerName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
+                                    <label class="form-label">Họ và Tên</label>
+                                    <input type="text" id="customerName" name="customerName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
                                 </div>
                                 <div class="col-md-4 mb-4">
-                                    <label class="form-label fw-semibold text-secondary">Số CCCD / CMND</label>
-                                    <input type="text" name="cccd" class="form-control" placeholder="Nhập đầy đủ 12 số" required>
+                                    <label class="form-label">Số CCCD / CMND</label>
+                                    <input type="text" name="cccd" class="form-control" placeholder="Nhập đầy đủ 12 số" pattern="[0-9]{9,12}" title="CCCD phải từ 9 đến 12 chữ số" required>
                                 </div>
                                 <div class="col-md-4 mb-4">
-                                    <label class="form-label fw-semibold text-secondary">Số điện thoại</label>
-                                    <input type="text" name="phone" class="form-control" placeholder="Ví dụ: 0987654321" required>
+                                    <label class="form-label">Số điện thoại</label>
+                                    <input type="tel" name="phone" class="form-control" placeholder="Ví dụ: 0987654321" pattern="^(0|\+84)[3|5|7|8|9][0-9]{8}$" title="Vui lòng nhập đúng định dạng số điện thoại Việt Nam" required>
                                 </div>
                             </div>
+                            <div class="section-title mt-2"><i class="fa-solid fa-map-location-dot me-2 text-success"></i>Địa Chỉ Thường Trú</div>
                             <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <label class="form-label fw-semibold text-secondary">Tỉnh / Thành phố</label>
-                                    <select name="region" class="form-select" required>
+                                <div class="col-md-4 mb-4">
+                                    <label class="form-label">Tỉnh / Thành phố</label>
+                                    <select id="province" name="region" class="form-select" required>
                                         <option value="">-- Chọn Tỉnh/Thành --</option>
-                                        <optgroup label="Thành phố Trực thuộc TW">
-                                            <option value="Hà Nội">Hà Nội</option>
-                                            <option value="TP Hồ Chí Minh">TP Hồ Chí Minh</option>
-                                            <option value="Đà Nẵng">Đà Nẵng</option>
-                                            <option value="Hải Phòng">Hải Phòng</option>
-                                            <option value="Cần Thơ">Cần Thơ</option>
-                                        </optgroup>
-                                        <optgroup label="Miền Bắc">
-                                            <option value="Thái Nguyên">Thái Nguyên</option>
-                                            <option value="Quảng Ninh">Quảng Ninh</option>
-                                            <option value="Bắc Ninh">Bắc Ninh</option>
-                                            <option value="Hải Dương">Hải Dương</option>
-                                            <option value="Nam Định">Nam Định</option>
-                                            <option value="Ninh Bình">Ninh Bình</option>
-                                            <option value="Lào Cai">Lào Cai</option>
-                                            <option value="Sơn La">Sơn La</option>
-                                        </optgroup>
-                                        <optgroup label="Miền Trung">
-                                            <option value="Thanh Hóa">Thanh Hóa</option>
-                                            <option value="Nghệ An">Nghệ An</option>
-                                            <option value="Hà Tĩnh">Hà Tĩnh</option>
-                                            <option value="Thừa Thiên Huế">Thừa Thiên Huế</option>
-                                            <option value="Quảng Nam">Quảng Nam</option>
-                                            <option value="Khánh Hòa">Khánh Hòa</option>
-                                            <option value="Bình Thuận">Bình Thuận</option>
-                                        </optgroup>
-                                        <optgroup label="Tây Nguyên & Miền Nam">
-                                            <option value="Đắk Lắk">Đắk Lắk</option>
-                                            <option value="Lâm Đồng">Lâm Đồng</option>
-                                            <option value="Bình Dương">Bình Dương</option>
-                                            <option value="Đồng Nai">Đồng Nai</option>
-                                            <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
-                                            <option value="Long An">Long An</option>
-                                            <option value="Tiền Giang">Tiền Giang</option>
-                                            <option value="Kiên Giang">Kiên Giang</option>
-                                            <option value="Cà Mau">Cà Mau</option>
-                                        </optgroup>
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-4">
-                                    <label class="form-label fw-semibold text-secondary">Địa chỉ cụ thể (Quận/Huyện, Phường/Xã)</label>
-                                    <input type="text" name="ward" class="form-control" placeholder="VD: Số 12, Phường Bến Nghé, Quận 1" required>
+                                <div class="col-md-4 mb-4">
+                                    <label class="form-label">Quận / Huyện</label>
+                                    <select id="district" class="form-select" disabled required>
+                                        <option value="">-- Chọn Quận/Huyện --</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <label class="form-label">Phường / Xã</label>
+                                    <select id="ward" class="form-select" disabled required>
+                                        <option value="">-- Chọn Phường/Xã --</option>
+                                    </select>
                                 </div>
                             </div>
+                            <div class="mb-4">
+                                <label class="form-label">Địa chỉ chi tiết (Số nhà, Tên đường)</label>
+                                <input type="text" id="street" class="form-control" placeholder="VD: Số 12, Đường Lê Lợi" required>
+                                <input type="hidden" name="ward" id="fullAddressHidden" required>
+                            </div>
+                            
+                            <div class="section-title mt-4"><i class="fa-solid fa-sack-dollar me-2 text-success"></i>Thông Tin Khoản Vay</div>
                             <div class="mb-4">
                                 <label class="form-label fw-semibold text-secondary">Số tiền đề nghị vay (VNĐ)</label>
                                 <!-- Input hiển thị -->
@@ -106,7 +119,7 @@
                                 <input type="hidden" name="amount" id="amountHidden" required>
                             </div>
                             <div class="mb-5">
-                                <label class="form-label fw-semibold text-secondary">Mục đích vay vốn</label>
+                                <label class="form-label">Mục đích vay vốn</label>
                                 <textarea name="purpose" class="form-control" rows="3" placeholder="Nhập chi tiết mục đích sử dụng vốn..." required></textarea>
                             </div>
                             
@@ -149,7 +162,76 @@
             $('form').on('submit', function() {
                 var value = $('#amountDisplay').val().replace(/\D/g, '');
                 $('#amountHidden').val(value);
+                
+                // Gom địa chỉ
+                var street = $('#street').val();
+                var wardText = $('#ward option:selected').text();
+                var districtText = $('#district option:selected').text();
+                var fullAddress = street + ", " + wardText + ", " + districtText;
+                $('#fullAddressHidden').val(fullAddress);
+                
                 return true;
+            });
+            
+            // Format Tên Tiếng Việt
+            $('#customerName').on('input', function() {
+                var val = $(this).val();
+                // Xóa ký tự không phải chữ cái và dấu cách
+                val = val.replace(/[^a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỮỰỲỴÝỶỸửữựỳỵỷỹ\s]/g, '');
+                
+                // Auto Capitalize First Letter of each word
+                val = val.replace(/(^\w{1}|(\s+\w{1}))/g, letter => letter.toUpperCase());
+                $(this).val(val);
+            });
+
+            // Tải API Tỉnh/Thành
+            let provincesData = [];
+            $.ajax({
+                url: 'https://provinces.open-api.vn/api/?depth=3',
+                method: 'GET',
+                success: function(data) {
+                    provincesData = data;
+                    let provinceHtml = '<option value="">-- Chọn Tỉnh/Thành --</option>';
+                    data.forEach(p => {
+                        provinceHtml += `<option value="${p.name}" data-code="${p.code}">${p.name}</option>`;
+                    });
+                    $('#province').html(provinceHtml);
+                }
+            });
+
+            $('#province').on('change', function() {
+                var code = $(this).find('option:selected').data('code');
+                $('#district').html('<option value="">-- Chọn Quận/Huyện --</option>').prop('disabled', true);
+                $('#ward').html('<option value="">-- Chọn Phường/Xã --</option>').prop('disabled', true);
+                
+                if (code) {
+                    var province = provincesData.find(p => p.code === code);
+                    if (province && province.districts) {
+                        let districtHtml = '<option value="">-- Chọn Quận/Huyện --</option>';
+                        province.districts.forEach(d => {
+                            districtHtml += `<option value="${d.name}" data-code="${d.code}">${d.name}</option>`;
+                        });
+                        $('#district').html(districtHtml).prop('disabled', false);
+                    }
+                }
+            });
+
+            $('#district').on('change', function() {
+                var provinceCode = $('#province').find('option:selected').data('code');
+                var districtCode = $(this).find('option:selected').data('code');
+                $('#ward').html('<option value="">-- Chọn Phường/Xã --</option>').prop('disabled', true);
+                
+                if (districtCode) {
+                    var province = provincesData.find(p => p.code === provinceCode);
+                    var district = province.districts.find(d => d.code === districtCode);
+                    if (district && district.wards) {
+                        let wardHtml = '<option value="">-- Chọn Phường/Xã --</option>';
+                        district.wards.forEach(w => {
+                            wardHtml += `<option value="${w.name}">${w.name}</option>`;
+                        });
+                        $('#ward').html(wardHtml).prop('disabled', false);
+                    }
+                }
             });
         });
     </script>

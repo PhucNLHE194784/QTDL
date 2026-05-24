@@ -24,26 +24,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #f0f2f5; font-family: 'Inter', sans-serif; }
-        .navbar { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 15px 0; }
+        body { background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); font-family: 'Inter', sans-serif; min-height: 100vh; }
+        .navbar { background: rgba(30, 60, 114, 0.9); backdrop-filter: blur(10px); padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .navbar-brand { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.5px; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.04); margin-bottom: 24px; }
-        .card-header { background-color: #fff; border-bottom: 1px solid #edf2f9; border-radius: 12px 12px 0 0 !important; font-weight: 600; padding: 16px 24px; font-size: 1.1rem; }
+        .card, .filter-panel { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255,255,255,0.5); 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03); 
+            margin-bottom: 24px; 
+        }
+        .card-header { background-color: rgba(255,255,255,0.5); border-bottom: 1px solid rgba(0,0,0,0.05); border-radius: 16px 16px 0 0 !important; font-weight: 600; padding: 16px 24px; font-size: 1.1rem; }
         
-        .filter-panel { background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.04); margin-bottom: 24px; }
-        .form-label { font-size: 0.85rem; font-weight: 600; color: #5e6e82; text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-control, .form-select { border-radius: 8px; padding: 10px 15px; border: 1px solid #d8e2ef; font-size: 0.95rem; }
+        .filter-panel { padding: 24px; }
+        .form-label { font-size: 0.85rem; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-control, .form-select { border-radius: 10px; padding: 10px 15px; border: 1px solid #e2e8f0; font-size: 0.95rem; background-color: rgba(255,255,255,0.9); }
         .form-control:focus, .form-select:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15); }
         
-        .table { margin-bottom: 0; }
-        .table th { background-color: #f8f9fa; color: #5e6e82; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; padding: 15px; border-bottom-width: 1px; }
-        .table td { vertical-align: middle; color: #344050; padding: 15px; font-size: 0.95rem; border-color: #edf2f9; }
+        .table { margin-bottom: 0; background: transparent; }
+        .table th { background-color: rgba(248, 249, 250, 0.5); color: #475569; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; padding: 15px; border-bottom-width: 1px; }
+        .table td { vertical-align: middle; color: #334155; padding: 15px; font-size: 0.95rem; border-color: rgba(0,0,0,0.05); background: transparent; }
+        .table-hover tbody tr:hover td { background-color: rgba(255,255,255,0.95); }
         
-        .badge { padding: 6px 12px; border-radius: 6px; font-weight: 500; font-size: 0.8rem; }
-        .badge-soft-success { background-color: #d1f2e1; color: #0f5132; }
-        .badge-soft-warning { background-color: #fff3cd; color: #856404; }
-        .badge-soft-danger { background-color: #f8d7da; color: #842029; }
-        .badge-soft-info { background-color: #cff4fc; color: #055160; }
+        .badge { padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.3px; }
+        .badge-soft-success { background: linear-gradient(135deg, #d1f2e1, #a3e4d7); color: #0f5132; }
+        .badge-soft-warning { background: linear-gradient(135deg, #fff3cd, #fdebd0); color: #856404; }
+        .badge-soft-danger { background: linear-gradient(135deg, #f8d7da, #fadbd8); color: #842029; }
+        .badge-soft-info { background: linear-gradient(135deg, #cff4fc, #d6eaf8); color: #055160; }
         
         .btn-action { border-radius: 8px; padding: 6px 15px; font-weight: 500; font-size: 0.85rem; }
         .money-text { font-family: 'Courier New', Courier, monospace; font-weight: 700; color: #198754; }
