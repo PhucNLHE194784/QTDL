@@ -36,13 +36,17 @@
                         <form action="profile" method="post">
                             <input type="hidden" name="action" value="create">
                             <div class="row">
-                                <div class="col-md-6 mb-4">
+                                <div class="col-md-4 mb-4">
                                     <label class="form-label fw-semibold text-secondary">Tên khách hàng</label>
                                     <input type="text" name="customerName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
                                 </div>
-                                <div class="col-md-6 mb-4">
+                                <div class="col-md-4 mb-4">
                                     <label class="form-label fw-semibold text-secondary">Số CCCD / CMND</label>
                                     <input type="text" name="cccd" class="form-control" placeholder="Nhập đầy đủ 12 số" required>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <label class="form-label fw-semibold text-secondary">Số điện thoại</label>
+                                    <input type="text" name="phone" class="form-control" placeholder="Ví dụ: 0987654321" required>
                                 </div>
                             </div>
                             <div class="row">

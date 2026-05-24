@@ -45,6 +45,8 @@ public class DBUtil {
             
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN region TEXT"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN ward TEXT"); } catch (Exception e) {}
+            try { stmt.execute("ALTER TABLE profiles ADD COLUMN phone TEXT"); } catch (Exception e) {}
+
             
             stmt.execute("CREATE TABLE IF NOT EXISTS audit_trail (id SERIAL PRIMARY KEY, profile_id TEXT, user_id INTEGER, old_status TEXT, new_status TEXT, updated_at TIMESTAMP)");
             

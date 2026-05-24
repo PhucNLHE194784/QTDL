@@ -58,6 +58,9 @@
                     <div class="fw-bold" style="font-size: 0.95rem;">${user.fullname}</div>
                     <div style="font-size: 0.8rem; opacity: 0.8;"><i class="fa-solid fa-id-badge me-1"></i>${user.role}</div>
                 </div>
+                <c:if test="${user.role eq 'LANH_DAO'}">
+                    <a href="users" class="btn btn-outline-light btn-sm fw-bold px-3 me-2" style="border-radius: 8px;"><i class="fa-solid fa-users me-1"></i>Nhân sự</a>
+                </c:if>
                 <a href="auth?action=logout" class="btn btn-light btn-sm fw-bold text-primary px-3" style="border-radius: 8px;"><i class="fa-solid fa-power-off me-1"></i>Thoát</a>
             </div>
         </div>
@@ -160,6 +163,7 @@
                             <tr>
                                 <th style="width: 12%;">Mã Hồ Sơ</th>
                                 <th style="width: 18%;">Khách Hàng</th>
+                                <th style="width: 15%;">Liên Hệ</th>
                                 <th style="width: 15%;">Khu Vực</th>
                                 <th style="width: 15%;">Số Tiền Vay</th>
                                 <th style="width: 15%;">Trạng Thái</th>
@@ -174,6 +178,9 @@
                                     <td>
                                         <div class="fw-bold text-primary text-capitalize">${p.customerName}</div>
                                         <div class="small text-muted"><i class="fa-regular fa-id-card me-1"></i>${p.cccd}</div>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold text-dark"><i class="fa-solid fa-phone me-1"></i>${not empty p.phone ? p.phone : 'Chưa có'}</div>
                                     </td>
                                     <td>
                                         <div class="fw-semibold text-dark">${not empty p.region ? p.region : 'Chưa cập nhật'}</div>

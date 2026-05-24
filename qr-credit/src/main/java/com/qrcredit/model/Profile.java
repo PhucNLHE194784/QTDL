@@ -11,11 +11,12 @@ public class Profile {
     private String status;
     private String region;
     private String ward;
+    private String phone;
     private Date lastUpdated;
 
     public Profile() {}
 
-    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String region, String ward, Date lastUpdated) {
+    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String region, String ward, String phone, Date lastUpdated) {
         this.id = id;
         this.customerName = customerName;
         this.cccd = cccd;
@@ -24,10 +25,11 @@ public class Profile {
         this.status = status;
         this.region = region;
         this.ward = ward;
+        this.phone = phone;
         this.lastUpdated = lastUpdated;
     }
 
-    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, Date lastUpdated) {
+    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String phone, Date lastUpdated) {
         this.id = id;
         this.customerName = customerName;
         this.cccd = cccd;
@@ -36,6 +38,7 @@ public class Profile {
         this.status = status;
         this.region = "";
         this.ward = "";
+        this.phone = phone;
         this.lastUpdated = lastUpdated;
     }
 
@@ -56,6 +59,8 @@ public class Profile {
     public void setRegion(String region) { this.region = region; }
     public String getWard() { return ward; }
     public void setWard(String ward) { this.ward = ward; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
     public Date getLastUpdated() { return lastUpdated; }
     public void setLastUpdated(Date lastUpdated) { this.lastUpdated = lastUpdated; }
 }

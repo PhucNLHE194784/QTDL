@@ -73,6 +73,7 @@ public class ProfileServlet extends HttpServlet {
             p.setStatus("Đã tiếp nhận");
             p.setRegion(request.getParameter("region") != null ? request.getParameter("region") : "");
             p.setWard(request.getParameter("ward") != null ? request.getParameter("ward") : "");
+            p.setPhone(request.getParameter("phone") != null ? request.getParameter("phone") : "");
             p.setLastUpdated(new Date());
 
             if (profileDAO.addProfile(p)) {

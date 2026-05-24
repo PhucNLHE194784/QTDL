@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class ProfileDAO {
     public boolean addProfile(Profile p) {
-        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getId());
@@ -19,7 +19,8 @@ public class ProfileDAO {
             ps.setString(6, p.getStatus());
             ps.setString(7, p.getRegion());
             ps.setString(8, p.getWard());
-            ps.setTimestamp(9, new java.sql.Timestamp(p.getLastUpdated().getTime()));
+            ps.setString(9, p.getPhone());
+            ps.setTimestamp(10, new java.sql.Timestamp(p.getLastUpdated().getTime()));
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,6 +44,7 @@ public class ProfileDAO {
                         rs.getString("status"),
                         rs.getString("region"),
                         rs.getString("ward"),
+                        rs.getString("phone"),
                         new Date(rs.getTimestamp("last_updated").getTime())
                     );
                 }
@@ -69,6 +71,7 @@ public class ProfileDAO {
                     rs.getString("status"),
                     rs.getString("region"),
                     rs.getString("ward"),
+                    rs.getString("phone"),
                     new Date(rs.getTimestamp("last_updated").getTime())
                 ));
             }
@@ -95,6 +98,7 @@ public class ProfileDAO {
                         rs.getString("status"),
                         rs.getString("region"),
                         rs.getString("ward"),
+                        rs.getString("phone"),
                         new Date(rs.getTimestamp("last_updated").getTime())
                     ));
                 }
