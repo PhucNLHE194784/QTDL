@@ -184,19 +184,19 @@
                 $(this).val(val);
             });
 
-            // Tải API Tỉnh/Thành từ nguồn cực kỳ ổn định
-            let provincesData = [];
+            // Tải API Tỉnh/Thành từ nguồn cực kỳ nhanh và ổn định (esgoo.net)
             $.ajax({
-                url: 'https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json',
+                url: 'https://esgoo.net/api-tinhthanh/1/0.htm',
                 method: 'GET',
                 dataType: 'json',
-                success: function(data) {
-                    provincesData = data;
-                    let provinceHtml = '<option value="">-- Chọn Tỉnh/Thành --</option>';
-                    data.forEach(p => {
-                        provinceHtml += `<option value="${p.Name}" data-id="${p.Id}">${p.Name}</option>`;
-                    });
-                    $('#province').html(provinceHtml);
+                success: function(response) {
+                    if (response.error == 0) {
+                        let provinceHtml = '<option value="">-- Chọn Tỉnh/Thành --</option>';
+                        response.data.forEach(p => {
+                            provinceHtml += `<option value="${p.full_name}" data-id="${p.id}">${p.full_name}</option>`;
+                        });
+                        $('#province').html(provinceHtml);
+                    }
                 },
                 error: function(err) {
                     console.error("Lỗi tải Tỉnh/Thành", err);
@@ -209,32 +209,42 @@
                 $('#ward').html('<option value="">-- Chọn Phường/Xã --</option>').prop('disabled', true);
                 
                 if (code) {
-                    var province = provincesData.find(p => p.Id == code);
-                    if (province && province.Districts) {
-                        let districtHtml = '<option value="">-- Chọn Quận/Huyện --</option>';
-                        province.Districts.forEach(d => {
-                            districtHtml += `<option value="${d.Name}" data-id="${d.Id}">${d.Name}</option>`;
-                        });
-                        $('#district').html(districtHtml).prop('disabled', false);
-                    }
+                    $.ajax({
+                        url: 'https://esgoo.net/api-tinhthanh/2/' + code + '.htm',
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.error == 0) {
+                                let districtHtml = '<option value="">-- Chọn Quận/Huyện --</option>';
+                                response.data.forEach(d => {
+                                    districtHtml += `<option value="${d.full_name}" data-id="${d.id}">${d.full_name}</option>`;
+                                });
+                                $('#district').html(districtHtml).prop('disabled', false);
+                            }
+                        }
+                    });
                 }
             });
 
             $('#district').on('change', function() {
-                var provinceCode = $('#province').find('option:selected').data('id');
                 var districtCode = $(this).find('option:selected').data('id');
                 $('#ward').html('<option value="">-- Chọn Phường/Xã --</option>').prop('disabled', true);
                 
                 if (districtCode) {
-                    var province = provincesData.find(p => p.Id == provinceCode);
-                    var district = province.Districts.find(d => d.Id == districtCode);
-                    if (district && district.Wards) {
-                        let wardHtml = '<option value="">-- Chọn Phường/Xã --</option>';
-                        district.Wards.forEach(w => {
-                            wardHtml += `<option value="${w.Name}">${w.Name}</option>`;
-                        });
-                        $('#ward').html(wardHtml).prop('disabled', false);
-                    }
+                    $.ajax({
+                        url: 'https://esgoo.net/api-tinhthanh/3/' + districtCode + '.htm',
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.error == 0) {
+                                let wardHtml = '<option value="">-- Chọn Phường/Xã --</option>';
+                                response.data.forEach(w => {
+                                    wardHtml += `<option value="${w.full_name}">${w.full_name}</option>`;
+                                });
+                                $('#ward').html(wardHtml).prop('disabled', false);
+                            }
+                        }
+                    });
                 }
             });
         });

@@ -222,7 +222,7 @@
                                     <td class="text-end">
                                         <a href="profile?id=${p.id}" class="btn btn-outline-primary btn-sm btn-action mb-1"><i class="fa-regular fa-eye me-1"></i>Xem</a>
                                         <c:if test="${user.role eq 'ADMIN' || user.role eq 'LANH_DAO'}">
-                                            <form action="profile" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn đưa hồ sơ này vào thùng rác?');">
+                                            <form action="profile" method="post" class="d-inline" onsubmit="return confirmDelete(event, this);">
                                                 <input type="hidden" name="action" value="soft_delete">
                                                 <input type="hidden" name="id" value="${p.id}">
                                                 <button type="submit" class="btn btn-outline-danger btn-sm btn-action mb-1"><i class="fa-solid fa-trash me-1"></i>Xóa</button>
@@ -243,6 +243,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
         $(document).ready(function() {
@@ -289,6 +290,25 @@
                 table.search('').columns().search('').draw();
             });
         });
+
+        function confirmDelete(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Đưa vào thùng rác?',
+                text: "Hồ sơ này sẽ bị đưa vào thùng rác. Bạn có thể khôi phục lại sau.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+            return false;
+        }
     </script>
 </body>
 </html>

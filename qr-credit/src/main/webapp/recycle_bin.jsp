@@ -110,13 +110,13 @@
                                         <div class="small text-muted"><fmt:formatDate value="${p.lastUpdated}" pattern="HH:mm:ss" /></div>
                                     </td>
                                     <td class="text-end">
-                                        <form action="profile" method="post" class="d-inline" onsubmit="return confirm('Khôi phục hồ sơ này?');">
+                                        <form action="profile" method="post" class="d-inline" onsubmit="return confirmRestore(event, this);">
                                             <input type="hidden" name="action" value="restore">
                                             <input type="hidden" name="id" value="${p.id}">
                                             <button type="submit" class="btn btn-outline-success btn-sm btn-action mb-1" title="Khôi phục"><i class="fa-solid fa-rotate-left"></i></button>
                                         </form>
                                         <c:if test="${user.role eq 'ADMIN'}">
-                                            <form action="profile" method="post" class="d-inline" onsubmit="return confirm('CẢNH BÁO: Hành động này sẽ XÓA VĨNH VIỄN hồ sơ và không thể khôi phục. Tiếp tục?');">
+                                            <form action="profile" method="post" class="d-inline" onsubmit="return confirmHardDelete(event, this);">
                                                 <input type="hidden" name="action" value="hard_delete">
                                                 <input type="hidden" name="id" value="${p.id}">
                                                 <button type="submit" class="btn btn-outline-danger btn-sm btn-action mb-1" title="Xóa vĩnh viễn"><i class="fa-solid fa-fire"></i></button>
@@ -137,6 +137,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
             $('#profileTable').DataTable({
@@ -148,6 +149,44 @@
                 "responsive": true
             });
         });
+
+        function confirmRestore(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Khôi phục hồ sơ?',
+                text: "Hồ sơ này sẽ được khôi phục trở lại hệ thống.",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#198754',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Khôi phục',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+            return false;
+        }
+
+        function confirmHardDelete(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'CẢNH BÁO: Xóa Vĩnh Viễn?',
+                text: "Hành động này sẽ XÓA VĨNH VIỄN hồ sơ và không thể khôi phục. Tiếp tục?",
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Xóa vĩnh viễn',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+            return false;
+        }
     </script>
 </body>
 </html>

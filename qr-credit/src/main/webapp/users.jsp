@@ -126,17 +126,17 @@
                                                     <td class="text-end">
                                                         <c:if test="${u.role ne 'ADMIN'}">
                                                             <div class="btn-group" role="group">
-                                                                <form action="users" method="post" class="d-inline" onsubmit="return confirm('Khóa tạm thời tài khoản này?');">
+                                                                <form action="users" method="post" class="d-inline" onsubmit="return confirmAction(event, this, 'lock_temp');">
                                                                     <input type="hidden" name="action" value="lock_temp">
                                                                     <input type="hidden" name="id" value="${u.id}">
                                                                     <button type="submit" class="btn btn-sm btn-outline-warning" title="Khóa tạm"><i class="fa-solid fa-lock"></i></button>
                                                                 </form>
-                                                                <form action="users" method="post" class="d-inline" onsubmit="return confirm('Khóa vĩnh viễn tài khoản này?');">
+                                                                <form action="users" method="post" class="d-inline" onsubmit="return confirmAction(event, this, 'lock_perm');">
                                                                     <input type="hidden" name="action" value="lock_perm">
                                                                     <input type="hidden" name="id" value="${u.id}">
                                                                     <button type="submit" class="btn btn-sm btn-outline-secondary" title="Khóa vĩnh viễn"><i class="fa-solid fa-ban"></i></button>
                                                                 </form>
-                                                                <form action="users" method="post" class="d-inline" onsubmit="return confirm('Đưa tài khoản này vào thùng rác?');">
+                                                                <form action="users" method="post" class="d-inline" onsubmit="return confirmAction(event, this, 'soft_delete');">
                                                                     <input type="hidden" name="action" value="soft_delete">
                                                                     <input type="hidden" name="id" value="${u.id}">
                                                                     <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa"><i class="fa-solid fa-trash"></i></button>
@@ -175,7 +175,7 @@
                                                         </c:choose>
                                                     </td>
                                                     <td class="text-end">
-                                                        <form action="users" method="post" class="d-inline" onsubmit="return confirm('Khôi phục hoạt động cho tài khoản này?');">
+                                                        <form action="users" method="post" class="d-inline" onsubmit="return confirmAction(event, this, 'restore');">
                                                             <input type="hidden" name="action" value="restore">
                                                             <input type="hidden" name="id" value="${u.id}">
                                                             <button type="submit" class="btn btn-sm btn-outline-success"><i class="fa-solid fa-unlock me-1"></i>Mở khóa/Khôi phục</button>
@@ -196,5 +196,52 @@
     
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmAction(event, form, actionType) {
+            event.preventDefault();
+            let title = '';
+            let text = '';
+            let icon = 'warning';
+            let confirmBtn = '#3085d6';
+            
+            if (actionType === 'lock_temp') {
+                title = 'Khóa tạm thời?';
+                text = 'Tài khoản sẽ không thể đăng nhập cho đến khi mở khóa.';
+                confirmBtn = '#ffc107';
+            } else if (actionType === 'lock_perm') {
+                title = 'Khóa vĩnh viễn?';
+                text = 'Tài khoản sẽ bị cấm đăng nhập vĩnh viễn.';
+                icon = 'error';
+                confirmBtn = '#6c757d';
+            } else if (actionType === 'soft_delete') {
+                title = 'Đưa vào thùng rác?';
+                text = 'Tài khoản sẽ bị xóa khỏi danh sách hoạt động.';
+                icon = 'error';
+                confirmBtn = '#d33';
+            } else if (actionType === 'restore') {
+                title = 'Mở khóa / Khôi phục?';
+                text = 'Tài khoản sẽ hoạt động lại bình thường.';
+                icon = 'info';
+                confirmBtn = '#198754';
+            }
+            
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon,
+                showCancelButton: true,
+                confirmButtonColor: confirmBtn,
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+            return false;
+        }
+    </script>
 </body>
 </html>
