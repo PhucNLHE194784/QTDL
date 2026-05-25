@@ -222,8 +222,16 @@
         <!-- Right Panel -->
         <div class="col-md-7 right-panel">
             <div class="top-right-menu d-none d-sm-flex">
-                <div class="lang-badge">VIE <i class="fa-solid fa-caret-down ms-1"></i></div>
-                <a href="#" class="contact-link">Liên hệ</a>
+                <div class="dropdown">
+                    <div class="lang-badge" data-bs-toggle="dropdown" aria-expanded="false" id="langBadge">
+                        VIE <i class="fa-solid fa-caret-down ms-1"></i>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width: 100px;">
+                        <li><a class="dropdown-item fw-bold" href="#" onclick="switchLang('VIE')">Tiếng Việt</a></li>
+                        <li><a class="dropdown-item fw-bold" href="#" onclick="switchLang('ENG')">English</a></li>
+                    </ul>
+                </div>
+                <a href="#" class="contact-link" id="contactLink" onclick="alertContact(event)">Liên hệ</a>
             </div>
             
             <div class="login-container">
@@ -232,19 +240,19 @@
                         <img src="https://upload.wikimedia.org/wikipedia/vi/1/1b/Agribank_logo.svg" alt="Agribank Logo" style="height: 40px; margin-right: 10px; display: none;"> <!-- Ẩn logo thật nếu ko load đc, dùng icon thay thế -->
                         <i class="fa-solid fa-leaf text-warning"></i> AGRIBANK
                     </div>
-                    <div class="welcome-text">Chào mừng đến với</div>
-                    <div class="system-text">Hệ thống Khởi tạo Tín dụng - Khách hàng cá nhân</div>
+                    <div class="welcome-text" id="txtWelcome">Chào mừng đến với</div>
+                    <div class="system-text" id="txtSystem">Hệ thống Khởi tạo Tín dụng - Khách hàng cá nhân</div>
                     
-                    <form action="auth" method="post" class="text-start mt-4">
+                    <form action="auth" method="post" class="text-start mt-4" onsubmit="return validateForm(event)">
                         <input type="hidden" name="action" value="login">
                         
                         <div class="mb-3">
-                            <label class="form-label">Tên đăng nhập <span class="text-danger">*</span></label>
+                            <label class="form-label" id="lblUser">Tên đăng nhập <span class="text-danger">*</span></label>
                             <input type="text" name="username" class="form-control input-custom input-red-border" required>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                            <label class="form-label" id="lblPass">Mật khẩu <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <input type="password" name="password" id="pwd" class="form-control input-custom border-end-0" required>
                                 <span class="input-group-text bg-white" style="border-radius: 0 4px 4px 0; cursor: pointer; color: #8E1521;" onclick="togglePwd()">
@@ -254,17 +262,16 @@
                         </div>
                         
                         <div class="mb-4">
-                            <label class="form-label">Mã ngẫu nhiên <span class="text-danger">*</span></label>
+                            <label class="form-label" id="lblCaptcha">Mã ngẫu nhiên <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input type="text" class="form-control input-custom border-end-0" placeholder="">
-                                <span class="input-group-text p-0" style="border-radius: 0 4px 4px 0; overflow: hidden;">
-                                    <!-- Fake Captcha Image -->
-                                    <img src="https://dummyimage.com/120x42/f4f4f4/333333.png&text=A8B2C" alt="captcha" style="height: 42px;">
+                                <input type="text" id="captchaInput" class="form-control input-custom border-end-0" placeholder="Nhập mã bên phải" required>
+                                <span class="input-group-text p-0 bg-white" style="border-radius: 0 4px 4px 0; overflow: hidden; cursor: pointer;" onclick="generateCaptcha()" title="Bấm để đổi mã mới">
+                                    <canvas id="captchaCanvas" width="120" height="42"></canvas>
                                 </span>
                             </div>
                         </div>
                         
-                        <button type="submit" class="btn btn-submit w-100">
+                        <button type="submit" class="btn btn-submit w-100" id="btnLogin">
                             <i class="fa-solid fa-right-to-bracket me-2"></i>Đăng nhập
                         </button>
                     </form>
@@ -277,7 +284,45 @@
         </div>
     </div>
     
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const dict = {
+            'VIE': {
+                'welcome': 'Chào mừng đến với',
+                'system': 'Hệ thống Khởi tạo Tín dụng - Khách hàng cá nhân',
+                'userLabel': 'Tên đăng nhập',
+                'passLabel': 'Mật khẩu',
+                'captchaLabel': 'Mã ngẫu nhiên',
+                'loginBtn': '<i class="fa-solid fa-right-to-bracket me-2"></i>Đăng nhập',
+                'contact': 'Liên hệ'
+            },
+            'ENG': {
+                'welcome': 'Welcome to',
+                'system': 'Retail Credit Origination System',
+                'userLabel': 'Username',
+                'passLabel': 'Password',
+                'captchaLabel': 'Captcha code',
+                'loginBtn': '<i class="fa-solid fa-right-to-bracket me-2"></i>Login',
+                'contact': 'Contact'
+            }
+        };
+
+        function switchLang(lang) {
+            document.getElementById('langBadge').innerHTML = lang + ' <i class="fa-solid fa-caret-down ms-1"></i>';
+            document.getElementById('txtWelcome').innerText = dict[lang].welcome;
+            document.getElementById('txtSystem').innerText = dict[lang].system;
+            document.getElementById('lblUser').innerHTML = dict[lang].userLabel + ' <span class="text-danger">*</span>';
+            document.getElementById('lblPass').innerHTML = dict[lang].passLabel + ' <span class="text-danger">*</span>';
+            document.getElementById('lblCaptcha').innerHTML = dict[lang].captchaLabel + ' <span class="text-danger">*</span>';
+            document.getElementById('btnLogin').innerHTML = dict[lang].loginBtn;
+            document.getElementById('contactLink').innerText = dict[lang].contact;
+        }
+
+        function alertContact(e) {
+            e.preventDefault();
+            alert("Hotline: 1900558818\nEmail: cskh@agribank.com.vn\nĐịa chỉ: Số 2 Láng Hạ, Ba Đình, Hà Nội");
+        }
+
         function togglePwd() {
             var pwd = document.getElementById("pwd");
             var icon = document.getElementById("eyeIcon");
@@ -290,6 +335,46 @@
                 icon.classList.remove("fa-eye-slash");
                 icon.classList.add("fa-eye");
             }
+        }
+
+        let captchaCode = "";
+        function generateCaptcha() {
+            const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            captchaCode = "";
+            for (let i = 0; i < 5; i++) {
+                captchaCode += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            const canvas = document.getElementById("captchaCanvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#f4f4f4";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            for(let i=0; i<5; i++){
+                ctx.strokeStyle = "#ccc";
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.stroke();
+            }
+            
+            ctx.font = "bold 24px 'Courier New', Courier, monospace";
+            ctx.fillStyle = "#8E1521";
+            ctx.fillText(captchaCode, 20, 30);
+        }
+
+        document.addEventListener("DOMContentLoaded", generateCaptcha);
+
+        function validateForm(e) {
+            const userInput = document.getElementById("captchaInput").value.toUpperCase();
+            if (userInput !== captchaCode) {
+                e.preventDefault();
+                alert("Mã ngẫu nhiên không chính xác. Vui lòng nhập lại!");
+                generateCaptcha();
+                document.getElementById("captchaInput").value = "";
+                return false;
+            }
+            return true;
         }
     </script>
 </body>

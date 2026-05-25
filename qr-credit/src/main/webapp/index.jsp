@@ -279,7 +279,9 @@
                 </div>
                 <a href="#" class="icon-btn"><i class="fa-solid fa-magnifying-glass"></i></a>
                 <!-- Link tới trang Đăng nhập hệ thống nội bộ -->
-                <a href="login.jsp" class="icon-btn" title="Đăng nhập hệ thống"><i class="fa-regular fa-user"></i></a>
+                <a href="login.jsp" class="btn btn-sm btn-light fw-bold text-danger px-3 rounded-pill" style="margin: 0 10px;">
+                    <i class="fa-solid fa-user-lock me-1"></i> Đăng nhập hệ thống
+                </a>
                 <a href="#" class="icon-btn"><i class="fa-solid fa-globe"></i></a>
             </div>
         </div>
@@ -345,25 +347,25 @@
                     <div class="row g-4">
                         <div class="col-md-3">
                             <div class="news-card">
-                                <img src="https://images.unsplash.com/photo-1595842553018-06da14dc62f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <img src="https://images.unsplash.com/photo-1595842553018-06da14dc62f7?auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
                                 <h3 class="news-title">Agribank hỗ trợ nông dân vay vốn phát triển kinh tế vùng sâu vùng xa</h3>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="news-card">
-                                <img src="https://images.unsplash.com/photo-1598442436400-9856f6b15091?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <img src="https://images.unsplash.com/photo-1598442436400-9856f6b15091?auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
                                 <h3 class="news-title">Chính sách tín dụng ưu đãi phục vụ phát triển nông nghiệp, nông thôn</h3>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="news-card">
-                                <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
                                 <h3 class="news-title">Ứng dụng công nghệ cao vào sản xuất nông nghiệp sạch tại ĐBSCL</h3>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="news-card">
-                                <img src="https://images.unsplash.com/photo-1590483866373-c4ce126ec588?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <img src="https://images.unsplash.com/photo-1590483866373-c4ce126ec588?auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
                                 <h3 class="news-title">Agribank trao tặng hệ thống nước sạch cho bà con miền Trung</h3>
                             </div>
                         </div>
@@ -378,13 +380,13 @@
                     <div class="row g-4">
                         <div class="col-md-3">
                             <div class="news-card">
-                                <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
                                 <h3 class="news-title">Biến động lãi suất huy động những tháng cuối năm 2026</h3>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="news-card">
-                                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
                                 <h3 class="news-title">Đẩy mạnh chuyển đổi số trong dịch vụ tài chính ngân hàng</h3>
                             </div>
                         </div>
@@ -399,7 +401,7 @@
                     <div class="row g-4">
                         <div class="col-md-3">
                             <div class="news-card">
-                                <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
                                 <h3 class="news-title">Agribank đạt giải thưởng Ngân hàng Số xuất sắc năm 2026</h3>
                             </div>
                         </div>
@@ -430,7 +432,6 @@
         <div class="container">
             <h5 class="fw-bold mb-3"><i class="fa-solid fa-leaf text-warning me-2"></i>AGRIBANK LOANFLOW</h5>
             <p class="mb-0">Dự án Mô phỏng Quy trình Tín dụng Ngân hàng</p>
-            <p class="mt-2 mb-0" style="font-size: 0.8rem; opacity: 0.7;">Bản quyền © 2026. Sinh viên thực hiện dự án tốt nghiệp.</p>
         </div>
     </footer>
 
