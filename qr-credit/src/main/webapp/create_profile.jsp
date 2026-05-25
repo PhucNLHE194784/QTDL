@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
     if(session.getAttribute("user") == null) {
         response.sendRedirect("login.jsp");
@@ -14,61 +15,166 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); min-height: 100vh; }
+        :root {
+            --agri-red: #A51A29;
+            --agri-red-dark: #8E1521;
+            --agri-yellow: #f1c40f;
+            --sidebar-width: 260px;
+        }
+        body { font-family: 'Inter', sans-serif; background: #f4f6f9; min-height: 100vh; overflow-x: hidden; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--agri-red-dark);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            top: 0; left: 0;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar-brand {
+            padding: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-brand i { color: var(--agri-yellow); font-size: 1.6rem; }
+        
+        .sidebar-menu { list-style: none; padding: 20px 0; margin: 0; }
+        .sidebar-menu li { padding: 0 15px; margin-bottom: 5px; }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 12px;
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .sidebar-link.active {
+            border-left: 4px solid var(--agri-yellow);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Navbar */
+        .top-navbar { 
+            background: white; 
+            padding: 15px 25px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
         .form-card { 
             border: none; 
-            border-radius: 20px; 
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05), 0 5px 15px rgba(0,0,0,0.03); 
-            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 12px; 
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
         }
         .form-control, .form-select { 
-            border-radius: 12px; 
-            padding: 14px; 
+            border-radius: 8px; 
+            padding: 12px 14px; 
             background-color: #f8fafc; 
             border: 1px solid #e2e8f0; 
             transition: all 0.3s ease;
         }
         .form-control:focus, .form-select:focus { 
-            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1); 
-            border-color: #2e7d32; 
+            box-shadow: 0 0 0 4px rgba(165, 26, 41, 0.1); 
+            border-color: var(--agri-red); 
             background-color: #fff; 
-            transform: translateY(-1px);
         }
         .btn-create { 
-            border-radius: 12px; 
+            border-radius: 8px; 
             padding: 14px; 
             font-weight: 600; 
             font-size: 1.1rem; 
-            background: linear-gradient(135deg, #2e7d32, #1b5e20); 
+            background: var(--agri-red); 
             border: none; 
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
         }
         .btn-create:hover { 
-            background: linear-gradient(135deg, #1b5e20, #144d18); 
+            background: var(--agri-red-dark); 
             transform: translateY(-2px); 
-            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4); 
+            box-shadow: 0 5px 15px rgba(165, 26, 41, 0.3); 
         }
-        .form-label { font-weight: 600; color: #475569; font-size: 0.9rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .section-title { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        .form-label { font-weight: 600; color: #555; font-size: 0.85rem; margin-bottom: 8px; text-transform: uppercase; }
+        .section-title { font-size: 1.1rem; font-weight: 700; color: var(--agri-red); margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .text-primary-custom { color: var(--agri-red) !important; }
     </style>
 </head>
 <body>
-    <div class="container mt-5 mb-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-7">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fw-bold text-success mb-0"><i class="fa-solid fa-file-signature me-2"></i>Tạo Hồ Sơ Vay Vốn Mới</h3>
-                    <a href="dashboard.jsp" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i>Trở về</a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-leaf"></i> AGRIBANK
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.jsp" class="sidebar-link"><i class="fa-solid fa-chart-pie w-20px text-center"></i> Bảng điều khiển</a></li>
+            <c:if test="${user.role eq 'GDV'}">
+                <li><a href="create_profile.jsp" class="sidebar-link active"><i class="fa-solid fa-plus w-20px text-center"></i> Tạo Hồ sơ mới</a></li>
+            </c:if>
+            <c:if test="${user.role eq 'ADMIN'}">
+                <li class="mt-4 px-3 mb-2 text-uppercase" style="font-size: 0.75rem; opacity: 0.6; font-weight: 700;">Quản trị hệ thống</li>
+                <li><a href="users" class="sidebar-link"><i class="fa-solid fa-users w-20px text-center"></i> Quản lý Nhân sự</a></li>
+            </c:if>
+            <c:if test="${user.role eq 'ADMIN' || user.role eq 'LANH_DAO'}">
+                <li><a href="recycle_bin.jsp" class="sidebar-link"><i class="fa-solid fa-trash-can w-20px text-center"></i> Thùng rác (Hồ sơ)</a></li>
+            </c:if>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <div class="top-navbar">
+            <div class="d-flex align-items-center">
+                <div class="text-end me-3">
+                    <div class="fw-bold text-dark" style="font-size: 0.95rem;">${user.fullname}</div>
+                    <div class="text-muted" style="font-size: 0.8rem;"><i class="fa-solid fa-id-badge me-1 text-warning"></i>${user.role}</div>
                 </div>
+                <div class="dropdown">
+                    <button class="btn btn-light rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown" style="width: 45px; height: 45px;">
+                        <i class="fa-solid fa-user text-primary-custom"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                        <li><a class="dropdown-item text-danger fw-bold" href="auth?action=logout"><i class="fa-solid fa-power-off me-2"></i>Đăng xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid px-4 mb-5">
+            <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-8">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold text-primary-custom mb-0"><i class="fa-solid fa-file-signature me-2"></i>Tạo Hồ Sơ Vay Vốn Mới</h3>
+                        <a href="dashboard.jsp" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i>Trở về</a>
+                    </div>
                 
                 <div class="card form-card">
                     <div class="card-body p-4 p-md-5">
                         <form action="profile" method="post">
                             <input type="hidden" name="action" value="create">
-                            <div class="section-title"><i class="fa-solid fa-user me-2 text-success"></i>Thông Tin Khách Hàng</div>
+                            <div class="section-title"><i class="fa-solid fa-user me-2 text-primary-custom"></i>Thông Tin Khách Hàng</div>
                             <div class="row">
                                 <div class="col-md-4 mb-4">
                                     <label class="form-label">Họ và Tên</label>
@@ -83,7 +189,7 @@
                                     <input type="tel" name="phone" class="form-control" placeholder="Ví dụ: 0987654321" pattern="^(0|\+84)[3|5|7|8|9][0-9]{8}$" title="Vui lòng nhập đúng định dạng số điện thoại Việt Nam" required>
                                 </div>
                             </div>
-                            <div class="section-title mt-2"><i class="fa-solid fa-map-location-dot me-2 text-success"></i>Địa Chỉ Thường Trú</div>
+                            <div class="section-title mt-2"><i class="fa-solid fa-map-location-dot me-2 text-primary-custom"></i>Địa Chỉ Thường Trú</div>
                             <div class="row">
                                 <div class="col-md-4 mb-4">
                                     <label class="form-label">Tỉnh / Thành phố</label>
@@ -110,11 +216,11 @@
                                 <input type="hidden" name="ward" id="fullAddressHidden" required>
                             </div>
                             
-                            <div class="section-title mt-4"><i class="fa-solid fa-sack-dollar me-2 text-success"></i>Thông Tin Khoản Vay</div>
+                            <div class="section-title mt-4"><i class="fa-solid fa-sack-dollar me-2 text-primary-custom"></i>Thông Tin Khoản Vay</div>
                             <div class="mb-4">
                                 <label class="form-label fw-semibold text-secondary">Số tiền đề nghị vay (VNĐ)</label>
                                 <!-- Input hiển thị -->
-                                <input type="text" id="amountDisplay" class="form-control fw-bold text-success" placeholder="Ví dụ: 50,000,000" required>
+                                <input type="text" id="amountDisplay" class="form-control fw-bold text-primary-custom" placeholder="Ví dụ: 50,000,000" required>
                                 <!-- Input ẩn để gửi dữ liệu chuẩn cho Server -->
                                 <input type="hidden" name="amount" id="amountHidden" required>
                             </div>
@@ -123,7 +229,7 @@
                                 <textarea name="purpose" class="form-control" rows="3" placeholder="Nhập chi tiết mục đích sử dụng vốn..." required></textarea>
                             </div>
                             
-                            <button type="submit" class="btn btn-success text-white w-100 btn-create">
+                            <button type="submit" class="btn btn-primary-custom text-white w-100 btn-create">
                                 <i class="fa-solid fa-qrcode me-2"></i>Khởi tạo & Sinh mã QR định danh
                             </button>
                         </form>
@@ -134,9 +240,12 @@
                 </div>
             </div>
         </div>
+            </div>
+        </div>
     </div>
-
+    
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
             // Tự động thêm dấu phân cách hàng nghìn khi nhập số tiền

@@ -353,7 +353,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="news-card">
-                                <img src="https://images.unsplash.com/photo-1592982537443-e14b225ba307?auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
                                 <h3 class="news-title">Chính sách tín dụng ưu đãi phục vụ phát triển nông nghiệp, nông thôn</h3>
                             </div>
                         </div>
@@ -365,7 +365,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="news-card">
-                                <img src="https://images.unsplash.com/photo-1536881206129-c852433010b9?auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
                                 <h3 class="news-title">Agribank trao tặng hệ thống nước sạch cho bà con miền Trung</h3>
                             </div>
                         </div>
