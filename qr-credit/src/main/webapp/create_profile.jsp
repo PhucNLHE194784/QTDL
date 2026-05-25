@@ -192,8 +192,8 @@
                 success: function(response) {
                     if (response.error == 0) {
                         let provinceHtml = '<option value="">-- Chọn Tỉnh/Thành --</option>';
-                        response.data.forEach(p => {
-                            provinceHtml += `<option value="${p.full_name}" data-id="${p.id}">${p.full_name}</option>`;
+                        response.data.forEach(function(p) {
+                            provinceHtml += '<option value="' + p.full_name + '" data-id="' + p.id + '">' + p.full_name + '</option>';
                         });
                         $('#province').html(provinceHtml);
                     }
@@ -216,8 +216,8 @@
                         success: function(response) {
                             if (response.error == 0) {
                                 let districtHtml = '<option value="">-- Chọn Quận/Huyện --</option>';
-                                response.data.forEach(d => {
-                                    districtHtml += `<option value="${d.full_name}" data-id="${d.id}">${d.full_name}</option>`;
+                                response.data.forEach(function(d) {
+                                    districtHtml += '<option value="' + d.full_name + '" data-id="' + d.id + '">' + d.full_name + '</option>';
                                 });
                                 $('#district').html(districtHtml).prop('disabled', false);
                             }
@@ -238,8 +238,8 @@
                         success: function(response) {
                             if (response.error == 0) {
                                 let wardHtml = '<option value="">-- Chọn Phường/Xã --</option>';
-                                response.data.forEach(w => {
-                                    wardHtml += `<option value="${w.full_name}">${w.full_name}</option>`;
+                                response.data.forEach(function(w) {
+                                    wardHtml += '<option value="' + w.full_name + '">' + w.full_name + '</option>';
                                 });
                                 $('#ward').html(wardHtml).prop('disabled', false);
                             }
