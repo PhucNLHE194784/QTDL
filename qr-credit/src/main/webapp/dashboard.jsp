@@ -328,7 +328,13 @@
             });
 
             // Logic Bộ lọc Custom
-            $('#filterRegion').on('change', function() { table.column(3).search(this.value).draw(); });
+            $('#filterRegion').on('change', function() { 
+                var val = this.value;
+                if (val) {
+                    val = val.replace(/^(Tỉnh |Thành phố |Thủ đô )/i, '');
+                }
+                table.column(3).search(val, true, false).draw(); 
+            });
             $('#filterStatus').on('change', function() { table.column(5).search(this.value).draw(); });
             $('#filterText').on('keyup', function() { table.search(this.value).draw(); });
             $('#filterDate').on('change', function() {
