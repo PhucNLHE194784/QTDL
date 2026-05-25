@@ -4,369 +4,422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriQR LoanFlow - Nền Tảng Khởi Tạo Tín Dụng</title>
+    <title>Agribank - Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt Nam</title>
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Animation -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
     <style>
         :root {
-            --agri-red: #a3171e;
-            --agri-red-dark: #7a1116;
+            --agri-red: #A51A29;
+            --agri-red-dark: #8E1521;
+            --agri-hover: #b92b3a;
             --agri-yellow: #f1c40f;
-            --agri-yellow-hover: #f39c12;
-            --text-light: #ffffff;
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-dark: #333;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f8f9fa;
-            overflow-x: hidden;
         }
 
-        /* Navbar */
-        .navbar {
-            background: rgba(163, 23, 30, 0.95);
-            backdrop-filter: blur(10px);
+        /* Top Bar */
+        .top-bar {
+            background-color: var(--agri-red-dark);
+            color: white;
+            font-size: 0.8rem;
+            padding: 5px 0;
+        }
+        .top-bar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+        .top-bar a:hover {
+            color: var(--agri-yellow);
+        }
+
+        /* Main Header */
+        .main-header {
+            background-color: var(--agri-red);
             padding: 15px 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            width: 100%;
+            color: white;
+            position: sticky;
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--text-light) !important;
-            letter-spacing: 0.5px;
-        }
-
-        .navbar-brand i {
-            color: var(--agri-yellow);
-        }
-
-        .nav-link {
-            color: var(--text-light) !important;
-            font-weight: 500;
-            margin: 0 10px;
-            position: relative;
-            transition: 0.3s;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background: var(--agri-yellow);
-            bottom: -5px;
-            left: 0;
-            transition: width 0.3s;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .btn-login {
-            background-color: var(--agri-yellow);
-            color: var(--agri-red-dark) !important;
-            font-weight: 700;
-            padding: 10px 25px;
-            border-radius: 30px;
-            border: none;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(241, 196, 15, 0.3);
-        }
-
-        .btn-login:hover {
-            background-color: var(--agri-yellow-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(241, 196, 15, 0.4);
-        }
-
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(135deg, rgba(163, 23, 30, 0.9) 0%, rgba(122, 17, 22, 0.95) 100%), 
-                        url('https://images.unsplash.com/photo-1556761175-5973dc0f32d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-            height: 100vh;
+        .header-left {
             display: flex;
             align-items: center;
-            position: relative;
-            padding-top: 80px;
+            gap: 20px;
         }
-
-        .hero-content {
-            color: var(--text-light);
-            z-index: 2;
-        }
-
-        .hero-title {
-            font-size: 4rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .hero-title span {
-            color: var(--agri-yellow);
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            font-weight: 300;
-            margin-bottom: 40px;
-            opacity: 0.9;
-            line-height: 1.6;
-        }
-
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        
+        .menu-btn {
+            background: none;
+            border: none;
             color: white;
-            transition: transform 0.3s;
+            font-size: 1.2rem;
+            cursor: pointer;
         }
 
-        .glass-card:hover {
-            transform: translateY(-5px);
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        .glass-icon {
-            font-size: 2.5rem;
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-text i {
             color: var(--agri-yellow);
-            margin-bottom: 15px;
+            font-size: 1.8rem;
         }
 
-        .btn-start {
-            background: transparent;
-            color: var(--text-light);
-            border: 2px solid var(--agri-yellow);
-            padding: 12px 30px;
-            font-weight: 600;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            transition: all 0.3s;
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .header-right .contact {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .icon-btn {
+            color: white;
             text-decoration: none;
-            display: inline-block;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+        .icon-btn:hover {
+            color: var(--agri-yellow);
         }
 
-        .btn-start:hover {
-            background: var(--agri-yellow);
-            color: var(--agri-red-dark);
-        }
-
-        /* Features Section */
-        .features {
-            padding: 100px 0;
-            background: #ffffff;
-        }
-
-        .section-title {
-            color: var(--agri-red-dark);
-            font-weight: 800;
-            text-transform: uppercase;
-            position: relative;
-            display: inline-block;
-            margin-bottom: 50px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            width: 50%;
-            height: 4px;
-            background: var(--agri-yellow);
-            bottom: -10px;
-            left: 25%;
-            border-radius: 2px;
-        }
-
-        .feature-box {
-            padding: 40px 30px;
-            border-radius: 20px;
-            background: #fff;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            height: 100%;
-            border: 1px solid rgba(0,0,0,0.02);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* Hero Image */
+        .hero-banner {
             width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--agri-red), var(--agri-yellow));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-            transform-origin: left;
+            height: 400px;
+            background: url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            position: relative;
         }
-
-        .feature-box:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(163, 23, 30, 0.1);
-        }
-
-        .feature-box:hover::before {
-            transform: scaleX(1);
-        }
-
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: rgba(163, 23, 30, 0.05);
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            color: var(--agri-red);
-            margin-bottom: 25px;
-            transition: all 0.3s;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        .feature-box:hover .feature-icon {
+        /* Tabs Section */
+        .tabs-section {
+            background: white;
+            padding: 30px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .custom-nav-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .custom-nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--agri-red);
+            padding: 15px 25px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            background: transparent;
+            border: none;
+            width: 150px;
+            text-align: center;
+        }
+
+        .custom-nav-link i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .custom-nav-link span {
+            font-size: 0.85rem;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        .custom-nav-link:hover, .custom-nav-link.active {
             background: var(--agri-red);
             color: white;
-            transform: rotateY(360deg);
+            box-shadow: 0 5px 15px rgba(165, 26, 41, 0.2);
+        }
+
+        /* Content Section */
+        .content-section {
+            padding: 50px 0;
+            background: white;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+        }
+        
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .news-card {
+            border: none;
+            transition: transform 0.3s;
+            cursor: pointer;
+            height: 100%;
+        }
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .news-img {
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .news-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #222;
+            margin-top: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         /* Footer */
         .footer {
             background: var(--agri-red-dark);
-            color: rgba(255,255,255,0.7);
-            padding: 40px 0 20px;
-        }
-
-        .footer-logo {
-            font-size: 1.5rem;
-            font-weight: 800;
             color: white;
-            margin-bottom: 20px;
+            padding: 30px 0;
+            text-align: center;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="#"><i class="fa-solid fa-leaf me-2"></i>AgriQR LoanFlow</a>
-            <button class="navbar-toggler text-white border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <i class="fa-solid fa-bars fs-3"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#features">Tính năng</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Về chúng tôi</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Hỗ trợ</a></li>
-                </ul>
-                <a href="login.jsp" class="btn btn-login"><i class="fa-solid fa-right-to-bracket me-2"></i>Đăng nhập</a>
-            </div>
+    <!-- Top Bar -->
+    <div class="top-bar d-none d-lg-block">
+        <div class="container d-flex justify-content-end">
+            <a href="#">Khách hàng cá nhân</a>
+            <a href="#">Khách hàng doanh nghiệp</a>
+            <a href="#">Định chế tài chính</a>
+            <a href="#">Về Agribank</a>
+            <a href="#">Tin tức</a>
+            <a href="#">Tuyển dụng</a>
+            <a href="#">Hỏi đáp</a>
+            <a href="#">Liên hệ</a>
+            <a href="#">English</a>
         </div>
-    </nav>
+    </div>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 hero-content animate__animated animate__fadeInLeft">
-                    <h1 class="hero-title">Khởi Tạo Tín Dụng <span>Thông Minh</span></h1>
-                    <p class="hero-subtitle">Giải pháp số hóa toàn diện quy trình cấp tín dụng. Tạo hồ sơ, định danh khách hàng qua QR Code và duyệt vay nhanh chóng, bảo mật tuyệt đối dành riêng cho hệ thống ngân hàng.</p>
-                    <div class="d-flex gap-3">
-                        <a href="login.jsp" class="btn btn-login px-4 py-3 fs-5"><i class="fa-solid fa-rocket me-2"></i>Truy cập ngay</a>
-                        <a href="#features" class="btn btn-start"><i class="fa-solid fa-play me-2"></i>Tìm hiểu thêm</a>
-                    </div>
-                </div>
-                <div class="col-lg-6 mt-5 mt-lg-0 animate__animated animate__fadeInRight animate__delay-1s">
-                    <div class="row g-4">
-                        <div class="col-sm-6">
-                            <div class="glass-card text-center">
-                                <i class="fa-solid fa-qrcode glass-icon"></i>
-                                <h4>Mã QR Động</h4>
-                                <p class="mb-0 text-white-50">Tích hợp dữ liệu khách hàng vào mã QR bảo mật cao.</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 mt-sm-4">
-                            <div class="glass-card text-center">
-                                <i class="fa-solid fa-bolt glass-icon"></i>
-                                <h4>Tốc Độ</h4>
-                                <p class="mb-0 text-white-50">Giảm 80% thời gian xử lý hồ sơ tín dụng truyền thống.</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="glass-card text-center">
-                                <i class="fa-solid fa-shield-halved glass-icon"></i>
-                                <h4>Bảo Mật</h4>
-                                <p class="mb-0 text-white-50">Dữ liệu mã hóa SHA-256 an toàn tuyệt đối.</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 mt-sm-4">
-                            <div class="glass-card text-center">
-                                <i class="fa-solid fa-chart-pie glass-icon"></i>
-                                <h4>Quản Trị</h4>
-                                <p class="mb-0 text-white-50">Hệ thống phân quyền thông minh, kiểm soát rủi ro chặt chẽ.</p>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <div class="header-left">
+                <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+                <span class="d-none d-md-inline fw-medium">Về Agribank</span>
+            </div>
+            
+            <div class="header-center">
+                <div class="logo-text">
+                    <i class="fa-solid fa-leaf"></i> AGRIBANK
                 </div>
             </div>
+
+            <div class="header-right">
+                <div class="contact d-none d-xl-block">
+                    <i class="fa-solid fa-phone me-1"></i> 1900558818 / 02432053205
+                </div>
+                <a href="#" class="icon-btn"><i class="fa-solid fa-magnifying-glass"></i></a>
+                <!-- Link tới trang Đăng nhập hệ thống nội bộ -->
+                <a href="login.jsp" class="icon-btn" title="Đăng nhập hệ thống"><i class="fa-regular fa-user"></i></a>
+                <a href="#" class="icon-btn"><i class="fa-solid fa-globe"></i></a>
+            </div>
         </div>
-        
-        <!-- Wave shape divider -->
-        <div style="position: absolute; bottom: 0; left: 0; width: 100%; overflow: hidden; line-height: 0;">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" style="position: relative; display: block; width: calc(135% + 1.3px); height: 80px;">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118,137.96,128.7,208.62,118.2,247.96,112.33,285.87,83.9,321.39,56.44Z" style="fill: #ffffff;"></path>
-            </svg>
+    </header>
+
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <div class="hero-overlay">
+            Chào mừng đến với Agribank
+        </div>
+    </div>
+
+    <!-- Tabs Section -->
+    <section class="tabs-section">
+        <div class="container">
+            <ul class="custom-nav-tabs nav" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="custom-nav-link active" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab">
+                        <i class="fa-solid fa-seedling"></i>
+                        <span>Đồng hành cùng Tam Nông</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="custom-nav-link" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                        <span>Tài chính ngân hàng</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="custom-nav-link" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
+                        <i class="fa-regular fa-newspaper"></i>
+                        <span>Tin về Agribank</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="custom-nav-link" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                        <span>Hoạt động cộng đồng</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="custom-nav-link" data-bs-toggle="tab" data-bs-target="#tab5" type="button" role="tab">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Phòng, chống rửa tiền</span>
+                    </button>
+                </li>
+            </ul>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container text-center">
-            <h2 class="section-title">Nền tảng vượt trội</h2>
-            <div class="row g-4 mt-2 text-start">
-                <div class="col-lg-4 col-md-6">
-                    <div class="feature-box">
-                        <div class="feature-icon"><i class="fa-solid fa-id-card"></i></div>
-                        <h4 class="fw-bold mb-3">Định danh eKYC</h4>
-                        <p class="text-muted">Hỗ trợ trích xuất thông tin khách hàng từ CCCD/CMND nhanh chóng, tích hợp công nghệ QR an toàn.</p>
+    <!-- Tab Content Area -->
+    <section class="content-section">
+        <div class="container">
+            <div class="tab-content">
+                <!-- TAB 1 CONTENT -->
+                <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+                    <div class="section-header">
+                        <h2>Đồng hành cùng Tam Nông</h2>
+                        <select class="form-select w-auto border-0 bg-light">
+                            <option>Xem tất cả</option>
+                        </select>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <div class="news-card">
+                                <img src="https://images.unsplash.com/photo-1595842553018-06da14dc62f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <h3 class="news-title">Agribank hỗ trợ nông dân vay vốn phát triển kinh tế vùng sâu vùng xa</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="news-card">
+                                <img src="https://images.unsplash.com/photo-1598442436400-9856f6b15091?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <h3 class="news-title">Chính sách tín dụng ưu đãi phục vụ phát triển nông nghiệp, nông thôn</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="news-card">
+                                <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <h3 class="news-title">Ứng dụng công nghệ cao vào sản xuất nông nghiệp sạch tại ĐBSCL</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="news-card">
+                                <img src="https://images.unsplash.com/photo-1590483866373-c4ce126ec588?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <h3 class="news-title">Agribank trao tặng hệ thống nước sạch cho bà con miền Trung</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="feature-box">
-                        <div class="feature-icon"><i class="fa-solid fa-code-branch"></i></div>
-                        <h4 class="fw-bold mb-3">Luồng Duyệt Phân Cấp</h4>
-                        <p class="text-muted">Phân chia rõ ràng quyền hạn Giao dịch viên, Thẩm định viên và Lãnh đạo với độ chính xác cao.</p>
+
+                <!-- TAB 2 CONTENT -->
+                <div class="tab-pane fade" id="tab2" role="tabpanel">
+                    <div class="section-header">
+                        <h2>Tài chính ngân hàng</h2>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <div class="news-card">
+                                <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <h3 class="news-title">Biến động lãi suất huy động những tháng cuối năm 2026</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="news-card">
+                                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <h3 class="news-title">Đẩy mạnh chuyển đổi số trong dịch vụ tài chính ngân hàng</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="feature-box">
-                        <div class="feature-icon"><i class="fa-solid fa-database"></i></div>
-                        <h4 class="fw-bold mb-3">Lưu trữ Đám mây</h4>
-                        <p class="text-muted">Triển khai trên hệ thống Neon PostgreSQL, đảm bảo dữ liệu luôn sẵn sàng 24/7 và an toàn tuyệt đối.</p>
+
+                <!-- TAB 3 CONTENT -->
+                <div class="tab-pane fade" id="tab3" role="tabpanel">
+                    <div class="section-header">
+                        <h2>Tin về Agribank</h2>
                     </div>
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <div class="news-card">
+                                <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid news-img" alt="News">
+                                <h3 class="news-title">Agribank đạt giải thưởng Ngân hàng Số xuất sắc năm 2026</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TAB 4 CONTENT -->
+                <div class="tab-pane fade" id="tab4" role="tabpanel">
+                    <div class="section-header">
+                        <h2>Hoạt động cộng đồng</h2>
+                    </div>
+                    <p class="text-muted">Nội dung đang được cập nhật...</p>
+                </div>
+
+                <!-- TAB 5 CONTENT -->
+                <div class="tab-pane fade" id="tab5" role="tabpanel">
+                    <div class="section-header">
+                        <h2>Phòng, chống rửa tiền</h2>
+                    </div>
+                    <p class="text-muted">Nội dung đang được cập nhật...</p>
                 </div>
             </div>
         </div>
@@ -374,25 +427,13 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container text-center">
-            <div class="footer-logo"><i class="fa-solid fa-leaf text-warning me-2"></i>AgriQR LoanFlow</div>
-            <p class="mb-0">Hệ thống mô phỏng Quy trình Tín dụng Ngân hàng. Phát triển phục vụ mục đích nghiên cứu & học tập.</p>
-            <p class="mt-2 mb-0" style="font-size: 0.85rem; opacity: 0.5;">&copy; 2026 Bản quyền thuộc về Dự án AgriQR.</p>
+        <div class="container">
+            <h5 class="fw-bold mb-3"><i class="fa-solid fa-leaf text-warning me-2"></i>AGRIBANK LOANFLOW</h5>
+            <p class="mb-0">Dự án Mô phỏng Quy trình Tín dụng Ngân hàng</p>
+            <p class="mt-2 mb-0" style="font-size: 0.8rem; opacity: 0.7;">Bản quyền © 2026. Sinh viên thực hiện dự án tốt nghiệp.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Navbar scroll effect
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
-                document.querySelector('.navbar').style.padding = '10px 0';
-                document.querySelector('.navbar').style.background = 'rgba(163, 23, 30, 1)';
-            } else {
-                document.querySelector('.navbar').style.padding = '15px 0';
-                document.querySelector('.navbar').style.background = 'rgba(163, 23, 30, 0.95)';
-            }
-        });
-    </script>
 </body>
 </html>
