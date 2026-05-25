@@ -11,85 +11,286 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            min-height: 100vh;
-        }
-        .login-card {
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             overflow: hidden;
+            background-color: #ffffff;
         }
-        .login-header {
-            background: linear-gradient(45deg, #f86230, #ff8c00);
-            padding: 30px 20px;
+        
+        .left-panel {
+            background-color: #8E1521;
             color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .bank-title {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.8rem;
+            font-weight: 700;
             text-align: center;
+            margin-top: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.4;
         }
-        .form-control {
-            border-radius: 12px;
-            padding: 14px 15px;
-            background-color: #f8f9fa;
+        
+        .hero-image {
+            width: 80%;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .form-control:focus {
-            box-shadow: 0 0 0 0.25rem rgba(248, 98, 48, 0.25);
-            border-color: #f86230;
+        
+        .icon-menu {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            margin-bottom: 20px;
         }
-        .btn-login {
-            background: linear-gradient(45deg, #f86230, #ff8c00);
-            border: none;
-            border-radius: 12px;
-            padding: 14px;
+        
+        .icon-item {
+            text-align: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 70px;
+        }
+        
+        .icon-item:hover {
+            color: #f1c40f;
+        }
+        
+        .icon-item i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .right-panel {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .top-right-menu {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .lang-badge {
+            border: 1px solid #ccc;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
             font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s;
+            color: #333;
+            cursor: pointer;
         }
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(248, 98, 48, 0.4);
+        
+        .contact-link {
+            color: #8E1521;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .login-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+        
+        .logo-agri {
+            color: #8E1521;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .welcome-text {
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .system-text {
+            color: #000;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        .form-label {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #333;
+        }
+        
+        .input-custom {
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+        }
+        
+        .input-custom:focus {
+            border-color: #8E1521;
+            box-shadow: none;
+        }
+        
+        .input-red-border {
+            border-color: #8E1521;
+        }
+        
+        .btn-submit {
+            background-color: #9c1c2b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        
+        .btn-submit:hover {
+            background-color: #7a1116;
+            color: white;
         }
     </style>
 </head>
-<body class="d-flex align-items-center">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-5 col-lg-4">
-                <div class="card login-card">
-                    <div class="login-header">
-                        <h3 class="fw-bold mb-0"><i class="fa-solid fa-shield-halved me-2"></i>AgriQR LoanFlow</h3>
-                        <p class="mb-0 mt-2 opacity-75">Hệ thống Quản lý Vay vốn Nội bộ</p>
+<body>
+    <div class="row g-0">
+        <!-- Left Panel -->
+        <div class="col-md-5 d-none d-md-flex left-panel">
+            <div>
+                <h1 class="bank-title">Ngân hàng Nông nghiệp<br>và Phát triển Nông thôn Việt Nam</h1>
+                <div class="text-center mt-5">
+                    <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Agribank" class="hero-image">
+                </div>
+            </div>
+            
+            <div>
+                <div class="icon-menu">
+                    <div class="icon-item">
+                        <i class="fa-solid fa-lock"></i>
+                        Quên mật khẩu
                     </div>
-                    <div class="card-body p-4 p-md-5">
-                        <form action="auth" method="post">
-                            <input type="hidden" name="action" value="login">
-                            <div class="mb-4">
-                                <label class="form-label fw-semibold text-secondary">Tên đăng nhập</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-user text-muted"></i></span>
-                                    <input type="text" name="username" class="form-control border-start-0 ps-0" placeholder="Nhập tài khoản" required>
-                                </div>
-                            </div>
-                            <div class="mb-4">
-                                <label class="form-label fw-semibold text-secondary">Mật khẩu</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-lock text-muted"></i></span>
-                                    <input type="password" name="password" class="form-control border-start-0 ps-0" placeholder="Nhập mật khẩu" required>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 btn-login text-white">Đăng nhập hệ thống</button>
-                        </form>
-                        <% if(request.getAttribute("error") != null) { %>
-                            <div class="alert alert-danger mt-4 rounded-3 shadow-sm border-0"><i class="fa-solid fa-circle-exclamation me-2"></i><%= request.getAttribute("error") %></div>
-                        <% } %>
+                    <div class="icon-item">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                        Truy vấn tỷ giá
+                    </div>
+                    <div class="icon-item">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Truy vấn lãi suất
+                    </div>
+                    <div class="icon-item">
+                        <i class="fa-solid fa-circle-info"></i>
+                        Truy vấn tài khoản
+                    </div>
+                    <div class="icon-item">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        Biểu phí
                     </div>
                 </div>
-                <div class="text-center text-white-50 mt-4">
-                    <small>&copy; 2026 Agribank Hackathon</small>
+                <div class="text-center pb-3" style="font-size: 0.75rem; opacity: 0.7;">
+                    © 2026 Bản quyền thuộc về Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt Nam.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Panel -->
+        <div class="col-md-7 right-panel">
+            <div class="top-right-menu d-none d-sm-flex">
+                <div class="lang-badge">VIE <i class="fa-solid fa-caret-down ms-1"></i></div>
+                <a href="#" class="contact-link">Liên hệ</a>
+            </div>
+            
+            <div class="login-container">
+                <div class="login-box text-center">
+                    <div class="logo-agri">
+                        <img src="https://upload.wikimedia.org/wikipedia/vi/1/1b/Agribank_logo.svg" alt="Agribank Logo" style="height: 40px; margin-right: 10px; display: none;"> <!-- Ẩn logo thật nếu ko load đc, dùng icon thay thế -->
+                        <i class="fa-solid fa-leaf text-warning"></i> AGRIBANK
+                    </div>
+                    <div class="welcome-text">Chào mừng đến với</div>
+                    <div class="system-text">Hệ thống Khởi tạo Tín dụng - Khách hàng cá nhân</div>
+                    
+                    <form action="auth" method="post" class="text-start mt-4">
+                        <input type="hidden" name="action" value="login">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Tên đăng nhập <span class="text-danger">*</span></label>
+                            <input type="text" name="username" class="form-control input-custom input-red-border" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="password" name="password" id="pwd" class="form-control input-custom border-end-0" required>
+                                <span class="input-group-text bg-white" style="border-radius: 0 4px 4px 0; cursor: pointer; color: #8E1521;" onclick="togglePwd()">
+                                    <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Mã ngẫu nhiên <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control input-custom border-end-0" placeholder="">
+                                <span class="input-group-text p-0" style="border-radius: 0 4px 4px 0; overflow: hidden;">
+                                    <!-- Fake Captcha Image -->
+                                    <img src="https://dummyimage.com/120x42/f4f4f4/333333.png&text=A8B2C" alt="captcha" style="height: 42px;">
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-submit w-100">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i>Đăng nhập
+                        </button>
+                    </form>
+                    
+                    <% if(request.getAttribute("error") != null) { %>
+                        <div class="alert alert-danger mt-3 py-2 text-start" style="font-size: 0.85rem;"><i class="fa-solid fa-circle-exclamation me-2"></i><%= request.getAttribute("error") %></div>
+                    <% } %>
                 </div>
             </div>
         </div>
     </div>
+    
+    <script>
+        function togglePwd() {
+            var pwd = document.getElementById("pwd");
+            var icon = document.getElementById("eyeIcon");
+            if (pwd.type === "password") {
+                pwd.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                pwd.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+    </script>
 </body>
 </html>
