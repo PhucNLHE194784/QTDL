@@ -145,6 +145,8 @@
             </c:if>
             <c:if test="${user.role eq 'ADMIN' || user.role eq 'LANH_DAO'}">
                 <li><a href="recycle_bin.jsp" class="sidebar-link"><i class="fa-solid fa-trash-can w-20px text-center"></i> <span data-i18n="trash_menu">Thùng rác (Hồ sơ)</span></a></li>
+                <li class="mt-4 px-3 mb-2 text-uppercase" style="font-size: 0.75rem; opacity: 0.6; font-weight: 700;">Hệ thống</li>
+                <li><a href="settings" class="sidebar-link"><i class="fa-solid fa-cog w-20px text-center"></i> <span>Cấu hình Email</span></a></li>
             </c:if>
         </ul>
     </div>

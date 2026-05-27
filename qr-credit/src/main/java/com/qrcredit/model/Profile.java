@@ -19,6 +19,13 @@ public class Profile {
     private Date lastUpdated;
     private int otpCount;
     private Date lastOtpDate;
+    private String secretLinkToken;
+    private int otpWrongAttempts;
+    private Date maturityDate;
+    private String interestRate;
+    private String officerName;
+    private String otpCode;
+    private Date otpExpiry;
 
     public Profile() {}
 
@@ -89,4 +96,19 @@ public class Profile {
     public void setOtpCount(int otpCount) { this.otpCount = otpCount; }
     public Date getLastOtpDate() { return lastOtpDate; }
     public void setLastOtpDate(Date lastOtpDate) { this.lastOtpDate = lastOtpDate; }
+    
+    public String getSecretLinkToken() { return secretLinkToken; }
+    public void setSecretLinkToken(String secretLinkToken) { this.secretLinkToken = secretLinkToken; }
+    public int getOtpWrongAttempts() { return otpWrongAttempts; }
+    public void setOtpWrongAttempts(int otpWrongAttempts) { this.otpWrongAttempts = otpWrongAttempts; }
+    public Date getMaturityDate() { return maturityDate; }
+    public void setMaturityDate(Date maturityDate) { this.maturityDate = maturityDate; }
+    public String getInterestRate() { return interestRate; }
+    public void setInterestRate(String interestRate) { this.interestRate = interestRate; }
+    public String getOfficerName() { return officerName; }
+    public void setOfficerName(String officerName) { this.officerName = officerName; }
+    public String getOtpCode() { return otpCode; }
+    public void setOtpCode(String otpCode) { this.otpCode = otpCode; }
+    public Date getOtpExpiry() { return otpExpiry; }
+    public void setOtpExpiry(Date otpExpiry) { this.otpExpiry = otpExpiry; }
 }

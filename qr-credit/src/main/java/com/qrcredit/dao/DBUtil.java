@@ -49,6 +49,13 @@ public class DBUtil {
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN email TEXT"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN otp_count INTEGER DEFAULT 0"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN last_otp_date TIMESTAMP"); } catch (Exception e) {}
+            try { stmt.execute("ALTER TABLE profiles ADD COLUMN secret_link_token TEXT"); } catch (Exception e) {}
+            try { stmt.execute("ALTER TABLE profiles ADD COLUMN otp_wrong_attempts INTEGER DEFAULT 0"); } catch (Exception e) {}
+            try { stmt.execute("ALTER TABLE profiles ADD COLUMN maturity_date TIMESTAMP"); } catch (Exception e) {}
+            try { stmt.execute("ALTER TABLE profiles ADD COLUMN interest_rate TEXT"); } catch (Exception e) {}
+            try { stmt.execute("ALTER TABLE profiles ADD COLUMN officer_name TEXT"); } catch (Exception e) {}
+            try { stmt.execute("ALTER TABLE profiles ADD COLUMN otp_code TEXT"); } catch (Exception e) {}
+            try { stmt.execute("ALTER TABLE profiles ADD COLUMN otp_expiry TIMESTAMP"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN created_by TEXT DEFAULT 'Chưa rõ'"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN credit_score INTEGER DEFAULT 0"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE"); } catch (Exception e) {}
@@ -64,6 +71,24 @@ public class DBUtil {
             
             // Cập nhật lại status mặc định cho những user cũ (chưa có status)
             stmt.execute("UPDATE users SET status = 'ACTIVE' WHERE status IS NULL");
+            
+            stmt.execute("CREATE TABLE IF NOT EXISTS audit_logs ("
+                    + "id TEXT PRIMARY KEY, "
+                    + "profile_id TEXT NOT NULL, "
+                    + "user_id TEXT NOT NULL, "
+                    + "action_time TIMESTAMP NOT NULL, "
+                    + "old_status TEXT, "
+                    + "new_status TEXT)");
+                    
+            stmt.execute("CREATE TABLE IF NOT EXISTS settings ("
+                    + "config_key TEXT PRIMARY KEY, "
+                    + "config_value TEXT)");
+
+            // Chèn cấu hình mặc định nếu chưa có
+            stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('SMTP_EMAIL', '') ON CONFLICT(config_key) DO NOTHING");
+            stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('SMTP_PASSWORD', '') ON CONFLICT(config_key) DO NOTHING");
+            
+            System.out.println("Database initialized successfully!");
         } catch (Exception e) {
             e.printStackTrace();
         }

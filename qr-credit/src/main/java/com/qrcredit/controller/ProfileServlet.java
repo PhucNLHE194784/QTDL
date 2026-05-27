@@ -80,8 +80,27 @@ public class ProfileServlet extends HttpServlet {
             p.setCreatedBy(user.getUsername());
             p.setLastUpdated(new Date());
 
+            // Thiết lập các trường mới cho Cổng Khách hàng
+            String token = UUID.randomUUID().toString();
+            p.setSecretLinkToken(token);
+            p.setMaturityDate(new Date(System.currentTimeMillis() + 31536000000L)); // +1 year (giả lập)
+            p.setInterestRate("10.5% / năm"); // (giả lập)
+            p.setOfficerName("Nguyễn Lâm Phúc"); // Tên cán bộ mặc định hoặc lấy từ user
+            p.setOtpWrongAttempts(0);
+            
+            String otp = String.format("%06d", new java.util.Random().nextInt(999999));
+            p.setOtpCode(otp);
+            p.setOtpExpiry(new Date(System.currentTimeMillis() + 180000)); // 3 mins
+
             if (profileDAO.addProfile(p)) {
                 auditLogDAO.logAction(p.getId(), user.getId(), "", "Đã tiếp nhận");
+                
+                // Gửi Email
+                if (p.getEmail() != null && !p.getEmail().isEmpty()) {
+                    String domain = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
+                    com.qrcredit.util.EmailService.sendPortalEmail(p.getEmail(), otp, token, "Đã tiếp nhận", domain);
+                }
+
                 response.sendRedirect("profile?id=" + p.getId());
             } else {
                 request.setAttribute("error", "Lỗi tạo hồ sơ!");
@@ -95,6 +114,16 @@ public class ProfileServlet extends HttpServlet {
                 String oldStatus = p.getStatus();
                 if (profileDAO.updateStatus(id, newStatus)) {
                     auditLogDAO.logAction(id, user.getId(), oldStatus, newStatus);
+                    
+                    // Sinh OTP mới và Gửi Email khi cập nhật trạng thái
+                    if (p.getEmail() != null && !p.getEmail().isEmpty()) {
+                        String otp = String.format("%06d", new java.util.Random().nextInt(999999));
+                        profileDAO.updateOtpCode(id, otp, new Date(System.currentTimeMillis() + 180000)); // 3 mins
+                        profileDAO.updateOtpWrongAttempts(id, 0); // Reset attempts
+                        
+                        String domain = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
+                        com.qrcredit.util.EmailService.sendPortalEmail(p.getEmail(), otp, p.getSecretLinkToken(), newStatus, domain);
+                    }
                 }
             }
             response.sendRedirect("profile?id=" + id);

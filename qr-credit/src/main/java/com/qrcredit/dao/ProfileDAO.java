@@ -25,10 +25,17 @@ public class ProfileDAO {
         p.setLastUpdated(new Date(rs.getTimestamp("last_updated").getTime()));
         try { p.setOtpCount(rs.getInt("otp_count")); } catch (Exception e) {}
         try { if(rs.getTimestamp("last_otp_date") != null) p.setLastOtpDate(new Date(rs.getTimestamp("last_otp_date").getTime())); } catch (Exception e) {}
+        try { p.setSecretLinkToken(rs.getString("secret_link_token")); } catch (Exception e) {}
+        try { p.setOtpWrongAttempts(rs.getInt("otp_wrong_attempts")); } catch (Exception e) {}
+        try { if(rs.getTimestamp("maturity_date") != null) p.setMaturityDate(new Date(rs.getTimestamp("maturity_date").getTime())); } catch (Exception e) {}
+        try { p.setInterestRate(rs.getString("interest_rate")); } catch (Exception e) {}
+        try { p.setOfficerName(rs.getString("officer_name")); } catch (Exception e) {}
+        try { p.setOtpCode(rs.getString("otp_code")); } catch (Exception e) {}
+        try { if(rs.getTimestamp("otp_expiry") != null) p.setOtpExpiry(new Date(rs.getTimestamp("otp_expiry").getTime())); } catch (Exception e) {}
         return p;
     }
     public boolean addProfile(Profile p) {
-        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, email, credit_score, created_by, is_deleted, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, email, credit_score, created_by, is_deleted, last_updated, secret_link_token, maturity_date, interest_rate, officer_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getId());
@@ -45,6 +52,10 @@ public class ProfileDAO {
             ps.setString(12, p.getCreatedBy());
             ps.setBoolean(13, false);
             ps.setTimestamp(14, new java.sql.Timestamp(p.getLastUpdated().getTime()));
+            ps.setString(15, p.getSecretLinkToken());
+            ps.setTimestamp(16, p.getMaturityDate() != null ? new java.sql.Timestamp(p.getMaturityDate().getTime()) : null);
+            ps.setString(17, p.getInterestRate());
+            ps.setString(18, p.getOfficerName());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,6 +77,49 @@ public class ProfileDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Profile getProfileByToken(String token) {
+        String sql = "SELECT * FROM profiles WHERE secret_link_token = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, token);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToProfile(rs);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean updateOtpWrongAttempts(String id, int attempts) {
+        String sql = "UPDATE profiles SET otp_wrong_attempts = ? WHERE id = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, attempts);
+            ps.setString(2, id);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateOtpCode(String id, String otpCode, Date otpExpiry) {
+        String sql = "UPDATE profiles SET otp_code = ?, otp_expiry = ? WHERE id = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, otpCode);
+            ps.setTimestamp(2, otpExpiry != null ? new java.sql.Timestamp(otpExpiry.getTime()) : null);
+            ps.setString(3, id);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public boolean updateOtpInfo(String id, int count, Date lastDate) {
