@@ -74,6 +74,7 @@ public class ProfileServlet extends HttpServlet {
             p.setRegion(request.getParameter("region") != null ? request.getParameter("region") : "");
             p.setWard(request.getParameter("ward") != null ? request.getParameter("ward") : "");
             p.setPhone(request.getParameter("phone") != null ? request.getParameter("phone") : "");
+            p.setCreditScore((int)(Math.random() * 81) + 20); // Random 20 to 100
             p.setLastUpdated(new Date());
 
             if (profileDAO.addProfile(p)) {

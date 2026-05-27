@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class ProfileDAO {
     public boolean addProfile(Profile p) {
-        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, is_deleted, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, credit_score, is_deleted, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getId());
@@ -20,8 +20,9 @@ public class ProfileDAO {
             ps.setString(7, p.getRegion());
             ps.setString(8, p.getWard());
             ps.setString(9, p.getPhone());
-            ps.setBoolean(10, false);
-            ps.setTimestamp(11, new java.sql.Timestamp(p.getLastUpdated().getTime()));
+            ps.setInt(10, p.getCreditScore());
+            ps.setBoolean(11, false);
+            ps.setTimestamp(12, new java.sql.Timestamp(p.getLastUpdated().getTime()));
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,6 +47,7 @@ public class ProfileDAO {
                         rs.getString("region"),
                         rs.getString("ward"),
                         rs.getString("phone"),
+                        rs.getInt("credit_score"),
                         rs.getBoolean("is_deleted"),
                         new Date(rs.getTimestamp("last_updated").getTime())
                     );
@@ -74,6 +76,7 @@ public class ProfileDAO {
                     rs.getString("region"),
                     rs.getString("ward"),
                     rs.getString("phone"),
+                    rs.getInt("credit_score"),
                     rs.getBoolean("is_deleted"),
                     new Date(rs.getTimestamp("last_updated").getTime())
                 ));
@@ -101,6 +104,7 @@ public class ProfileDAO {
                     rs.getString("region"),
                     rs.getString("ward"),
                     rs.getString("phone"),
+                    rs.getInt("credit_score"),
                     rs.getBoolean("is_deleted"),
                     new Date(rs.getTimestamp("last_updated").getTime())
                 ));
@@ -129,6 +133,7 @@ public class ProfileDAO {
                         rs.getString("region"),
                         rs.getString("ward"),
                         rs.getString("phone"),
+                        rs.getInt("credit_score"),
                         rs.getBoolean("is_deleted"),
                         new Date(rs.getTimestamp("last_updated").getTime())
                     ));

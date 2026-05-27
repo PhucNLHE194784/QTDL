@@ -80,17 +80,9 @@
             transform: translateX(-50%);
         }
 
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .logo-text i {
-            color: var(--agri-yellow);
-            font-size: 1.8rem;
+        .logo-img {
+            height: 45px;
+            object-fit: contain;
         }
 
         .header-right {
@@ -268,16 +260,14 @@
             </div>
             
             <div class="header-center">
-                <div class="logo-text">
-                    <i class="fa-solid fa-leaf"></i> AGRIBANK
-                </div>
-            </div>
+            <a href="index.jsp"><img src="assets/img/agribank_logo.png" alt="Agribank" class="logo-img"></a>
+        </div>
 
             <div class="header-right">
                 <div class="contact d-none d-xl-block">
                     <i class="fa-solid fa-phone me-1"></i> 1900558818 / 02432053205
                 </div>
-                <a href="#" class="icon-btn"><i class="fa-solid fa-magnifying-glass"></i></a>
+                <a href="search.jsp" class="icon-btn" title="Tra cứu hồ sơ"><i class="fa-solid fa-magnifying-glass"></i></a>
                 <!-- Link tới trang Đăng nhập hệ thống nội bộ -->
                 <a href="login.jsp" class="btn btn-sm btn-light fw-bold text-danger px-3 rounded-pill" style="margin: 0 10px;">
                     <i class="fa-solid fa-user-lock me-1"></i> Đăng nhập hệ thống

@@ -119,13 +119,19 @@
         .form-label { font-weight: 600; color: #555; font-size: 0.85rem; margin-bottom: 8px; text-transform: uppercase; }
         .section-title { font-size: 1.1rem; font-weight: 700; color: var(--agri-red); margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         .text-primary-custom { color: var(--agri-red) !important; }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+        }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="sidebar-brand">
-            <i class="fa-solid fa-leaf"></i> AGRIBANK
+        <div class="sidebar-brand text-center d-block">
+            <a href="index.jsp"><img src="assets/img/agribank_logo.png" alt="Agribank" style="height: 45px; background: white; padding: 5px; border-radius: 5px; max-width: 100%;"></a>
         </div>
         <ul class="sidebar-menu">
             <li><a href="dashboard.jsp" class="sidebar-link"><i class="fa-solid fa-chart-pie w-20px text-center"></i> Bảng điều khiển</a></li>
@@ -146,8 +152,9 @@
     <div class="main-content">
         <!-- Top Navbar -->
         <div class="top-navbar">
-            <div class="d-flex align-items-center">
-                <div class="text-end me-3">
+            <div class="d-flex align-items-center w-100">
+                <button class="btn btn-light d-md-none me-auto shadow-sm" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="text-end ms-auto me-3">
                     <div class="fw-bold text-dark" style="font-size: 0.95rem;">${user.fullname}</div>
                     <div class="text-muted" style="font-size: 0.8rem;"><i class="fa-solid fa-id-badge me-1 text-warning"></i>${user.role}</div>
                 </div>
@@ -248,6 +255,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Sidebar toggle for mobile
+            $('#sidebarToggle').on('click', function() {
+                $('.sidebar').toggleClass('show');
+            });
+
             // Tự động thêm dấu phân cách hàng nghìn khi nhập số tiền
             $('#amountDisplay').on('input', function(e) {
                 // Xóa mọi ký tự không phải là số

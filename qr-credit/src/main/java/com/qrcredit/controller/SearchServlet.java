@@ -29,7 +29,7 @@ public class SearchServlet extends HttpServlet {
                 request.setAttribute("error", "Mã QR không hợp lệ hoặc hồ sơ không tồn tại.");
             }
         }
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        request.getRequestDispatcher("search.jsp").forward(request, response);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SearchServlet extends HttpServlet {
         } else {
             request.setAttribute("error", "Không tìm thấy hồ sơ. Vui lòng kiểm tra lại số CCCD.");
         }
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        request.getRequestDispatcher("search.jsp").forward(request, response);
     }
 
     private void maskNames(List<Profile> results) {

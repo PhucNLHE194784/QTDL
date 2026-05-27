@@ -120,13 +120,19 @@
         .text-primary-custom { color: var(--agri-red); }
         
         .money-text { font-family: 'Courier New', Courier, monospace; font-weight: 700; color: var(--agri-red); }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+        }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="sidebar-brand">
-            <i class="fa-solid fa-leaf"></i> AGRIBANK
+        <div class="sidebar-brand text-center d-block">
+            <a href="index.jsp"><img src="assets/img/agribank_logo.png" alt="Agribank" style="height: 45px; background: white; padding: 5px; border-radius: 5px; max-width: 100%;"></a>
         </div>
         <ul class="sidebar-menu">
             <li><a href="dashboard.jsp" class="sidebar-link active"><i class="fa-solid fa-chart-pie w-20px text-center"></i> <span data-i18n="dashboard_menu">Bảng điều khiển</span></a></li>
@@ -147,8 +153,9 @@
     <div class="main-content">
         <!-- Top Navbar -->
         <div class="top-navbar">
-            <div class="d-flex align-items-center">
-                <div class="dropdown me-4">
+            <div class="d-flex align-items-center w-100">
+                <button class="btn btn-light d-md-none me-auto shadow-sm" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="dropdown me-4 ms-auto">
                     <div class="fw-bold text-dark" data-bs-toggle="dropdown" aria-expanded="false" id="langBadge" style="cursor:pointer; font-size: 0.9rem;">
                         VIE <i class="fa-solid fa-caret-down ms-1"></i>
                     </div>
@@ -229,11 +236,11 @@
                                     <th style="width: 12%;" data-i18n="col_id">Mã Hồ Sơ</th>
                                     <th style="width: 18%;" data-i18n="col_customer">Khách Hàng</th>
                                     <th style="width: 15%;" data-i18n="col_contact">Liên Hệ</th>
-                                    <th style="width: 15%;" data-i18n="col_region">Khu Vực</th>
+                                    <th style="width: 10%;" data-i18n="col_score">Điểm Tín Dụng</th>
                                     <th style="width: 15%;" data-i18n="col_amount">Số Tiền Vay</th>
                                     <th style="width: 15%;" data-i18n="col_status">Trạng Thái</th>
-                                    <th style="width: 15%;" data-i18n="col_updated">Cập Nhật Lúc</th>
-                                    <th style="width: 10%; text-align: right;" data-i18n="col_action">Thao Tác</th>
+                                    <th style="width: 10%;" data-i18n="col_updated">Cập Nhật Lúc</th>
+                                    <th style="width: 5%; text-align: right;" data-i18n="col_action">Thao Tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -248,8 +255,17 @@
                                             <div class="fw-semibold text-dark"><i class="fa-solid fa-phone me-1 text-muted"></i>${not empty p.phone ? p.phone : 'Chưa có'}</div>
                                         </td>
                                         <td>
-                                            <div class="fw-semibold text-dark">${not empty p.region ? p.region : 'Chưa cập nhật'}</div>
-                                            <div class="small text-muted">${p.ward}</div>
+                                            <c:choose>
+                                                <c:when test="${p.creditScore >= 80}">
+                                                    <span class="badge bg-success"><i class="fa-solid fa-arrow-trend-up me-1"></i>${p.creditScore} (Tốt)</span>
+                                                </c:when>
+                                                <c:when test="${p.creditScore >= 50}">
+                                                    <span class="badge bg-warning text-dark"><i class="fa-solid fa-minus me-1"></i>${p.creditScore} (Khá)</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="badge bg-danger"><i class="fa-solid fa-arrow-trend-down me-1"></i>${p.creditScore} (Xấu)</span>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </td>
                                         <td>
                                             <span class="money-text">

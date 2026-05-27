@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%
     if(session.getAttribute("user") == null) {
         response.sendRedirect("login.jsp");
@@ -77,8 +78,32 @@
                         <div class="info-row"><span class="info-label">Số CCCD:</span><span class="info-value">${profile.cccd}</span></div>
                         <div class="info-row"><span class="info-label">Khu vực:</span><span class="info-value">${profile.region}</span></div>
                         <div class="info-row"><span class="info-label">Xã/Phường:</span><span class="info-value">${profile.ward}</span></div>
-                        <div class="info-row"><span class="info-label">Số tiền vay:</span><span class="info-value text-danger fs-5">${profile.amount} VNĐ</span></div>
+                        <div class="info-row"><span class="info-label">Số tiền vay:</span><span class="info-value text-danger fs-5"><fmt:formatNumber value="${profile.amount}" pattern="#,###"/> VNĐ</span></div>
                         <div class="info-row border-bottom-0"><span class="info-label">Mục đích:</span><span class="info-value text-muted" style="max-width: 60%; text-align: right;">${profile.purpose}</span></div>
+                    </div>
+                </div>
+
+                <div class="card detail-card">
+                    <div class="card-header bg-white border-bottom pt-3 pb-3">
+                        <h5 class="mb-0 text-dark"><i class="fa-solid fa-gauge-high text-success me-2"></i>Điểm tín dụng (Credit Score)</h5>
+                    </div>
+                    <div class="card-body p-4 text-center">
+                        <h2 class="fw-bold mb-2 ${profile.creditScore >= 80 ? 'text-success' : (profile.creditScore >= 50 ? 'text-warning' : 'text-danger')}">
+                            ${profile.creditScore} <span class="fs-5 text-muted">/ 100</span>
+                        </h2>
+                        <p class="text-muted mb-3">
+                            <c:choose>
+                                <c:when test="${profile.creditScore >= 80}">Rất Tốt - Rủi ro thấp, độ tin cậy cao.</c:when>
+                                <c:when test="${profile.creditScore >= 50}">Khá - Rủi ro trung bình, cần cân nhắc.</c:when>
+                                <c:otherwise>Kém - Rủi ro cao, có thể bị từ chối.</c:otherwise>
+                            </c:choose>
+                        </p>
+                        <div class="progress shadow-sm" style="height: 15px; border-radius: 10px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated ${profile.creditScore >= 80 ? 'bg-success' : (profile.creditScore >= 50 ? 'bg-warning' : 'bg-danger')}" 
+                                 role="progressbar" style="width: ${profile.creditScore}%" 
+                                 aria-valuenow="${profile.creditScore}" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

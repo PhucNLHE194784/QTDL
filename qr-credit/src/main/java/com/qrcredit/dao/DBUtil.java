@@ -46,6 +46,7 @@ public class DBUtil {
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN region TEXT"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN ward TEXT"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN phone TEXT"); } catch (Exception e) {}
+            try { stmt.execute("ALTER TABLE profiles ADD COLUMN credit_score INTEGER DEFAULT 0"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE profiles ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE"); } catch (Exception e) {}
             try { stmt.execute("ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'ACTIVE'"); } catch (Exception e) {}
             
