@@ -24,6 +24,7 @@ public class Profile {
     private Date maturityDate;
     private String interestRate;
     private String officerName;
+    private String faceDescriptor;
     private String otpCode;
     private Date otpExpiry;
 
@@ -110,5 +111,15 @@ public class Profile {
     public String getOtpCode() { return otpCode; }
     public void setOtpCode(String otpCode) { this.otpCode = otpCode; }
     public Date getOtpExpiry() { return otpExpiry; }
-    public void setOtpExpiry(Date otpExpiry) { this.otpExpiry = otpExpiry; }
+    public void setOtpExpiry(Date otpExpiry) {
+        this.otpExpiry = otpExpiry;
+    }
+
+    public String getFaceDescriptor() {
+        return faceDescriptor;
+    }
+
+    public void setFaceDescriptor(String faceDescriptor) {
+        this.faceDescriptor = faceDescriptor;
+    }
 }

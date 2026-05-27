@@ -240,6 +240,20 @@
                                 <textarea name="purpose" class="form-control" rows="3" placeholder="Nhập chi tiết mục đích sử dụng vốn..." required></textarea>
                             </div>
                             
+                            <div class="section-title mt-4"><i class="fa-solid fa-camera me-2 text-primary-custom"></i>Đăng Ký Khuôn Mặt Khách Hàng</div>
+                            <div class="mb-4 text-center">
+                                <div id="videoContainer" style="position: relative; display: inline-block; width: 100%; max-width: 400px;">
+                                    <video id="videoElement" autoplay muted style="width: 100%; border-radius: 8px; border: 2px solid #ddd;"></video>
+                                    <canvas id="canvasElement" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
+                                </div>
+                                <div class="mt-3">
+                                    <button type="button" id="startCameraBtn" class="btn btn-outline-primary"><i class="fa-solid fa-video me-1"></i>Bật Camera</button>
+                                    <button type="button" id="captureFaceBtn" class="btn btn-success d-none"><i class="fa-solid fa-camera-retro me-1"></i>Chụp & Trích xuất</button>
+                                </div>
+                                <div id="faceStatus" class="mt-2 text-muted small"></div>
+                                <input type="hidden" name="faceDescriptor" id="faceDescriptorHidden">
+                            </div>
+                            
                             <button type="submit" class="btn btn-primary-custom text-white w-100 btn-create">
                                 <i class="fa-solid fa-qrcode me-2"></i>Khởi tạo & Sinh mã QR định danh
                             </button>
@@ -257,6 +271,7 @@
     
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/face-api.min.js"></script>
     <script>
         $(document).ready(function() {
             // Sidebar toggle for mobile
@@ -343,6 +358,7 @@
                                 let districtHtml = '<option value="">-- Chọn Quận/Huyện --</option>';
                                 response.data.forEach(function(d) {
                                     districtHtml += '<option value="' + d.full_name + '" data-id="' + d.id + '">' + d.full_name + '</option>';
+                                    districtHtml += '<option value="' + d.id + '" data-id="' + d.id + '">' + d.full_name + '</option>';
                                 });
                                 $('#district').html(districtHtml).prop('disabled', false);
                             }
@@ -372,6 +388,63 @@
                     });
                 }
             });
+        });
+        // --- FACE API LOGIC ---
+        Promise.all([
+            faceapi.nets.tinyFaceDetector.loadFromUri('models'),
+            faceapi.nets.faceLandmark68Net.loadFromUri('models'),
+            faceapi.nets.faceRecognitionNet.loadFromUri('models')
+        ]).then(() => {
+            console.log("Face API models loaded.");
+        }).catch(err => {
+            console.error("Error loading models:", err);
+            $('#faceStatus').html("<span class='text-danger'>Lỗi tải mô hình AI. Vui lòng kiểm tra thư mục models.</span>");
+        });
+
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('canvasElement');
+        const faceStatus = document.getElementById('faceStatus');
+        const faceDescriptorHidden = document.getElementById('faceDescriptorHidden');
+        let cameraStream = null;
+
+        $('#startCameraBtn').click(async function() {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: {} });
+                video.srcObject = cameraStream;
+                $(this).addClass('d-none');
+                $('#captureFaceBtn').removeClass('d-none');
+                faceStatus.innerHTML = "<span class='text-primary'>Camera đã bật. Vui lòng căn chỉnh khuôn mặt khách hàng.</span>";
+            } catch (err) {
+                faceStatus.innerHTML = "<span class='text-danger'>Không thể truy cập Camera. Vui lòng cấp quyền!</span>";
+            }
+        });
+
+        $('#captureFaceBtn').click(async function() {
+            faceStatus.innerHTML = "<span class='text-warning'><i class='fas fa-spinner fa-spin'></i> Đang phân tích khuôn mặt...</span>";
+            try {
+                const detections = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+                
+                if (detections) {
+                    const displaySize = { width: video.videoWidth, height: video.videoHeight };
+                    faceapi.matchDimensions(canvas, displaySize);
+                    const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+                    faceapi.draw.drawDetections(canvas, resizedDetections);
+                    
+                    faceDescriptorHidden.value = JSON.stringify(Array.from(detections.descriptor));
+                    faceStatus.innerHTML = "<span class='text-success fw-bold'><i class='fas fa-check-circle'></i> Đã lưu khuôn mặt thành công!</span>";
+                    
+                    if (cameraStream) {
+                        cameraStream.getTracks().forEach(track => track.stop());
+                    }
+                    $(this).addClass('d-none');
+                    $('#startCameraBtn').removeClass('d-none').html('<i class="fa-solid fa-redo me-1"></i>Chụp lại');
+                } else {
+                    faceStatus.innerHTML = "<span class='text-danger fw-bold'><i class='fas fa-exclamation-triangle'></i> Không nhận diện được khuôn mặt. Thử lại!</span>";
+                }
+            } catch (e) {
+                faceStatus.innerHTML = "<span class='text-danger fw-bold'>Lỗi xử lý AI! Thử lại.</span>";
+            }
         });
     </script>
 </body>

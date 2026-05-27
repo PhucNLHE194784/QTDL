@@ -32,10 +32,11 @@ public class ProfileDAO {
         try { p.setOfficerName(rs.getString("officer_name")); } catch (Exception e) {}
         try { p.setOtpCode(rs.getString("otp_code")); } catch (Exception e) {}
         try { if(rs.getTimestamp("otp_expiry") != null) p.setOtpExpiry(new Date(rs.getTimestamp("otp_expiry").getTime())); } catch (Exception e) {}
+        try { p.setFaceDescriptor(rs.getString("face_descriptor")); } catch (Exception e) {}
         return p;
     }
     public boolean addProfile(Profile p) {
-        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, email, credit_score, created_by, is_deleted, last_updated, secret_link_token, maturity_date, interest_rate, officer_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, email, credit_score, created_by, is_deleted, last_updated, secret_link_token, maturity_date, interest_rate, officer_name, face_descriptor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getId());
@@ -56,6 +57,7 @@ public class ProfileDAO {
             ps.setTimestamp(16, p.getMaturityDate() != null ? new java.sql.Timestamp(p.getMaturityDate().getTime()) : null);
             ps.setString(17, p.getInterestRate());
             ps.setString(18, p.getOfficerName());
+            ps.setString(19, p.getFaceDescriptor());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

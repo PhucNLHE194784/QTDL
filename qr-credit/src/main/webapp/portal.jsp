@@ -57,6 +57,85 @@
                 </c:if>
 
                 <c:choose>
+                    <c:when test="${useFaceId}">
+                        <h5 class="mb-3" style="color: #A51A29;"><i class="fa-solid fa-face-viewfinder me-2"></i>Xác thực khuôn mặt</h5>
+                        <p class="text-muted small mb-4">Vui lòng đưa khuôn mặt vào khung hình để xác minh danh tính trước khi xem hồ sơ.</p>
+                        
+                        <div class="mb-4 text-center">
+                            <div id="videoContainer" style="position: relative; display: inline-block; width: 100%; max-width: 400px;">
+                                <video id="videoElement" autoplay muted playsinline style="width: 100%; border-radius: 8px; border: 2px solid #ddd;"></video>
+                                <canvas id="canvasElement" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
+                            </div>
+                            <div class="mt-3">
+                                <button type="button" id="startCameraBtn" class="btn btn-outline-primary fw-bold px-4"><i class="fa-solid fa-video me-2"></i>Bật Camera Xác Thực</button>
+                            </div>
+                            <div id="faceStatus" class="mt-3 text-muted small fw-bold"></div>
+                        </div>
+
+                        <form action="portal" method="post" id="faceForm">
+                            <input type="hidden" name="action" value="verifyFace">
+                            <input type="hidden" name="token" value="${token}">
+                            <input type="hidden" name="liveDescriptor" id="liveDescriptorHidden">
+                        </form>
+                        
+                        <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+                        <script src="js/face-api.min.js"></script>
+                        <script>
+                            $(document).ready(function() {
+                                Promise.all([
+                                    faceapi.nets.tinyFaceDetector.loadFromUri('models'),
+                                    faceapi.nets.faceLandmark68Net.loadFromUri('models'),
+                                    faceapi.nets.faceRecognitionNet.loadFromUri('models')
+                                ]).then(() => {
+                                    $('#faceStatus').html("<span class='text-success'>Hệ thống AI đã sẵn sàng. Vui lòng bấm Bật Camera.</span>");
+                                }).catch(err => {
+                                    $('#faceStatus').html("<span class='text-danger'>Lỗi khởi động AI. Vui lòng làm mới trang.</span>");
+                                });
+
+                                const video = document.getElementById('videoElement');
+                                const canvas = document.getElementById('canvasElement');
+                                const faceStatus = document.getElementById('faceStatus');
+                                const faceForm = document.getElementById('faceForm');
+                                const faceDescriptorHidden = document.getElementById('liveDescriptorHidden');
+                                let cameraStream = null;
+                                let faceScanInterval = null;
+
+                                $('#startCameraBtn').click(async function() {
+                                    try {
+                                        cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                                        video.srcObject = cameraStream;
+                                        $(this).addClass('d-none');
+                                        faceStatus.innerHTML = "<span class='text-primary'><i class='fas fa-spinner fa-spin'></i> Đang quét nhận diện khuôn mặt...</span>";
+                                        
+                                        video.addEventListener('play', () => {
+                                            const displaySize = { width: video.videoWidth, height: video.videoHeight };
+                                            faceapi.matchDimensions(canvas, displaySize);
+                                            
+                                            faceScanInterval = setInterval(async () => {
+                                                const detections = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+                                                
+                                                if (detections) {
+                                                    const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                                                    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+                                                    faceapi.draw.drawDetections(canvas, resizedDetections);
+                                                    
+                                                    // Face found, stop loop and submit!
+                                                    clearInterval(faceScanInterval);
+                                                    cameraStream.getTracks().forEach(track => track.stop());
+                                                    faceStatus.innerHTML = "<span class='text-success fw-bold'><i class='fas fa-check-circle'></i> Đã lấy sinh trắc học! Đang đối chiếu máy chủ...</span>";
+                                                    
+                                                    faceDescriptorHidden.value = JSON.stringify(Array.from(detections.descriptor));
+                                                    faceForm.submit();
+                                                }
+                                            }, 500); // Chụp nửa giây 1 lần
+                                        });
+                                    } catch (err) {
+                                        faceStatus.innerHTML = "<span class='text-danger fw-bold'>Lỗi: Vui lòng cấp quyền sử dụng Camera cho trình duyệt!</span>";
+                                    }
+                                });
+                            });
+                        </script>
+                    </c:when>
                     <c:when test="${locked}">
                         <div class="mb-4 text-danger">
                             <i class="fas fa-lock fa-4x mb-3"></i>

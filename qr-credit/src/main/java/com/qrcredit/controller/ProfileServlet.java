@@ -76,6 +76,7 @@ public class ProfileServlet extends HttpServlet {
             p.setWard(request.getParameter("ward") != null ? request.getParameter("ward") : "");
             p.setPhone(request.getParameter("phone") != null ? request.getParameter("phone") : "");
             p.setEmail(request.getParameter("email") != null ? request.getParameter("email") : "");
+            p.setFaceDescriptor(request.getParameter("faceDescriptor"));
             p.setCreditScore((int)(Math.random() * 81) + 20); // Random 20 to 100
             p.setCreatedBy(user.getUsername());
             p.setLastUpdated(new Date());

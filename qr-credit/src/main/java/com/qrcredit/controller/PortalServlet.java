@@ -56,7 +56,33 @@ public class PortalServlet extends HttpServlet {
             request.setAttribute("locked", false);
         }
 
+        if (p.getFaceDescriptor() != null && !p.getFaceDescriptor().trim().isEmpty()) {
+            request.setAttribute("useFaceId", true);
+        }
+
         request.getRequestDispatcher("portal.jsp").forward(request, response);
+    }
+
+    private float[] parseDescriptor(String jsonStr) {
+        if (jsonStr == null || jsonStr.isEmpty()) return new float[0];
+        String clean = jsonStr.replace("[", "").replace("]", "").trim();
+        if (clean.isEmpty()) return new float[0];
+        String[] parts = clean.split(",");
+        float[] result = new float[parts.length];
+        for (int i=0; i<parts.length; i++) {
+            result[i] = Float.parseFloat(parts[i].trim());
+        }
+        return result;
+    }
+
+    private double calculateEuclideanDistance(float[] d1, float[] d2) {
+        if (d1.length == 0 || d2.length == 0 || d1.length != d2.length) return 999.0;
+        double sum = 0.0;
+        for (int i = 0; i < d1.length; i++) {
+            double diff = d1[i] - d2[i];
+            sum += diff * diff;
+        }
+        return Math.sqrt(sum);
     }
 
     @Override
@@ -78,7 +104,26 @@ public class PortalServlet extends HttpServlet {
         com.qrcredit.dao.SettingDAO settingDAO = new com.qrcredit.dao.SettingDAO();
         String method = settingDAO.getSetting("OTP_METHOD");
 
-        if ("verify".equals(action)) {
+        if ("verifyFace".equals(action)) {
+            String liveDescStr = request.getParameter("liveDescriptor");
+            float[] liveDesc = parseDescriptor(liveDescStr);
+            float[] refDesc = parseDescriptor(p.getFaceDescriptor());
+            
+            double distance = calculateEuclideanDistance(liveDesc, refDesc);
+            if (distance < 0.55) { // Threshold for face match
+                java.util.List<Profile> results = profileDAO.getProfilesByCccd(p.getCccd());
+                request.setAttribute("profiles", results);
+                request.setAttribute("currentProfile", p);
+                request.getRequestDispatcher("portal_detail.jsp").forward(request, response);
+                return;
+            } else {
+                request.setAttribute("error", "Khuôn mặt không khớp! Vui lòng căn chỉnh lại và thử lại.");
+                request.setAttribute("useFaceId", true);
+                request.setAttribute("token", token);
+                request.getRequestDispatcher("portal.jsp").forward(request, response);
+                return;
+            }
+        } else if ("verify".equals(action)) {
             if (p.getOtpWrongAttempts() >= 3) {
                 response.sendRedirect("portal?token=" + token);
                 return;

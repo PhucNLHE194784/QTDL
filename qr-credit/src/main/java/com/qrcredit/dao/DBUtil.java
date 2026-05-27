@@ -72,6 +72,27 @@ public class DBUtil {
             // Cập nhật lại status mặc định cho những user cũ (chưa có status)
             stmt.execute("UPDATE users SET status = 'ACTIVE' WHERE status IS NULL");
             
+            stmt.execute("CREATE TABLE IF NOT EXISTS profiles (" +
+                    "id TEXT PRIMARY KEY, " +
+                    "customer_name TEXT NOT NULL, " +
+                    "cccd TEXT NOT NULL, " +
+                    "phone TEXT, " +
+                    "email TEXT, " +
+                    "region TEXT, " +
+                    "ward TEXT, " +
+                    "amount REAL, " +
+                    "purpose TEXT, " +
+                    "status TEXT, " +
+                    "maturity_date DATE, " +
+                    "interest_rate TEXT, " +
+                    "officer_name TEXT)");
+            
+            try {
+                stmt.execute("ALTER TABLE profiles ADD COLUMN face_descriptor TEXT");
+            } catch (Exception e) {
+                // Ignore if column already exists
+            }
+            
             stmt.execute("CREATE TABLE IF NOT EXISTS audit_logs ("
                     + "id TEXT PRIMARY KEY, "
                     + "profile_id TEXT NOT NULL, "
