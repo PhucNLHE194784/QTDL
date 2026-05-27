@@ -243,8 +243,8 @@
                             <div class="section-title mt-4"><i class="fa-solid fa-camera me-2 text-primary-custom"></i>Đăng Ký Khuôn Mặt Khách Hàng</div>
                             <div class="mb-4 text-center">
                                 <div id="videoContainer" style="position: relative; display: inline-block; width: 100%; max-width: 400px;">
-                                    <video id="videoElement" autoplay muted style="width: 100%; border-radius: 8px; border: 2px solid #ddd;"></video>
-                                    <canvas id="canvasElement" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
+                                    <video id="videoElement" autoplay muted style="width: 100%; border-radius: 8px; border: 2px solid #ddd; transform: scaleX(-1); -webkit-transform: scaleX(-1);"></video>
+                                    <canvas id="canvasElement" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; transform: scaleX(-1); -webkit-transform: scaleX(-1);"></canvas>
                                 </div>
                                 <div class="mt-3">
                                     <button type="button" id="startCameraBtn" class="btn btn-outline-primary"><i class="fa-solid fa-video me-1"></i>Bật Camera</button>
