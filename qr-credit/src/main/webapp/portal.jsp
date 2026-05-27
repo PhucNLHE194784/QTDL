@@ -83,7 +83,7 @@
                         <script>
                             $(document).ready(function() {
                                 Promise.all([
-                                    faceapi.nets.tinyFaceDetector.loadFromUri('models'),
+                                    faceapi.nets.ssdMobilenetv1.loadFromUri('models'),
                                     faceapi.nets.faceLandmark68Net.loadFromUri('models'),
                                     faceapi.nets.faceRecognitionNet.loadFromUri('models')
                                 ]).then(() => {
@@ -112,7 +112,7 @@
                                             faceapi.matchDimensions(canvas, displaySize);
                                             
                                             faceScanInterval = setInterval(async () => {
-                                                const detections = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+                                                const detections = await faceapi.detectSingleFace(video, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.5 })).withFaceLandmarks().withFaceDescriptor();
                                                 
                                                 if (detections) {
                                                     const resizedDetections = faceapi.resizeResults(detections, displaySize);
