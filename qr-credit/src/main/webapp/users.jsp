@@ -16,37 +16,145 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); font-family: 'Inter', sans-serif; min-height: 100vh; }
-        .navbar { background: rgba(30, 60, 114, 0.9); backdrop-filter: blur(10px); padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .navbar-brand { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.5px; }
+        :root {
+            --agri-red: #A51A29;
+            --agri-red-dark: #8E1521;
+            --agri-yellow: #f1c40f;
+            --sidebar-width: 260px;
+        }
+        body { font-family: 'Inter', sans-serif; background: #f4f6f9; min-height: 100vh; overflow-x: hidden; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--agri-red-dark);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            top: 0; left: 0;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar-brand {
+            padding: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-brand i { color: var(--agri-yellow); font-size: 1.6rem; }
+        
+        .sidebar-menu { list-style: none; padding: 20px 0; margin: 0; }
+        .sidebar-menu li { padding: 0 15px; margin-bottom: 5px; }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 12px;
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .sidebar-link.active {
+            border-left: 4px solid var(--agri-yellow);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Navbar */
+        .top-navbar { 
+            background: white; 
+            padding: 15px 25px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
         .card { 
-            background: rgba(255, 255, 255, 0.85); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(255,255,255,0.5); 
-            border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03); 
+            border: none; 
+            border-radius: 12px; 
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
             margin-bottom: 24px; 
         }
-        .card-header { background-color: rgba(255,255,255,0.5); border-bottom: 1px solid rgba(0,0,0,0.05); border-radius: 16px 16px 0 0 !important; font-weight: 600; padding: 16px 24px; font-size: 1.1rem; }
-        .table { margin-bottom: 0; background: transparent; }
-        .table th { background-color: rgba(248, 249, 250, 0.5); color: #475569; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; padding: 15px; border-bottom-width: 1px; }
-        .table td { vertical-align: middle; color: #334155; padding: 15px; font-size: 0.95rem; border-color: rgba(0,0,0,0.05); background: transparent; }
-        .table-hover tbody tr:hover td { background-color: rgba(255,255,255,0.95); }
-        .form-control, .form-select { border-radius: 10px; padding: 10px 15px; border: 1px solid #e2e8f0; font-size: 0.95rem; background-color: rgba(255,255,255,0.9); }
-        .form-control:focus, .form-select:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15); }
-        .badge { padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.3px; }
+        .card-header { background-color: transparent; border-bottom: 1px solid #eee; font-weight: 700; padding: 16px 24px; font-size: 1.1rem; color: var(--agri-red); }
+        .table { margin-bottom: 0; }
+        .table th { background-color: #f8f9fa; color: #555; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; border-bottom: 2px solid #eee; padding: 15px; }
+        .table td { vertical-align: middle; padding: 15px; font-size: 0.95rem; border-color: #eee; }
+        
+        .form-control, .form-select { border-radius: 8px; border: 1px solid #ddd; padding: 10px 15px; }
+        .form-control:focus, .form-select:focus { border-color: var(--agri-red); box-shadow: 0 0 0 0.2rem rgba(165, 26, 41, 0.15); }
+        .badge { padding: 6px 12px; border-radius: 6px; font-weight: 600; }
+        .badge-soft-warning { background: #fef7e0; color: #b06000; }
+        .badge-soft-danger { background: #fce8e6; color: #d93025; }
+        
+        .btn-primary { background-color: var(--agri-red); border-color: var(--agri-red); }
+        .btn-primary:hover { background-color: var(--agri-red-dark); border-color: var(--agri-red-dark); }
+        .text-primary { color: var(--agri-red) !important; }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand" href="#"><i class="fa-solid fa-users-gear me-2 text-warning"></i>Quản Lý Nhân Sự</a>
-            <div class="d-flex align-items-center text-white">
-                <a href="dashboard.jsp" class="btn btn-outline-light btn-sm fw-bold px-3 me-2" style="border-radius: 8px;"><i class="fa-solid fa-chart-pie me-1"></i>Bảng Điều Khiển</a>
-                <a href="auth?action=logout" class="btn btn-light btn-sm fw-bold text-primary px-3" style="border-radius: 8px;"><i class="fa-solid fa-power-off me-1"></i>Thoát</a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand text-center d-block">
+            <a href="index.jsp"><img src="assets/img/agribank_logo.png" alt="Agribank" style="height: 45px; background: white; padding: 5px; border-radius: 5px; max-width: 100%;"></a>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.jsp" class="sidebar-link"><i class="fa-solid fa-chart-pie w-20px text-center"></i> Bảng điều khiển</a></li>
+            <c:if test="${user.role eq 'GDV'}">
+                <li><a href="create_profile.jsp" class="sidebar-link"><i class="fa-solid fa-plus w-20px text-center"></i> Tạo Hồ sơ mới</a></li>
+            </c:if>
+            <c:if test="${user.role eq 'ADMIN'}">
+                <li class="mt-4 px-3 mb-2 text-uppercase" style="font-size: 0.75rem; opacity: 0.6; font-weight: 700;">Quản trị hệ thống</li>
+                <li><a href="users" class="sidebar-link active"><i class="fa-solid fa-users w-20px text-center"></i> Quản lý Nhân sự</a></li>
+            </c:if>
+            <c:if test="${user.role eq 'ADMIN' || user.role eq 'LANH_DAO'}">
+                <li><a href="recycle_bin.jsp" class="sidebar-link"><i class="fa-solid fa-trash-can w-20px text-center"></i> Thùng rác (Hồ sơ)</a></li>
+            </c:if>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <div class="top-navbar">
+            <div class="d-flex align-items-center w-100">
+                <button class="btn btn-light d-md-none me-auto shadow-sm" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="text-end ms-auto me-3">
+                    <div class="fw-bold text-dark" style="font-size: 0.95rem;">${user.fullname}</div>
+                    <div class="text-muted" style="font-size: 0.8rem;"><i class="fa-solid fa-id-badge me-1 text-warning"></i>${user.role}</div>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-light rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown" style="width: 45px; height: 45px;">
+                        <i class="fa-solid fa-user text-primary"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                        <li><a class="dropdown-item text-danger fw-bold" href="auth?action=logout"><i class="fa-solid fa-power-off me-2"></i>Đăng xuất</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </nav>
 
     <div class="container px-4 mb-5">
         <div class="row">
@@ -242,6 +350,13 @@
             });
             return false;
         }
+
+        $(document).ready(function() {
+            $('#sidebarToggle').on('click', function() {
+                $('.sidebar').toggleClass('show');
+            });
+        });
     </script>
+    </div>
 </body>
 </html>
