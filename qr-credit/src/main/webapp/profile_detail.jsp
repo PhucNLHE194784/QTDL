@@ -81,7 +81,17 @@
                         <div class="info-row"><span class="info-label">Khu vực:</span><span class="info-value">${profile.region}</span></div>
                         <div class="info-row"><span class="info-label">Xã/Phường:</span><span class="info-value">${profile.ward}</span></div>
                         <div class="info-row"><span class="info-label">Số tiền vay:</span><span class="info-value text-danger fs-5"><fmt:formatNumber value="${profile.amount}" pattern="#,###"/> VNĐ</span></div>
-                        <div class="info-row"><span class="info-label">Ngày đến hạn HĐ:</span><span class="info-value text-dark">${profile.maturityDate != null ? '<fmt:formatDate value="${profile.maturityDate}" pattern="dd/MM/yyyy"/>' : '27/05/2027'}</span></div>
+                        <div class="info-row">
+                            <span class="info-label">Ngày đến hạn HĐ:</span>
+                            <span class="info-value text-dark">
+                                <c:choose>
+                                    <c:when test="${not empty profile.maturityDate}">
+                                        <fmt:formatDate value="${profile.maturityDate}" pattern="dd/MM/yyyy"/>
+                                    </c:when>
+                                    <c:otherwise>27/05/2027</c:otherwise>
+                                </c:choose>
+                            </span>
+                        </div>
                         <div class="info-row"><span class="info-label">Lãi suất (Ngắn/Dài hạn):</span><span class="info-value text-dark">${profile.interestRate != null ? profile.interestRate : '10.5% / năm (Trung hạn)'}</span></div>
                         <div class="info-row"><span class="info-label">Cán bộ quản lý:</span><span class="info-value text-dark">${profile.officerName != null ? profile.officerName : 'Nguyễn Lâm Phúc'}</span></div>
                         <div class="info-row border-bottom-0"><span class="info-label">Mục đích:</span><span class="info-value text-muted" style="max-width: 60%; text-align: right;">${profile.purpose}</span></div>

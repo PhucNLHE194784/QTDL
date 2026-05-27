@@ -105,7 +105,14 @@
                             <div class="col-12 p-3 border rounded bg-light">
                                 <div class="d-flex justify-content-between mb-2 border-bottom pb-1">
                                     <span class="text-muted small">Ngày đến hạn HĐ:</span>
-                                    <span class="fw-bold text-dark">${p.maturityDate != null ? '<fmt:formatDate value="${p.maturityDate}" pattern="dd/MM/yyyy"/>' : '27/05/2027'}</span>
+                                    <span class="fw-bold text-dark">
+                                        <c:choose>
+                                            <c:when test="${not empty p.maturityDate}">
+                                                <fmt:formatDate value="${p.maturityDate}" pattern="dd/MM/yyyy"/>
+                                            </c:when>
+                                            <c:otherwise>27/05/2027</c:otherwise>
+                                        </c:choose>
+                                    </span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2 border-bottom pb-1">
                                     <span class="text-muted small">Lãi suất (Ngắn/Dài hạn):</span>
