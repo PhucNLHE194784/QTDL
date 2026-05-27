@@ -63,6 +63,7 @@ public class ProfileServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         if ("create".equals(action)) {
+            String username = user.getUsername();
             Profile p = new Profile();
             String uniqueID = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
             p.setId("HS-" + uniqueID);
@@ -75,6 +76,7 @@ public class ProfileServlet extends HttpServlet {
             p.setWard(request.getParameter("ward") != null ? request.getParameter("ward") : "");
             p.setPhone(request.getParameter("phone") != null ? request.getParameter("phone") : "");
             p.setCreditScore((int)(Math.random() * 81) + 20); // Random 20 to 100
+            p.setCreatedBy(user.getUsername());
             p.setLastUpdated(new Date());
 
             if (profileDAO.addProfile(p)) {

@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class ProfileDAO {
     public boolean addProfile(Profile p) {
-        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, credit_score, is_deleted, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, credit_score, created_by, is_deleted, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getId());
@@ -21,8 +21,9 @@ public class ProfileDAO {
             ps.setString(8, p.getWard());
             ps.setString(9, p.getPhone());
             ps.setInt(10, p.getCreditScore());
-            ps.setBoolean(11, false);
-            ps.setTimestamp(12, new java.sql.Timestamp(p.getLastUpdated().getTime()));
+            ps.setString(11, p.getCreatedBy());
+            ps.setBoolean(12, false);
+            ps.setTimestamp(13, new java.sql.Timestamp(p.getLastUpdated().getTime()));
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,6 +49,7 @@ public class ProfileDAO {
                         rs.getString("ward"),
                         rs.getString("phone"),
                         rs.getInt("credit_score"),
+                        rs.getString("created_by"),
                         rs.getBoolean("is_deleted"),
                         new Date(rs.getTimestamp("last_updated").getTime())
                     );
@@ -59,27 +61,36 @@ public class ProfileDAO {
         return null;
     }
 
-    public java.util.List<Profile> getAllProfiles() {
+    public java.util.List<Profile> getAllProfiles(com.qrcredit.model.User user) {
         java.util.List<Profile> list = new java.util.ArrayList<>();
-        String sql = "SELECT * FROM profiles WHERE is_deleted = FALSE OR is_deleted IS NULL ORDER BY last_updated DESC";
+        String sql = "SELECT * FROM profiles WHERE (is_deleted = FALSE OR is_deleted IS NULL)";
+        if (user != null && "GDV".equals(user.getRole())) {
+            sql += " AND created_by = ?";
+        }
+        sql += " ORDER BY last_updated DESC";
         try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                list.add(new Profile(
-                    rs.getString("id"),
-                    rs.getString("customer_name"),
-                    rs.getString("cccd"),
-                    rs.getDouble("amount"),
-                    rs.getString("purpose"),
-                    rs.getString("status"),
-                    rs.getString("region"),
-                    rs.getString("ward"),
-                    rs.getString("phone"),
-                    rs.getInt("credit_score"),
-                    rs.getBoolean("is_deleted"),
-                    new Date(rs.getTimestamp("last_updated").getTime())
-                ));
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            if (user != null && "GDV".equals(user.getRole())) {
+                ps.setString(1, user.getUsername());
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Profile(
+                        rs.getString("id"),
+                        rs.getString("customer_name"),
+                        rs.getString("cccd"),
+                        rs.getDouble("amount"),
+                        rs.getString("purpose"),
+                        rs.getString("status"),
+                        rs.getString("region"),
+                        rs.getString("ward"),
+                        rs.getString("phone"),
+                        rs.getInt("credit_score"),
+                        rs.getString("created_by"),
+                        rs.getBoolean("is_deleted"),
+                        new Date(rs.getTimestamp("last_updated").getTime())
+                    ));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,27 +98,36 @@ public class ProfileDAO {
         return list;
     }
 
-    public java.util.List<Profile> getDeletedProfiles() {
+    public java.util.List<Profile> getDeletedProfiles(com.qrcredit.model.User user) {
         java.util.List<Profile> list = new java.util.ArrayList<>();
-        String sql = "SELECT * FROM profiles WHERE is_deleted = TRUE ORDER BY last_updated DESC";
+        String sql = "SELECT * FROM profiles WHERE is_deleted = TRUE";
+        if (user != null && "GDV".equals(user.getRole())) {
+            sql += " AND created_by = ?";
+        }
+        sql += " ORDER BY last_updated DESC";
         try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                list.add(new Profile(
-                    rs.getString("id"),
-                    rs.getString("customer_name"),
-                    rs.getString("cccd"),
-                    rs.getDouble("amount"),
-                    rs.getString("purpose"),
-                    rs.getString("status"),
-                    rs.getString("region"),
-                    rs.getString("ward"),
-                    rs.getString("phone"),
-                    rs.getInt("credit_score"),
-                    rs.getBoolean("is_deleted"),
-                    new Date(rs.getTimestamp("last_updated").getTime())
-                ));
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            if (user != null && "GDV".equals(user.getRole())) {
+                ps.setString(1, user.getUsername());
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Profile(
+                        rs.getString("id"),
+                        rs.getString("customer_name"),
+                        rs.getString("cccd"),
+                        rs.getDouble("amount"),
+                        rs.getString("purpose"),
+                        rs.getString("status"),
+                        rs.getString("region"),
+                        rs.getString("ward"),
+                        rs.getString("phone"),
+                        rs.getInt("credit_score"),
+                        rs.getString("created_by"),
+                        rs.getBoolean("is_deleted"),
+                        new Date(rs.getTimestamp("last_updated").getTime())
+                    ));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,6 +154,7 @@ public class ProfileDAO {
                         rs.getString("ward"),
                         rs.getString("phone"),
                         rs.getInt("credit_score"),
+                        rs.getString("created_by"),
                         rs.getBoolean("is_deleted"),
                         new Date(rs.getTimestamp("last_updated").getTime())
                     ));

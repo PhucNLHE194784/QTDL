@@ -12,13 +12,14 @@ public class Profile {
     private String region;
     private String ward;
     private String phone;
+    private String createdBy;
     private int creditScore;
     private boolean isDeleted;
     private Date lastUpdated;
 
     public Profile() {}
 
-    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String region, String ward, String phone, int creditScore, boolean isDeleted, Date lastUpdated) {
+    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String region, String ward, String phone, int creditScore, String createdBy, boolean isDeleted, Date lastUpdated) {
         this.id = id;
         this.customerName = customerName;
         this.cccd = cccd;
@@ -29,11 +30,12 @@ public class Profile {
         this.ward = ward;
         this.phone = phone;
         this.creditScore = creditScore;
+        this.createdBy = createdBy;
         this.isDeleted = isDeleted;
         this.lastUpdated = lastUpdated;
     }
 
-    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String phone, Date lastUpdated) {
+    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String phone, String createdBy, Date lastUpdated) {
         this.id = id;
         this.customerName = customerName;
         this.cccd = cccd;
@@ -44,6 +46,7 @@ public class Profile {
         this.ward = "";
         this.phone = phone;
         this.creditScore = 0;
+        this.createdBy = createdBy;
         this.lastUpdated = lastUpdated;
     }
 
@@ -68,6 +71,8 @@ public class Profile {
     public void setPhone(String phone) { this.phone = phone; }
     public int getCreditScore() { return creditScore; }
     public void setCreditScore(int creditScore) { this.creditScore = creditScore; }
+    public String getCreatedBy() { return createdBy; }
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
     public boolean isDeleted() { return isDeleted; }
     public void setDeleted(boolean isDeleted) { this.isDeleted = isDeleted; }
     public Date getLastUpdated() { return lastUpdated; }

@@ -10,7 +10,7 @@
         return;
     }
     ProfileDAO dao = new ProfileDAO();
-    List<Profile> recentProfiles = dao.getAllProfiles();
+    List<Profile> recentProfiles = dao.getAllProfiles((com.qrcredit.model.User)session.getAttribute("user"));
     request.setAttribute("recentProfiles", recentProfiles);
 %>
 <!DOCTYPE html>
@@ -237,8 +237,10 @@
                                     <th style="width: 18%;" data-i18n="col_customer">Khách Hàng</th>
                                     <th style="width: 15%;" data-i18n="col_contact">Liên Hệ</th>
                                     <th style="width: 10%;" data-i18n="col_score">Điểm Tín Dụng</th>
-                                    <th style="width: 15%;" data-i18n="col_amount">Số Tiền Vay</th>
-                                    <th style="width: 15%;" data-i18n="col_status">Trạng Thái</th>
+                                    <th><i class="fa-solid fa-location-dot me-1"></i><span class="d-none d-lg-inline" data-i18n="col_region">Khu Vực</span></th>
+                                    <th><i class="fa-solid fa-money-bill-wave me-1"></i><span class="d-none d-lg-inline" data-i18n="col_amount">Số Tiền Vay</span></th>
+                                    <th><i class="fa-solid fa-user-pen me-1"></i><span class="d-none d-lg-inline">Người Tạo</span></th>
+                                    <th><i class="fa-solid fa-flag me-1"></i><span class="d-none d-lg-inline" data-i18n="col_status">Trạng Thái</span></th>
                                     <th style="width: 10%;" data-i18n="col_updated">Cập Nhật Lúc</th>
                                     <th style="width: 5%; text-align: right;" data-i18n="col_action">Thao Tác</th>
                                 </tr>
@@ -267,10 +269,14 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
+                                        <td>${p.region}</td>
                                         <td>
                                             <span class="money-text">
                                                 <fmt:formatNumber value="${p.amount}" pattern="#,###" /> đ
                                             </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark border"><i class="fa-solid fa-user-tie me-1 text-secondary"></i>${not empty p.createdBy ? p.createdBy : 'Chưa rõ'}</span>
                                         </td>
                                         <td>
                                             <c:choose>

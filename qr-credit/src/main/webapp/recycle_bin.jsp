@@ -12,7 +12,7 @@
         return;
     }
     ProfileDAO dao = new ProfileDAO();
-    List<Profile> deletedProfiles = dao.getDeletedProfiles();
+    List<Profile> deletedProfiles = dao.getDeletedProfiles(sessionUser);
     request.setAttribute("deletedProfiles", deletedProfiles);
 %>
 <!DOCTYPE html>
@@ -180,6 +180,7 @@
                                 <th style="width: 18%;">Khách Hàng</th>
                                 <th style="width: 15%;">Liên Hệ</th>
                                 <th style="width: 15%;">Số Tiền Vay</th>
+                                <th style="width: 15%;">Người Tạo</th>
                                 <th style="width: 15%;">Trạng Thái Cũ</th>
                                 <th style="width: 15%;">Ngày Xóa</th>
                                 <th style="width: 10%; text-align: right;">Thao Tác</th>
@@ -200,6 +201,9 @@
                                         <span class="money-text">
                                             <fmt:formatNumber value="${p.amount}" pattern="#,###" /> đ
                                         </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border"><i class="fa-solid fa-user-tie me-1 text-secondary"></i>${not empty p.createdBy ? p.createdBy : 'Chưa rõ'}</span>
                                     </td>
                                     <td>
                                         <span class="badge badge-soft-danger"><i class="fa-solid fa-ban me-1"></i>${p.status}</span>
