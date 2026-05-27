@@ -96,21 +96,7 @@ public class ProfileDAO {
             }
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    list.add(new Profile(
-                        rs.getString("id"),
-                        rs.getString("customer_name"),
-                        rs.getString("cccd"),
-                        rs.getDouble("amount"),
-                        rs.getString("purpose"),
-                        rs.getString("status"),
-                        rs.getString("region"),
-                        rs.getString("ward"),
-                        rs.getString("phone"),
-                        rs.getInt("credit_score"),
-                        rs.getString("created_by"),
-                        rs.getBoolean("is_deleted"),
-                        new Date(rs.getTimestamp("last_updated").getTime())
-                    ));
+                    list.add(mapRowToProfile(rs));
                 }
             }
         } catch (Exception e) {
@@ -133,21 +119,7 @@ public class ProfileDAO {
             }
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    list.add(new Profile(
-                        rs.getString("id"),
-                        rs.getString("customer_name"),
-                        rs.getString("cccd"),
-                        rs.getDouble("amount"),
-                        rs.getString("purpose"),
-                        rs.getString("status"),
-                        rs.getString("region"),
-                        rs.getString("ward"),
-                        rs.getString("phone"),
-                        rs.getInt("credit_score"),
-                        rs.getString("created_by"),
-                        rs.getBoolean("is_deleted"),
-                        new Date(rs.getTimestamp("last_updated").getTime())
-                    ));
+                    list.add(mapRowToProfile(rs));
                 }
             }
         } catch (Exception e) {
@@ -164,21 +136,7 @@ public class ProfileDAO {
             ps.setString(1, cccd);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    list.add(new Profile(
-                        rs.getString("id"),
-                        rs.getString("customer_name"),
-                        rs.getString("cccd"),
-                        rs.getDouble("amount"),
-                        rs.getString("purpose"),
-                        rs.getString("status"),
-                        rs.getString("region"),
-                        rs.getString("ward"),
-                        rs.getString("phone"),
-                        rs.getInt("credit_score"),
-                        rs.getString("created_by"),
-                        rs.getBoolean("is_deleted"),
-                        new Date(rs.getTimestamp("last_updated").getTime())
-                    ));
+                    list.add(mapRowToProfile(rs));
                 }
             }
         } catch (Exception e) {
