@@ -268,15 +268,20 @@
             
             // Hiện alert toast
             const alertBox = document.createElement('div');
-            alertBox.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow';
+            alertBox.className = 'alert alert-success position-fixed top-0 end-0 m-3 shadow d-flex align-items-center';
             alertBox.style.zIndex = '9999';
-            alertBox.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>Đã tự động gửi thông báo (Email/SMS) cho khách hàng thành công!' +
-                                 '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+            alertBox.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i><span>Đã tự động gửi thông báo (Email/SMS) cho khách hàng thành công!</span>' +
+                                 '<button type="button" class="btn-close ms-3" aria-label="Close"></button>';
             document.body.appendChild(alertBox);
             
+            // Xử lý nút X
+            alertBox.querySelector('.btn-close').addEventListener('click', function() {
+                alertBox.remove();
+            });
+            
+            // Tự ẩn sau 4s
             setTimeout(() => {
-                const bsAlert = new bootstrap.Alert(alertBox);
-                bsAlert.close();
+                if(document.body.contains(alertBox)) alertBox.remove();
             }, 4000);
         }
 
