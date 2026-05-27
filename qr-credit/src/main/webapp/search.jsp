@@ -101,47 +101,70 @@
                             </div>
                         </div>
 
+                        <div class="row text-start mb-4 g-3 mx-1">
+                            <div class="col-12 p-3 border rounded bg-light">
+                                <div class="d-flex justify-content-between mb-2 border-bottom pb-1">
+                                    <span class="text-muted small">Ngày đến hạn HĐ:</span>
+                                    <span class="fw-bold text-dark">${p.maturityDate != null ? '<fmt:formatDate value="${p.maturityDate}" pattern="dd/MM/yyyy"/>' : '27/05/2027'}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 border-bottom pb-1">
+                                    <span class="text-muted small">Lãi suất (Ngắn/Dài hạn):</span>
+                                    <span class="fw-bold text-dark">${p.interestRate != null ? p.interestRate : '10.5% / năm (Trung hạn)'}</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted small">Cán bộ quản lý:</span>
+                                    <span class="fw-bold text-dark">${p.officerName != null ? p.officerName : 'Nguyễn Lâm Phúc'}</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <h6 class="fw-bold border-bottom pb-2 mb-3"><i class="fa-solid fa-list-check me-2 text-secondary"></i>Lịch sử thu nợ (Gần nhất)</h6>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover text-center align-middle" style="font-size: 0.9rem;">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>Kỳ hạn</th>
-                                        <th>Ngày trả</th>
-                                        <th>Gốc đã thu</th>
-                                        <th>Lãi đã thu</th>
+                                        <th>Ngày tháng</th>
+                                        <th>Gốc vay</th>
+                                        <th>Lãi suất</th>
+                                        <th>Phí giao dịch</th>
+                                        <th>Lãi thu từ ngày... đến ngày...</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>04/2026</td>
                                         <td>30/04/2026</td>
                                         <td class="text-success fw-bold">1,500,000</td>
-                                        <td class="text-warning text-dark fw-bold">850,541</td>
+                                        <td class="text-warning text-dark fw-bold">10.5%</td>
+                                        <td class="text-secondary fw-bold">22,000</td>
+                                        <td class="text-muted small">31/03/2026 - 30/04/2026</td>
                                     </tr>
                                     <tr>
-                                        <td>03/2026</td>
                                         <td>31/03/2026</td>
                                         <td class="text-success fw-bold">1,500,000</td>
-                                        <td class="text-warning text-dark fw-bold">886,630</td>
+                                        <td class="text-warning text-dark fw-bold">10.5%</td>
+                                        <td class="text-secondary fw-bold">22,000</td>
+                                        <td class="text-muted small">28/02/2026 - 31/03/2026</td>
                                     </tr>
                                     <tr>
-                                        <td>02/2026</td>
                                         <td>28/02/2026</td>
                                         <td class="text-success fw-bold">1,500,000</td>
-                                        <td class="text-warning text-dark fw-bold">807,294</td>
+                                        <td class="text-warning text-dark fw-bold">10.5%</td>
+                                        <td class="text-secondary fw-bold">22,000</td>
+                                        <td class="text-muted small">31/01/2026 - 28/02/2026</td>
                                     </tr>
                                     <tr>
-                                        <td>01/2026</td>
                                         <td>31/01/2026</td>
                                         <td class="text-success fw-bold">1,500,000</td>
-                                        <td class="text-warning text-dark fw-bold">900,192</td>
+                                        <td class="text-warning text-dark fw-bold">10.5%</td>
+                                        <td class="text-secondary fw-bold">22,000</td>
+                                        <td class="text-muted small">31/12/2025 - 31/01/2026</td>
                                     </tr>
                                     <tr>
-                                        <td>12/2025</td>
                                         <td>31/12/2025</td>
                                         <td class="text-success fw-bold">1,500,000</td>
-                                        <td class="text-warning text-dark fw-bold">995,349</td>
+                                        <td class="text-warning text-dark fw-bold">10.5%</td>
+                                        <td class="text-secondary fw-bold">22,000</td>
+                                        <td class="text-muted small">30/11/2025 - 31/12/2025</td>
                                     </tr>
                                 </tbody>
                             </table>
