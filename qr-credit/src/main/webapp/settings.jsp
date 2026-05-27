@@ -60,9 +60,30 @@
                                 </c:if>
                                 
                                 <form action="settings" method="post">
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold"><i class="fas fa-paper-plane me-2 text-primary"></i>Phương thức gửi OTP & Link</label>
+                                        <div class="d-flex gap-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="otpMethod" id="methodEmail" value="EMAIL" ${empty otpMethod || otpMethod == 'EMAIL' ? 'checked' : ''}>
+                                                <label class="form-check-label" for="methodEmail">
+                                                    Gửi qua Email (Miễn phí)
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="otpMethod" id="methodSms" value="SMS" ${otpMethod == 'SMS' ? 'checked' : ''}>
+                                                <label class="form-check-label" for="methodSms">
+                                                    Gửi qua SMS (SpeedSMS)
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <hr class="text-muted">
+
+                                    <h6 class="fw-bold mt-4 mb-3 text-secondary">CẤU HÌNH EMAIL GMAIL</h6>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Email gửi tự động (Gmail)</label>
-                                        <input type="email" name="smtpEmail" class="form-control" value="${smtpEmail}" placeholder="VD: agribank.loanflow@gmail.com" required>
+                                        <input type="email" name="smtpEmail" class="form-control" value="${smtpEmail}" placeholder="VD: agribank.loanflow@gmail.com">
                                         <div class="form-text text-muted small"><i class="fas fa-info-circle me-1"></i>Địa chỉ email dùng để gửi mã OTP và link báo cáo cho khách hàng.</div>
                                     </div>
                                     <div class="mb-4">
@@ -70,7 +91,17 @@
                                         <input type="password" name="smtpPassword" class="form-control" placeholder="Nhập để thay đổi (Bỏ trống nếu giữ nguyên)">
                                         <div class="form-text text-muted small"><i class="fas fa-info-circle me-1"></i>Chuỗi 16 ký tự do Google cấp. Tuyệt đối không dùng mật khẩu đăng nhập Gmail thường.</div>
                                     </div>
-                                    <div class="text-end">
+
+                                    <hr class="text-muted">
+
+                                    <h6 class="fw-bold mt-4 mb-3 text-secondary">CẤU HÌNH SMS (SPEEDSMS.VN)</h6>
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold">Access Token API</label>
+                                        <input type="text" name="smsApiKey" class="form-control" value="${smsApiKey}" placeholder="Nhập mã Access Token lấy từ SpeedSMS">
+                                        <div class="form-text text-muted small"><i class="fas fa-info-circle me-1"></i>Dùng cho tùy chọn gửi SMS. Đăng ký tại speedsms.vn để lấy mã.</div>
+                                    </div>
+
+                                    <div class="text-end mt-4">
                                         <button type="submit" class="btn btn-agri px-4"><i class="fas fa-save me-2"></i>Lưu Cấu Hình</button>
                                     </div>
                                 </form>

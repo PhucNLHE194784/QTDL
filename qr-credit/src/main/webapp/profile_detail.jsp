@@ -260,6 +260,26 @@
     </div>
     
     <script>
+        // Kiểm tra xem URL có parameter sent=true không
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('sent') && urlParams.get('sent') === 'true') {
+            // Xóa parameter khỏi URL
+            window.history.replaceState({}, document.title, window.location.pathname + "?id=" + urlParams.get('id'));
+            
+            // Hiện alert toast
+            const alertBox = document.createElement('div');
+            alertBox.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow';
+            alertBox.style.zIndex = '9999';
+            alertBox.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>Đã tự động gửi thông báo (Email/SMS) cho khách hàng thành công!' +
+                                 '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+            document.body.appendChild(alertBox);
+            
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alertBox);
+                bsAlert.close();
+            }, 4000);
+        }
+
         // QR Code dynamic refresh
         let timeLeft = 60;
         setInterval(function() {

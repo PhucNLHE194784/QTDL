@@ -30,11 +30,11 @@ public class SettingsServlet extends HttpServlet {
             return;
         }
 
-        String email = settingDAO.getSetting("SMTP_EMAIL");
-        String password = settingDAO.getSetting("SMTP_PASSWORD");
+        request.setAttribute("smtpEmail", settingDAO.getSetting("SMTP_EMAIL"));
+        request.setAttribute("smtpPassword", settingDAO.getSetting("SMTP_PASSWORD"));
+        request.setAttribute("otpMethod", settingDAO.getSetting("OTP_METHOD"));
+        request.setAttribute("smsApiKey", settingDAO.getSetting("SMS_API_KEY"));
         
-        request.setAttribute("smtpEmail", email);
-        request.setAttribute("smtpPassword", password);
         request.getRequestDispatcher("settings.jsp").forward(request, response);
     }
 
@@ -50,17 +50,24 @@ public class SettingsServlet extends HttpServlet {
 
         String email = request.getParameter("smtpEmail");
         String password = request.getParameter("smtpPassword");
+        String otpMethod = request.getParameter("otpMethod");
+        String smsApiKey = request.getParameter("smsApiKey");
 
         if (email != null) settingDAO.updateSetting("SMTP_EMAIL", email.trim());
         if (password != null && !password.trim().isEmpty()) {
             settingDAO.updateSetting("SMTP_PASSWORD", password.trim());
         }
+        if (otpMethod != null) settingDAO.updateSetting("OTP_METHOD", otpMethod.trim());
+        if (smsApiKey != null) settingDAO.updateSetting("SMS_API_KEY", smsApiKey.trim());
 
         request.setAttribute("message", "Đã lưu cấu hình thành công!");
         
         // Reload to show current values
         request.setAttribute("smtpEmail", settingDAO.getSetting("SMTP_EMAIL"));
         request.setAttribute("smtpPassword", settingDAO.getSetting("SMTP_PASSWORD"));
+        request.setAttribute("otpMethod", settingDAO.getSetting("OTP_METHOD"));
+        request.setAttribute("smsApiKey", settingDAO.getSetting("SMS_API_KEY"));
+        
         request.getRequestDispatcher("settings.jsp").forward(request, response);
     }
 }

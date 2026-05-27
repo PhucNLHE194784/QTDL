@@ -36,14 +36,23 @@ public class PortalServlet extends HttpServlet {
             return;
         }
 
+        com.qrcredit.dao.SettingDAO settingDAO = new com.qrcredit.dao.SettingDAO();
+        String method = settingDAO.getSetting("OTP_METHOD");
+        request.setAttribute("otpMethod", method);
+
         request.setAttribute("token", token);
         
         if (p.getOtpWrongAttempts() >= 3) {
             request.setAttribute("locked", true);
             request.setAttribute("error", "Bạn đã nhập sai quá 3 lần. Vui lòng bấm 'Yêu cầu cấp lại mã OTP' để nhận mã mới.");
         } else {
-            String maskedEmail = p.getEmail().replaceAll("(^[^@]{3}|(?!^)\\G)[^@]", "$1*");
-            request.setAttribute("maskedEmail", maskedEmail);
+            if ("SMS".equals(method) && p.getPhone() != null && !p.getPhone().isEmpty()) {
+                String maskedPhone = p.getPhone().replaceAll(".(?=.{3})", "*");
+                request.setAttribute("maskedContact", maskedPhone);
+            } else {
+                String maskedEmail = p.getEmail() != null ? p.getEmail().replaceAll("(^[^@]{3}|(?!^)\\G)[^@]", "$1*") : "chưa cấu hình";
+                request.setAttribute("maskedContact", maskedEmail);
+            }
             request.setAttribute("locked", false);
         }
 
@@ -65,6 +74,9 @@ public class PortalServlet extends HttpServlet {
             response.sendRedirect("index.jsp");
             return;
         }
+
+        com.qrcredit.dao.SettingDAO settingDAO = new com.qrcredit.dao.SettingDAO();
+        String method = settingDAO.getSetting("OTP_METHOD");
 
         if ("verify".equals(action)) {
             if (p.getOtpWrongAttempts() >= 3) {
@@ -103,21 +115,33 @@ public class PortalServlet extends HttpServlet {
                 }
             }
             
-            String maskedEmail = p.getEmail().replaceAll("(^[^@]{3}|(?!^)\\G)[^@]", "$1*");
-            request.setAttribute("maskedEmail", maskedEmail);
+            request.setAttribute("otpMethod", method);
+            if ("SMS".equals(method) && p.getPhone() != null && !p.getPhone().isEmpty()) {
+                request.setAttribute("maskedContact", p.getPhone().replaceAll(".(?=.{3})", "*"));
+            } else {
+                request.setAttribute("maskedContact", p.getEmail() != null ? p.getEmail().replaceAll("(^[^@]{3}|(?!^)\\G)[^@]", "$1*") : "chưa cấu hình");
+            }
             request.setAttribute("token", token);
             request.getRequestDispatcher("portal.jsp").forward(request, response);
 
         } else if ("resend".equals(action)) {
             // Cấp lại OTP
-            String otp = String.format("%06d", new Random().nextInt(999999));
+            String otp = String.format("%06d", new java.util.Random().nextInt(999999));
             profileDAO.updateOtpCode(p.getId(), otp, new Date(System.currentTimeMillis() + 180000));
             profileDAO.updateOtpWrongAttempts(p.getId(), 0);
             
             String domain = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
-            EmailService.sendPortalEmail(p.getEmail(), otp, token, "Cấp lại mã OTP", domain);
             
-            request.setAttribute("message", "Mã OTP mới đã được gửi đến email của bạn.");
+            if ("SMS".equals(method) && p.getPhone() != null && !p.getPhone().isEmpty()) {
+                com.qrcredit.util.SmsService.sendPortalSms(p.getPhone(), otp, token, "Cấp lại mã OTP", domain);
+                request.setAttribute("message", "Mã OTP mới đã được gửi qua SMS đến điện thoại của bạn.");
+            } else if (p.getEmail() != null && !p.getEmail().isEmpty()) {
+                com.qrcredit.util.EmailService.sendPortalEmail(p.getEmail(), otp, token, "Cấp lại mã OTP", domain);
+                request.setAttribute("message", "Mã OTP mới đã được gửi đến email của bạn.");
+            } else {
+                request.setAttribute("error", "Hồ sơ chưa có Email/SĐT để gửi.");
+            }
+            
             response.sendRedirect("portal?token=" + token);
         }
     }

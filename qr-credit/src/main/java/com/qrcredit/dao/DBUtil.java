@@ -87,6 +87,8 @@ public class DBUtil {
             // Chèn cấu hình mặc định nếu chưa có
             stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('SMTP_EMAIL', '') ON CONFLICT(config_key) DO NOTHING");
             stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('SMTP_PASSWORD', '') ON CONFLICT(config_key) DO NOTHING");
+            stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('OTP_METHOD', 'EMAIL') ON CONFLICT(config_key) DO NOTHING");
+            stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('SMS_API_KEY', '') ON CONFLICT(config_key) DO NOTHING");
             
             System.out.println("Database initialized successfully!");
         } catch (Exception e) {

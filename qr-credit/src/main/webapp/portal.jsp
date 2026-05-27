@@ -74,7 +74,14 @@
                     <c:otherwise>
                         <h5 class="mb-3">Xác thực mã OTP</h5>
                         <p class="text-muted small mb-4">
-                            Mã xác thực 6 số đã được gửi đến email <strong>${maskedEmail}</strong>.<br>
+                            <c:choose>
+                                <c:when test="${otpMethod == 'SMS'}">
+                                    Mã xác thực 6 số đã được gửi qua SMS đến số điện thoại <strong>${maskedContact}</strong>.<br>
+                                </c:when>
+                                <c:otherwise>
+                                    Mã xác thực 6 số đã được gửi đến email <strong>${maskedContact}</strong>.<br>
+                                </c:otherwise>
+                            </c:choose>
                             Vui lòng nhập mã để xem hồ sơ.
                         </p>
 

@@ -95,13 +95,21 @@ public class ProfileServlet extends HttpServlet {
             if (profileDAO.addProfile(p)) {
                 auditLogDAO.logAction(p.getId(), user.getId(), "", "Đã tiếp nhận");
                 
-                // Gửi Email
-                if (p.getEmail() != null && !p.getEmail().isEmpty()) {
-                    String domain = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
-                    com.qrcredit.util.EmailService.sendPortalEmail(p.getEmail(), otp, token, "Đã tiếp nhận", domain);
-                }
+                // Lấy cấu hình phương thức gửi
+                com.qrcredit.dao.SettingDAO settingDAO = new com.qrcredit.dao.SettingDAO();
+                String method = settingDAO.getSetting("OTP_METHOD");
+                String domain = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
 
-                response.sendRedirect("profile?id=" + p.getId());
+                // Chạy gửi Email/SMS ở background (Asynchronous) để không làm đơ trang web
+                new Thread(() -> {
+                    if ("SMS".equals(method) && p.getPhone() != null && !p.getPhone().isEmpty()) {
+                        com.qrcredit.util.SmsService.sendPortalSms(p.getPhone(), otp, token, "Đã tiếp nhận", domain);
+                    } else if (p.getEmail() != null && !p.getEmail().isEmpty()) {
+                        com.qrcredit.util.EmailService.sendPortalEmail(p.getEmail(), otp, token, "Đã tiếp nhận", domain);
+                    }
+                }).start();
+
+                response.sendRedirect("profile?id=" + p.getId() + "&sent=true");
             } else {
                 request.setAttribute("error", "Lỗi tạo hồ sơ!");
                 request.getRequestDispatcher("create_profile.jsp").forward(request, response);
@@ -115,18 +123,29 @@ public class ProfileServlet extends HttpServlet {
                 if (profileDAO.updateStatus(id, newStatus)) {
                     auditLogDAO.logAction(id, user.getId(), oldStatus, newStatus);
                     
-                    // Sinh OTP mới và Gửi Email khi cập nhật trạng thái
-                    if (p.getEmail() != null && !p.getEmail().isEmpty()) {
+                    // Sinh OTP mới và Gửi Email/SMS khi cập nhật trạng thái
+                    com.qrcredit.dao.SettingDAO settingDAO = new com.qrcredit.dao.SettingDAO();
+                    String method = settingDAO.getSetting("OTP_METHOD");
+
+                    if (p.getEmail() != null || p.getPhone() != null) {
                         String otp = String.format("%06d", new java.util.Random().nextInt(999999));
                         profileDAO.updateOtpCode(id, otp, new Date(System.currentTimeMillis() + 180000)); // 3 mins
                         profileDAO.updateOtpWrongAttempts(id, 0); // Reset attempts
                         
                         String domain = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
-                        com.qrcredit.util.EmailService.sendPortalEmail(p.getEmail(), otp, p.getSecretLinkToken(), newStatus, domain);
+                        
+                        // Chạy nền
+                        new Thread(() -> {
+                            if ("SMS".equals(method) && p.getPhone() != null && !p.getPhone().isEmpty()) {
+                                com.qrcredit.util.SmsService.sendPortalSms(p.getPhone(), otp, p.getSecretLinkToken(), newStatus, domain);
+                            } else if (p.getEmail() != null && !p.getEmail().isEmpty()) {
+                                com.qrcredit.util.EmailService.sendPortalEmail(p.getEmail(), otp, p.getSecretLinkToken(), newStatus, domain);
+                            }
+                        }).start();
                     }
                 }
             }
-            response.sendRedirect("profile?id=" + id);
+            response.sendRedirect("profile?id=" + id + "&sent=true");
         } else if ("soft_delete".equals(action)) {
             if ("ADMIN".equals(user.getRole()) || "LANH_DAO".equals(user.getRole())) {
                 String id = request.getParameter("id");
