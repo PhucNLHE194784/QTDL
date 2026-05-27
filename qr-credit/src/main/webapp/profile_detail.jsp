@@ -156,6 +156,77 @@
                             </div>
                         </form>
                     </div>
+                <div class="card timeline-card mb-4">
+                    <div class="card-header bg-success text-white border-bottom pt-3 pb-3">
+                        <h5 class="mb-0 fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Lịch sử thu nợ (Hệ thống IPCAS)</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row text-center mb-4 g-3">
+                            <div class="col-md-4">
+                                <div class="p-3 border rounded bg-light" style="border-left: 4px solid var(--agri-yellow) !important;">
+                                    <div class="text-muted small mb-1">Số tiền Giải Ngân</div>
+                                    <div class="fw-bold fs-5 text-dark"><fmt:formatNumber value="${profile.amount}" pattern="#,###"/> VNĐ</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 border rounded bg-light" style="border-left: 4px solid #198754 !important;">
+                                    <div class="text-muted small mb-1">Đã trả (Luỹ kế)</div>
+                                    <div class="fw-bold fs-5 text-success">63,000,000 VNĐ</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 border rounded bg-light" style="border-left: 4px solid #dc3545 !important;">
+                                    <div class="text-muted small mb-1">Dư nợ hiện tại</div>
+                                    <div class="fw-bold fs-5 text-danger"><fmt:formatNumber value="${profile.amount - 63000000}" pattern="#,###"/> VNĐ</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover text-center align-middle" style="font-size: 0.9rem;">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Kỳ hạn</th>
+                                        <th>Ngày trả</th>
+                                        <th>Gốc đã thu</th>
+                                        <th>Lãi đã thu</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>04/2026</td>
+                                        <td>30/04/2026</td>
+                                        <td class="text-success fw-bold">1,500,000</td>
+                                        <td class="text-warning text-dark fw-bold">850,541</td>
+                                    </tr>
+                                    <tr>
+                                        <td>03/2026</td>
+                                        <td>31/03/2026</td>
+                                        <td class="text-success fw-bold">1,500,000</td>
+                                        <td class="text-warning text-dark fw-bold">886,630</td>
+                                    </tr>
+                                    <tr>
+                                        <td>02/2026</td>
+                                        <td>28/02/2026</td>
+                                        <td class="text-success fw-bold">1,500,000</td>
+                                        <td class="text-warning text-dark fw-bold">807,294</td>
+                                    </tr>
+                                    <tr>
+                                        <td>01/2026</td>
+                                        <td>31/01/2026</td>
+                                        <td class="text-success fw-bold">1,500,000</td>
+                                        <td class="text-warning text-dark fw-bold">900,192</td>
+                                    </tr>
+                                    <tr>
+                                        <td>12/2025</td>
+                                        <td>31/12/2025</td>
+                                        <td class="text-success fw-bold">1,500,000</td>
+                                        <td class="text-warning text-dark fw-bold">995,349</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card timeline-card">

@@ -18,15 +18,17 @@ public class SearchServlet extends HttpServlet {
         String id = request.getParameter("id");
         String t = request.getParameter("t");
         
-        if (t != null) {
+        if (t != null && id != null) {
             try {
                 long timestamp = Long.parseLong(t);
                 long diff = System.currentTimeMillis() - timestamp;
-                // Nếu quét mã trễ hơn 60s hoặc lấy mã của tương lai quá 10s (chống sai lệch giờ)
                 if (diff > 60000 || diff < -10000) {
-                    request.setAttribute("error", "Mã QR đã hết hạn (chỉ có hiệu lực trong 60 giây vì lý do bảo mật). Vui lòng yêu cầu cấp lại mã mới.");
+                    request.setAttribute("error", "Mã QR đã hết hạn. Vui lòng yêu cầu cấp lại mã mới hoặc Tự nhập Số CCCD để tra cứu tại nhà.");
                     request.getRequestDispatcher("search.jsp").forward(request, response);
                     return;
+                } else {
+                    // Quét QR trực tiếp tại quầy -> Hợp lệ -> Đánh dấu xác thực luôn
+                    request.getSession().setAttribute("verified_profile_" + id.trim(), true);
                 }
             } catch (Exception e) {}
         }
@@ -34,12 +36,18 @@ public class SearchServlet extends HttpServlet {
         if (id != null && !id.trim().isEmpty()) {
             Profile p = profileDAO.getProfileById(id.trim());
             if (p != null) {
-                // Khi quét QR (có ID), tự động lấy ra tất cả hồ sơ của người đó luôn
-                List<Profile> results = profileDAO.getProfilesByCccd(p.getCccd());
-                maskNames(results);
-                request.setAttribute("profiles", results);
-                // Che luôn ô nhập CCCD trên giao diện để mượt hơn
-                request.setAttribute("autoSearch", true); 
+                javax.servlet.http.HttpSession session = request.getSession();
+                Boolean verified = (Boolean) session.getAttribute("verified_profile_" + p.getId());
+                
+                if (verified != null && verified) {
+                    List<Profile> results = profileDAO.getProfilesByCccd(p.getCccd());
+                    request.setAttribute("profiles", results);
+                    request.setAttribute("autoSearch", true); 
+                } else {
+                    // Tới link ID nhưng chưa xác thực (VD lưu link cũ) -> Đẩy ra màn nhập CCCD hoặc chuyển sang OTP
+                    response.sendRedirect("otp?id=" + p.getId());
+                    return;
+                }
             } else {
                 request.setAttribute("error", "Mã QR không hợp lệ hoặc hồ sơ không tồn tại.");
             }
@@ -49,26 +57,28 @@ public class SearchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String id = request.getParameter("id");
         String cccdInput = request.getParameter("cccdInput");
 
-        List<Profile> results = new ArrayList<>();
-
-        if (id != null && !id.trim().isEmpty()) {
-            Profile p = profileDAO.getProfileById(id.trim());
-            if (p != null && p.getCccd().endsWith(cccdInput.trim())) {
-                results = profileDAO.getProfilesByCccd(p.getCccd());
+        if (cccdInput != null && !cccdInput.trim().isEmpty()) {
+            List<Profile> results = profileDAO.getProfilesByCccd(cccdInput.trim());
+            
+            if (!results.isEmpty()) {
+                Profile firstProfile = results.get(0);
+                javax.servlet.http.HttpSession session = request.getSession();
+                Boolean verified = (Boolean) session.getAttribute("verified_profile_" + firstProfile.getId());
+                
+                if (verified != null && verified) {
+                    request.setAttribute("profiles", results);
+                } else {
+                    // Chưa xác thực OTP -> Bắt buộc gửi OTP qua email
+                    response.sendRedirect("otp?id=" + firstProfile.getId());
+                    return;
+                }
+            } else {
+                request.setAttribute("error", "Không tìm thấy hồ sơ. Vui lòng kiểm tra lại số CCCD.");
             }
-        } else {
-            results = profileDAO.getProfilesByCccd(cccdInput.trim());
         }
-
-        if (!results.isEmpty()) {
-            maskNames(results);
-            request.setAttribute("profiles", results);
-        } else {
-            request.setAttribute("error", "Không tìm thấy hồ sơ. Vui lòng kiểm tra lại số CCCD.");
-        }
+        
         request.getRequestDispatcher("search.jsp").forward(request, response);
     }
 

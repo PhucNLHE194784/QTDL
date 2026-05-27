@@ -237,8 +237,7 @@
             <div class="login-container">
                 <div class="login-box text-center">
                     <div class="logo-agri">
-                        <img src="https://upload.wikimedia.org/wikipedia/vi/1/1b/Agribank_logo.svg" alt="Agribank Logo" style="height: 40px; margin-right: 10px; display: none;"> <!-- Ẩn logo thật nếu ko load đc, dùng icon thay thế -->
-                        <i class="fa-solid fa-leaf text-warning"></i> AGRIBANK
+                        <img src="assets/img/agribank_logo.png" alt="Agribank Logo" style="height: 50px; margin-right: 10px;">
                     </div>
                     <div class="welcome-text" id="txtWelcome">Chào mừng đến với</div>
                     <div class="system-text" id="txtSystem">Hệ thống Khởi tạo Tín dụng - Khách hàng cá nhân</div>

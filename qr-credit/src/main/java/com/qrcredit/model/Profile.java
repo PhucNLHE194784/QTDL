@@ -12,14 +12,17 @@ public class Profile {
     private String region;
     private String ward;
     private String phone;
+    private String email;
     private String createdBy;
     private int creditScore;
     private boolean isDeleted;
     private Date lastUpdated;
+    private int otpCount;
+    private Date lastOtpDate;
 
     public Profile() {}
 
-    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String region, String ward, String phone, int creditScore, String createdBy, boolean isDeleted, Date lastUpdated) {
+    public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String region, String ward, String phone, String email, int creditScore, boolean isDeleted, Date lastUpdated, String createdBy) {
         this.id = id;
         this.customerName = customerName;
         this.cccd = cccd;
@@ -29,10 +32,11 @@ public class Profile {
         this.region = region;
         this.ward = ward;
         this.phone = phone;
+        this.email = email;
         this.creditScore = creditScore;
-        this.createdBy = createdBy;
         this.isDeleted = isDeleted;
         this.lastUpdated = lastUpdated;
+        this.createdBy = createdBy;
     }
 
     public Profile(String id, String customerName, String cccd, double amount, String purpose, String status, String phone, String createdBy, Date lastUpdated) {
@@ -69,6 +73,10 @@ public class Profile {
     public void setWard(String ward) { this.ward = ward; }
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
     public int getCreditScore() { return creditScore; }
     public void setCreditScore(int creditScore) { this.creditScore = creditScore; }
     public String getCreatedBy() { return createdBy; }
@@ -77,4 +85,8 @@ public class Profile {
     public void setDeleted(boolean isDeleted) { this.isDeleted = isDeleted; }
     public Date getLastUpdated() { return lastUpdated; }
     public void setLastUpdated(Date lastUpdated) { this.lastUpdated = lastUpdated; }
+    public int getOtpCount() { return otpCount; }
+    public void setOtpCount(int otpCount) { this.otpCount = otpCount; }
+    public Date getLastOtpDate() { return lastOtpDate; }
+    public void setLastOtpDate(Date lastOtpDate) { this.lastOtpDate = lastOtpDate; }
 }

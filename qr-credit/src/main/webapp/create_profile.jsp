@@ -195,9 +195,13 @@
                                     <label class="form-label">Số điện thoại</label>
                                     <input type="tel" name="phone" class="form-control" placeholder="Ví dụ: 0987654321" pattern="^(0|\+84)[3|5|7|8|9][0-9]{8}$" title="Vui lòng nhập đúng định dạng số điện thoại Việt Nam" required>
                                 </div>
+                                <div class="col-md-12 mb-4">
+                                    <label class="form-label">Email (Dùng để nhận OTP bảo mật)</label>
+                                    <input type="email" name="email" class="form-control" placeholder="khachhang@gmail.com" required>
+                                </div>
                             </div>
                             <div class="section-title mt-2"><i class="fa-solid fa-map-location-dot me-2 text-primary-custom"></i>Địa Chỉ Thường Trú</div>
-                            <div class="row">
+                                <div class="row">
                                 <div class="col-md-4 mb-4">
                                     <label class="form-label">Tỉnh / Thành phố</label>
                                     <select id="province" name="region" class="form-select" required>

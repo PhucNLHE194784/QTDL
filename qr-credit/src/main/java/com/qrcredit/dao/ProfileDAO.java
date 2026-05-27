@@ -7,8 +7,28 @@ import java.sql.ResultSet;
 import java.util.Date;
 
 public class ProfileDAO {
+    private Profile mapRowToProfile(ResultSet rs) throws Exception {
+        Profile p = new Profile();
+        p.setId(rs.getString("id"));
+        p.setCustomerName(rs.getString("customer_name"));
+        p.setCccd(rs.getString("cccd"));
+        p.setAmount(rs.getDouble("amount"));
+        p.setPurpose(rs.getString("purpose"));
+        p.setStatus(rs.getString("status"));
+        p.setRegion(rs.getString("region"));
+        p.setWard(rs.getString("ward"));
+        p.setPhone(rs.getString("phone"));
+        p.setEmail(rs.getString("email"));
+        p.setCreditScore(rs.getInt("credit_score"));
+        p.setCreatedBy(rs.getString("created_by"));
+        p.setDeleted(rs.getBoolean("is_deleted"));
+        p.setLastUpdated(new Date(rs.getTimestamp("last_updated").getTime()));
+        try { p.setOtpCount(rs.getInt("otp_count")); } catch (Exception e) {}
+        try { if(rs.getTimestamp("last_otp_date") != null) p.setLastOtpDate(new Date(rs.getTimestamp("last_otp_date").getTime())); } catch (Exception e) {}
+        return p;
+    }
     public boolean addProfile(Profile p) {
-        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, credit_score, created_by, is_deleted, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, email, credit_score, created_by, is_deleted, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getId());
@@ -20,10 +40,11 @@ public class ProfileDAO {
             ps.setString(7, p.getRegion());
             ps.setString(8, p.getWard());
             ps.setString(9, p.getPhone());
-            ps.setInt(10, p.getCreditScore());
-            ps.setString(11, p.getCreatedBy());
-            ps.setBoolean(12, false);
-            ps.setTimestamp(13, new java.sql.Timestamp(p.getLastUpdated().getTime()));
+            ps.setString(10, p.getEmail());
+            ps.setInt(11, p.getCreditScore());
+            ps.setString(12, p.getCreatedBy());
+            ps.setBoolean(13, false);
+            ps.setTimestamp(14, new java.sql.Timestamp(p.getLastUpdated().getTime()));
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,27 +59,27 @@ public class ProfileDAO {
             ps.setString(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new Profile(
-                        rs.getString("id"),
-                        rs.getString("customer_name"),
-                        rs.getString("cccd"),
-                        rs.getDouble("amount"),
-                        rs.getString("purpose"),
-                        rs.getString("status"),
-                        rs.getString("region"),
-                        rs.getString("ward"),
-                        rs.getString("phone"),
-                        rs.getInt("credit_score"),
-                        rs.getString("created_by"),
-                        rs.getBoolean("is_deleted"),
-                        new Date(rs.getTimestamp("last_updated").getTime())
-                    );
+                    return mapRowToProfile(rs);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean updateOtpInfo(String id, int count, Date lastDate) {
+        String sql = "UPDATE profiles SET otp_count = ?, last_otp_date = ? WHERE id = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, count);
+            ps.setTimestamp(2, lastDate != null ? new java.sql.Timestamp(lastDate.getTime()) : null);
+            ps.setString(3, id);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public java.util.List<Profile> getAllProfiles(com.qrcredit.model.User user) {
@@ -218,3 +239,4 @@ public class ProfileDAO {
         return false;
     }
 }
+
