@@ -18,8 +18,9 @@ public class EmailService {
         String email = dao.getSetting("SMTP_EMAIL");
         String pass = dao.getSetting("SMTP_PASSWORD");
         // Fallback for demo if not configured
-        if (email == null || email.isEmpty()) email = "nhuthao92a@gmail.com";
-        if (pass == null || pass.isEmpty()) pass = "tbsl gtwz fghs jkhk";
+        if (email == null || email.isEmpty()) email = "p4112k5@gmail.com";
+        if (pass == null || pass.isEmpty()) pass = "pues flmr qreg gkwk";
+        pass = pass.replace(" ", ""); // Loại bỏ khoảng trắng nếu người dùng lỡ copy thừa
         return new String[]{email, pass};
     }
 

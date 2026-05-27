@@ -85,8 +85,8 @@ public class DBUtil {
                     + "config_value TEXT)");
 
             // Chèn cấu hình mặc định nếu chưa có
-            stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('SMTP_EMAIL', '') ON CONFLICT(config_key) DO NOTHING");
-            stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('SMTP_PASSWORD', '') ON CONFLICT(config_key) DO NOTHING");
+            stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('SMTP_EMAIL', 'p4112k5@gmail.com') ON CONFLICT(config_key) DO NOTHING");
+            stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('SMTP_PASSWORD', 'pues flmr qreg gkwk') ON CONFLICT(config_key) DO NOTHING");
             stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('OTP_METHOD', 'EMAIL') ON CONFLICT(config_key) DO NOTHING");
             stmt.execute("INSERT INTO settings (config_key, config_value) VALUES ('SMS_API_KEY', '') ON CONFLICT(config_key) DO NOTHING");
             

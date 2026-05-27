@@ -33,7 +33,7 @@
                 <c:if test="${sessionScope.user.role == 'ADMIN' || sessionScope.user.role == 'LANH_DAO'}">
                     <a href="settings" class="active"><i class="fas fa-cog me-2"></i> Cấu hình HT</a>
                 </c:if>
-                <a href="logoutServlet" class="text-white mt-5"><i class="fas fa-sign-out-alt me-2"></i> Đăng xuất</a>
+                <a href="auth?action=logout" class="text-white mt-5"><i class="fas fa-sign-out-alt me-2"></i> Đăng xuất</a>
             </div>
 
             <!-- Main Content -->
