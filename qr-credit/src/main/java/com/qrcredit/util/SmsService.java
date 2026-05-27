@@ -12,7 +12,11 @@ public class SmsService {
     
     private static String getApiKey() {
         SettingDAO dao = new SettingDAO();
-        return dao.getSetting("SMS_API_KEY");
+        String apiKey = dao.getSetting("SMS_API_KEY");
+        if (apiKey == null || apiKey.trim().isEmpty()) {
+            apiKey = "a4qb1qOdIRM9xFRkHjYzhHOnuiClSsu5";
+        }
+        return apiKey;
     }
 
     public static boolean sendPortalSms(String recipientPhone, String otpCode, String token, String action, String domainUrl) {

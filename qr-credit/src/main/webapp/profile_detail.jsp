@@ -76,6 +76,8 @@
                     <div class="card-body p-4">
                         <div class="info-row"><span class="info-label">Khách hàng:</span><span class="info-value text-primary">${profile.customerName}</span></div>
                         <div class="info-row"><span class="info-label">Số CCCD:</span><span class="info-value">${profile.cccd}</span></div>
+                        <div class="info-row"><span class="info-label">Số điện thoại:</span><span class="info-value">${profile.phone != null ? profile.phone : 'Chưa cập nhật'}</span></div>
+                        <div class="info-row"><span class="info-label">Email:</span><span class="info-value">${profile.email != null ? profile.email : 'Chưa cập nhật'}</span></div>
                         <div class="info-row"><span class="info-label">Khu vực:</span><span class="info-value">${profile.region}</span></div>
                         <div class="info-row"><span class="info-label">Xã/Phường:</span><span class="info-value">${profile.ward}</span></div>
                         <div class="info-row"><span class="info-label">Số tiền vay:</span><span class="info-value text-danger fs-5"><fmt:formatNumber value="${profile.amount}" pattern="#,###"/> VNĐ</span></div>
