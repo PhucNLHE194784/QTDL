@@ -16,6 +16,21 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = request.getParameter("id");
+        String t = request.getParameter("t");
+        
+        if (t != null) {
+            try {
+                long timestamp = Long.parseLong(t);
+                long diff = System.currentTimeMillis() - timestamp;
+                // Nếu quét mã trễ hơn 60s hoặc lấy mã của tương lai quá 10s (chống sai lệch giờ)
+                if (diff > 60000 || diff < -10000) {
+                    request.setAttribute("error", "Mã QR đã hết hạn (chỉ có hiệu lực trong 60 giây vì lý do bảo mật). Vui lòng yêu cầu cấp lại mã mới.");
+                    request.getRequestDispatcher("search.jsp").forward(request, response);
+                    return;
+                }
+            } catch (Exception e) {}
+        }
+
         if (id != null && !id.trim().isEmpty()) {
             Profile p = profileDAO.getProfileById(id.trim());
             if (p != null) {

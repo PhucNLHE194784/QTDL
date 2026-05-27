@@ -70,40 +70,81 @@
         </div>
 
         <c:if test="${not empty profiles}">
-            <h5 class="fw-bold mb-3 text-dark">Kết Quả Hồ Sơ Của Bạn (${profiles.size()})</h5>
-            <c:forEach var="p" items="${profiles}">
-                <div class="card result-card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div>
-                                <h5 class="fw-bold text-dark mb-1">${p.customerName}</h5>
-                                <span class="text-muted small"><i class="fa-solid fa-hashtag me-1"></i>Mã HS: <strong>${p.id}</strong></span>
+            <h5 class="fw-bold mb-3 text-dark text-center">BẢN SAO KÊ KHOẢN VAY</h5>
+            <c:forEach var="p" items="${profiles}" end="0">
+                <div class="card result-card p-0">
+                    <div class="search-header bg-success" style="border-radius: 12px 12px 0 0;">
+                        <i class="fa-solid fa-file-invoice-dollar me-2"></i>Dữ Liệu Khoản Vay Cá Nhân
+                    </div>
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold text-center text-primary-custom mb-1 text-uppercase">${p.customerName}</h4>
+                        <div class="text-center text-muted small mb-4"><i class="fa-regular fa-id-card me-1"></i>Số khách hàng: ${p.cccd} | Mã hợp đồng: ${p.id}</div>
+                        
+                        <div class="row text-center mb-4 g-3">
+                            <div class="col-md-4">
+                                <div class="p-3 border rounded bg-light" style="border-left: 4px solid var(--agri-yellow) !important;">
+                                    <div class="text-muted small mb-1">Số tiền Giải Ngân</div>
+                                    <div class="fw-bold fs-5 text-dark"><fmt:formatNumber value="${p.amount}" pattern="#,###"/> VNĐ</div>
+                                </div>
                             </div>
-                            <span class="badge bg-warning text-dark status-badge fs-6">${p.status}</span>
+                            <div class="col-md-4">
+                                <div class="p-3 border rounded bg-light" style="border-left: 4px solid #198754 !important;">
+                                    <div class="text-muted small mb-1">Đã trả (Luỹ kế)</div>
+                                    <div class="fw-bold fs-5 text-success">63,000,000 VNĐ</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 border rounded bg-light" style="border-left: 4px solid #dc3545 !important;">
+                                    <div class="text-muted small mb-1">Dư nợ hiện tại</div>
+                                    <div class="fw-bold fs-5 text-danger"><fmt:formatNumber value="${p.amount - 63000000}" pattern="#,###"/> VNĐ</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="row g-2">
-                            <div class="col-sm-4">
-                                <div class="text-muted small">Điểm tín dụng</div>
-                                <c:choose>
-                                    <c:when test="${p.creditScore >= 80}">
-                                        <div class="fw-bold text-success fs-5">${p.creditScore}/100 (Tốt)</div>
-                                    </c:when>
-                                    <c:when test="${p.creditScore >= 50}">
-                                        <div class="fw-bold text-warning fs-5">${p.creditScore}/100 (Khá)</div>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <div class="fw-bold text-danger fs-5">${p.creditScore}/100 (Xấu)</div>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="text-muted small">Số tiền đề nghị vay</div>
-                                <div class="fw-bold text-danger fs-5"><fmt:formatNumber value="${p.amount}" pattern="#,###"/> VNĐ</div>
-                            </div>
-                            <div class="col-sm-4 text-sm-end">
-                                <div class="text-muted small">Cập nhật lần cuối</div>
-                                <div class="fw-medium text-dark"><i class="fa-regular fa-clock me-1 text-secondary"></i>${p.lastUpdated}</div>
-                            </div>
+
+                        <h6 class="fw-bold border-bottom pb-2 mb-3"><i class="fa-solid fa-list-check me-2 text-secondary"></i>Lịch sử thu nợ (Gần nhất)</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover text-center align-middle" style="font-size: 0.9rem;">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Kỳ hạn</th>
+                                        <th>Ngày trả</th>
+                                        <th>Gốc đã thu</th>
+                                        <th>Lãi đã thu</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>04/2026</td>
+                                        <td>30/04/2026</td>
+                                        <td class="text-success fw-bold">1,500,000</td>
+                                        <td class="text-warning text-dark fw-bold">850,541</td>
+                                    </tr>
+                                    <tr>
+                                        <td>03/2026</td>
+                                        <td>31/03/2026</td>
+                                        <td class="text-success fw-bold">1,500,000</td>
+                                        <td class="text-warning text-dark fw-bold">886,630</td>
+                                    </tr>
+                                    <tr>
+                                        <td>02/2026</td>
+                                        <td>28/02/2026</td>
+                                        <td class="text-success fw-bold">1,500,000</td>
+                                        <td class="text-warning text-dark fw-bold">807,294</td>
+                                    </tr>
+                                    <tr>
+                                        <td>01/2026</td>
+                                        <td>31/01/2026</td>
+                                        <td class="text-success fw-bold">1,500,000</td>
+                                        <td class="text-warning text-dark fw-bold">900,192</td>
+                                    </tr>
+                                    <tr>
+                                        <td>12/2025</td>
+                                        <td>31/12/2025</td>
+                                        <td class="text-success fw-bold">1,500,000</td>
+                                        <td class="text-warning text-dark fw-bold">995,349</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

@@ -58,10 +58,10 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="qr-box h-100">
-                                    <h6 class="fw-bold text-primary">QR Khách Hàng</h6>
-                                    <p class="text-muted small mb-3">In trên Giấy biên nhận để khách tra cứu tiến độ.</p>
-                                    <img src="qr?id=${profile.id}&type=public" alt="QR Public" class="img-fluid rounded mb-3" style="max-width: 180px;">
+                                <div class="qr-box h-100 position-relative">
+                                    <h6 class="fw-bold text-primary">QR Tra Cứu (Khách Hàng)</h6>
+                                    <p class="text-muted small mb-3">Tự động làm mới sau <span id="qrCountdown" class="text-danger fw-bold">60</span>s để bảo mật.</p>
+                                    <img id="qrPublicImg" src="qr?id=${profile.id}&type=public&t=<%=System.currentTimeMillis()%>" alt="QR Public" class="img-fluid rounded mb-3" style="max-width: 180px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
                                     <button onclick="window.print()" class="btn btn-sm btn-primary w-100"><i class="fa-solid fa-print me-1"></i>In mã QR này</button>
                                 </div>
                             </div>
@@ -187,5 +187,18 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        // QR Code dynamic refresh
+        let timeLeft = 60;
+        setInterval(function() {
+            timeLeft--;
+            if (timeLeft <= 0) {
+                timeLeft = 60;
+                document.getElementById('qrPublicImg').src = 'qr?id=${profile.id}&type=public&t=' + Date.now();
+            }
+            document.getElementById('qrCountdown').innerText = timeLeft;
+        }, 1000);
+    </script>
 </body>
 </html>

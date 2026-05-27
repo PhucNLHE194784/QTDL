@@ -57,6 +57,10 @@ public class QRCodeServlet extends HttpServlet {
         String url;
         if ("public".equals(type)) {
             url = scheme + "://" + serverName + ":" + serverPort + contextPath + "/search?id=" + id;
+            String t = request.getParameter("t");
+            if (t != null) {
+                url += "&t=" + t;
+            }
         } else {
             url = scheme + "://" + serverName + ":" + serverPort + contextPath + "/profile?id=" + id;
         }
