@@ -411,20 +411,27 @@
                             foundPhone = "0987654321"; 
                             foundCif = dataRow[0] ? dataRow[0].toString().substring(0, 9) : ""; 
                             
-                            // Auto-fill Address Fields (Province, District, Detail)
+                            // Auto-fill Address Fields
                             let provName = dataRow[48] ? dataRow[48].toString() : "";
                             let distName = dataRow[50] ? dataRow[50].toString() : "";
+                            let wardName = dataRow[64] ? dataRow[64].toString() : ""; // Column 64 is actually Ward!
                             let addrDetail = dataRow[52] ? dataRow[52].toString() : "";
                             
                             if(provName) {
-                                $('#province').append(`<option value="${provName}" selected>${provName}</option>`);
+                                $('#province').append(`<option value="${provName}" selected>${provName}</option>`).val(provName);
                             }
                             if(distName) {
-                                $('#district').append(`<option value="${distName}" selected>${distName}</option>`);
+                                $('#district').prop('disabled', false).append(`<option value="${distName}" selected>${distName}</option>`).val(distName);
+                            }
+                            if(wardName) {
+                                $('#ward').prop('disabled', false).append(`<option value="${wardName}" selected>${wardName}</option>`).val(wardName);
                             }
                             if(addrDetail) {
-                                $('#addressDetail').val(addrDetail);
+                                $('#street').val(addrDetail);
                             }
+                            
+                            // Re-adjust Branch since 64 was Ward
+                            foundBranch = dataRow[50] ? "Agribank " + dataRow[50].toString() : "Agribank Hội Sở";
                             
                             rawTextDump = dataRow.join(" - ");
                         } else {
