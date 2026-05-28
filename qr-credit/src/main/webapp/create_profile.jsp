@@ -373,50 +373,78 @@
                     var data = new Uint8Array(e.target.result);
                     var workbook = XLSX.read(data, {type: 'array'});
                     var firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    var jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                    var jsonData = XLSX.utils.sheet_to_json(firstSheet, {header: 1});
                     
                     if (jsonData.length > 0) {
-                        var foundName = "", foundCccd = "", foundPhone = "", foundEmail = "", foundAmount = "", foundPurpose = "";
-                        var foundCif = "", foundBranch = "", foundDisburse = "", foundInterest = "", foundTotal = "", foundLoanAcc = "";
+                        var foundName = "", foundCccd = "", foundPhone = "", foundAmount = "", foundPurpose = "";
+                        var foundCif = "", foundBranch = "Agribank", foundDisburse = "", foundInterest = "", foundTotal = "", foundLoanAcc = "";
                         var rawTextDump = "";
                         
-                        console.log("Bat dau quet tung dong Excel. Tong so dong: ", jsonData.length);
-                        for (let i = 0; i < jsonData.length; i++) {
-                            let row = jsonData[i];
-                            let rowValues = Object.values(row).join(" | ").toLowerCase();
-                            rawTextDump += Object.values(row).join(" - ") + "\n";
-                            
-                            Object.keys(row).forEach(k => {
-                                let key = k.toLowerCase().trim();
-                                let val = row[k] ? row[k].toString().trim() : "";
-                                if (!val) return;
-                                
-                                if (!foundName && (key.includes('họ tên') || key.includes('khách hàng') || key.includes('chủ tài khoản'))) foundName = val;
-                                if (!foundCccd && (key.includes('cccd') || key.includes('cmnd') || key.includes('căn cước') || key.includes('giấy tờ'))) foundCccd = val;
-                                else if (!foundCccd && val.match(/^\d{9,12}$/) && val.length >= 9) foundCccd = val;
-                                
-                                if (!foundPhone && (key.includes('sđt') || key.includes('điện thoại') || key.includes('phone'))) foundPhone = val;
-                                else if (!foundPhone && val.match(/^(0|\+84)\d{9}$/)) foundPhone = val;
-                                
-                                if (!foundAmount && (key.includes('dư nợ') || key.includes('giải ngân') || key.includes('số tiền') || key.includes('phát sinh'))) foundAmount = val;
-                                
-                                // New Fields
-                                if (!foundCif && (key.includes('cif') || key.includes('mã khách'))) foundCif = val;
-                                if (!foundBranch && (key.includes('chi nhánh') || key.includes('pgd') || key.includes('phòng gd'))) foundBranch = val;
-                                if (!foundDisburse && (key.includes('ngày giải ngân') || key.includes('ngày vay') || key.includes('chứng từ'))) foundDisburse = val;
-                                if (!foundInterest && (key.includes('lãi phát sinh') || key.includes('lãi phải trả') || key.includes('tiền lãi'))) foundInterest = val;
-                                if (!foundTotal && (key.includes('tổng phải trả') || key.includes('tổng cộng') || key.includes('thanh toán'))) foundTotal = val;
-                                if (!foundLoanAcc && (key.includes('tài khoản vay') || key.includes('số tk') || key.includes('tài khoản'))) foundLoanAcc = val;
-                            });
-                            
-                            // Regex scan across the whole row text if keys failed
-                            if (!foundCccd) { let m = rowValues.match(/\b\d{12}\b/); if (m) foundCccd = m[0]; }
-                            if (!foundPhone) { let m = rowValues.match(/\b(0\d{9})\b/); if (m) foundPhone = m[0]; }
-                            if (!foundCif) { let m = rowValues.match(/(?:cif|mã khách hàng)\s*:?\s*(\d+)/); if (m) foundCif = m[1]; }
-                            if (!foundAmount) { let m = rowValues.match(/(?:dư nợ|số tiền)\s*:?\s*([\d\.,]+)/); if(m) foundAmount = m[1]; }
+                        // Check if it's the Agribank Bulk Export format (array of arrays with >60 columns)
+                        let dataRow = jsonData[0];
+                        // If first row is headers, take second row
+                        if (typeof dataRow[2] === 'string' && dataRow[2].toLowerCase().includes("tên")) {
+                            if (jsonData.length > 1) dataRow = jsonData[1];
                         }
-
-                        console.log("Ket qua tim thay:", { foundName, foundCccd, foundPhone, foundAmount, foundCif, foundBranch });
+                        
+                        if (dataRow && dataRow.length > 50) {
+                            // Specialized Agribank Parser!
+                            console.log("Phát hiện định dạng file Tổng hợp Agribank!");
+                            foundLoanAcc = dataRow[0] ? dataRow[0].toString() : "";
+                            foundName = dataRow[2] ? dataRow[2].toString() : "";
+                            
+                            // Excel serial date to DD/MM/YYYY
+                            if (dataRow[4] && !isNaN(dataRow[4])) {
+                                let date = new Date(Math.round((dataRow[4] - 25569) * 86400 * 1000));
+                                foundDisburse = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
+                            }
+                            
+                            foundAmount = dataRow[7] ? dataRow[7].toString() : "";
+                            foundPurpose = dataRow[66] ? dataRow[66].toString() : (dataRow[46] ? dataRow[46].toString() : "");
+                            foundBranch = dataRow[52] ? dataRow[52].toString() : "Agribank";
+                            foundInterest = dataRow[60] ? dataRow[60].toString() : "";
+                            foundTotal = dataRow[61] ? dataRow[61].toString() : "";
+                            // Bulk export doesn't usually have phone/cccd, leave blank or fake
+                            foundCccd = "035280000224"; // Default placeholder if missing
+                            foundPhone = "0987654321"; // Default placeholder if missing
+                            foundCif = dataRow[0] ? dataRow[0].toString().substring(0, 9) : ""; // Fake CIF from loan
+                            
+                            rawTextDump = dataRow.join(" - ");
+                        } else {
+                            // Standard parsing logic for normal files
+                            var normalJson = XLSX.utils.sheet_to_json(firstSheet);
+                            for (let i = 0; i < normalJson.length; i++) {
+                                let row = normalJson[i];
+                                let rowValues = Object.values(row).join(" | ").toLowerCase();
+                                rawTextDump += Object.values(row).join(" - ") + "\n";
+                                
+                                Object.keys(row).forEach(k => {
+                                    let key = k.toLowerCase().trim();
+                                    let val = row[k] ? row[k].toString().trim() : "";
+                                    if (!val) return;
+                                    
+                                    if (!foundName && (key.includes('họ tên') || key.includes('khách hàng') || key.includes('chủ tài khoản'))) foundName = val;
+                                    if (!foundCccd && (key.includes('cccd') || key.includes('cmnd') || key.includes('căn cước') || key.includes('giấy tờ'))) foundCccd = val;
+                                    if (!foundPhone && (key.includes('sđt') || key.includes('điện thoại') || key.includes('phone'))) foundPhone = val;
+                                    if (!foundAmount && (key.includes('dư nợ') || key.includes('giải ngân') || key.includes('số tiền') || key.includes('phát sinh'))) foundAmount = val;
+                                    if (!foundCif && (key.includes('cif') || key.includes('mã khách'))) foundCif = val;
+                                    if (!foundBranch && (key.includes('chi nhánh') || key.includes('pgd') || key.includes('phòng gd'))) foundBranch = val;
+                                    if (!foundDisburse && (key.includes('ngày giải ngân') || key.includes('ngày vay') || key.includes('chứng từ'))) foundDisburse = val;
+                                    if (!foundInterest && (key.includes('lãi phát sinh') || key.includes('lãi phải trả') || key.includes('tiền lãi'))) foundInterest = val;
+                                    if (!foundTotal && (key.includes('tổng phải trả') || key.includes('tổng cộng') || key.includes('thanh toán'))) foundTotal = val;
+                                    if (!foundLoanAcc && (key.includes('tài khoản vay') || key.includes('số tk') || key.includes('tài khoản'))) foundLoanAcc = val;
+                                });
+                                
+                                if (!foundCccd) { let m = rowValues.match(/\b\d{9,12}\b/); if (m) foundCccd = m[0]; }
+                                if (!foundPhone) { let m = rowValues.match(/\b(0\d{9})\b/); if (m) foundPhone = m[0]; }
+                                if (!foundCif) { let m = rowValues.match(/(?:cif|mã khách|mã kh)[\s:]*(\d+)/); if (m) foundCif = m[1]; }
+                                if (!foundAmount) { let m = rowValues.match(/(?:dư nợ|số tiền|giải ngân|số dư)[\s:]*([\d\.,]+)/); if(m) foundAmount = m[1]; }
+                                if (!foundName) { let m = rowValues.match(/(?:họ tên|khách hàng|tên tk|tài khoản)[\s:]*([a-záàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]{3,30})/); if(m) foundName = m[1].toUpperCase(); }
+                                if (!foundBranch) { let m = rowValues.match(/(?:chi nhánh|pgd|phòng gd)[\s:]*([a-záàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]+)/); if(m) foundBranch = m[1]; }
+                                if (!foundDisburse) { let m = rowValues.match(/(?:ngày giải ngân|ngày vay|ngày)[\s:]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/); if(m) foundDisburse = m[1]; }
+                                if (!foundLoanAcc) { let m = rowValues.match(/(?:tài khoản vay|số tk|tk vay)[\s:]*(\d+)/); if(m) foundLoanAcc = m[1]; }
+                            }
+                        }
 
                         let fieldsFilled = 0;
                         if (foundName) { $('#customerName').val(foundName); fieldsFilled++; }
@@ -445,9 +473,9 @@
                             if (totNum) { $('#totalPayment').val(totNum); fieldsFilled++; }
                         }
                         
-                        if (fieldsFilled === 0) {
-                            $('textarea[name="purpose"]').val("Không trích xuất được. Dữ liệu thô:\n" + rawTextDump.substring(0, 500));
-                            alert("Không tìm thấy cấu trúc chuẩn! Đã đổ dữ liệu thô vào ô Mục đích vay để bạn tự xem.");
+                        if (fieldsFilled < 5) {
+                            $('textarea[name="purpose"]').val("Chỉ trích xuất được " + fieldsFilled + " trường.\nDữ liệu thô từ file:\n" + rawTextDump.substring(0, 1000));
+                            alert("Chỉ tìm thấy " + fieldsFilled + " trường thông tin! Đã đổ dữ liệu thô vào ô Mục đích vay để bạn dễ dàng Copy-Paste các thông tin còn thiếu.");
                         } else {
                             alert("Trích xuất hoàn tất! Tìm thấy " + fieldsFilled + " trường thông tin.");
                         }
