@@ -402,14 +402,29 @@
                             }
                             
                             foundAmount = dataRow[7] ? dataRow[7].toString() : "";
-                            foundPurpose = dataRow[66] ? dataRow[66].toString() : (dataRow[46] ? dataRow[46].toString() : "");
-                            foundBranch = dataRow[52] ? dataRow[52].toString() : "Agribank";
-                            foundInterest = dataRow[60] ? dataRow[60].toString() : "";
-                            foundTotal = dataRow[61] ? dataRow[61].toString() : "";
+                            foundPurpose = dataRow[76] ? dataRow[76].toString() : (dataRow[66] ? dataRow[66].toString() : "");
+                            foundBranch = dataRow[64] ? dataRow[64].toString() : "Agribank";
+                            foundInterest = dataRow[71] ? dataRow[71].toString() : "";
+                            foundTotal = dataRow[72] ? dataRow[72].toString() : "";
                             
                             foundCccd = "035280000224"; 
                             foundPhone = "0987654321"; 
                             foundCif = dataRow[0] ? dataRow[0].toString().substring(0, 9) : ""; 
+                            
+                            // Auto-fill Address Fields (Province, District, Detail)
+                            let provName = dataRow[48] ? dataRow[48].toString() : "";
+                            let distName = dataRow[50] ? dataRow[50].toString() : "";
+                            let addrDetail = dataRow[52] ? dataRow[52].toString() : "";
+                            
+                            if(provName) {
+                                $('#province').append(`<option value="${provName}" selected>${provName}</option>`);
+                            }
+                            if(distName) {
+                                $('#district').append(`<option value="${distName}" selected>${distName}</option>`);
+                            }
+                            if(addrDetail) {
+                                $('#addressDetail').val(addrDetail);
+                            }
                             
                             rawTextDump = dataRow.join(" - ");
                         } else {
