@@ -7,6 +7,25 @@ import java.sql.ResultSet;
 import java.util.Date;
 
 public class ProfileDAO {
+
+    public ProfileDAO() {
+        try (Connection conn = DBUtil.getConnection();
+             java.sql.Statement stmt = conn.createStatement()) {
+            String[] cols = {
+                "ALTER TABLE profiles ADD COLUMN cif_number TEXT;",
+                "ALTER TABLE profiles ADD COLUMN branch_name TEXT;",
+                "ALTER TABLE profiles ADD COLUMN disbursement_date TEXT;",
+                "ALTER TABLE profiles ADD COLUMN accrued_interest REAL DEFAULT 0;",
+                "ALTER TABLE profiles ADD COLUMN total_payment REAL DEFAULT 0;",
+                "ALTER TABLE profiles ADD COLUMN loan_account TEXT;"
+            };
+            for(String col : cols) {
+                try { stmt.execute(col); } catch(Exception e) { }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private Profile mapRowToProfile(ResultSet rs) throws Exception {
         Profile p = new Profile();
         p.setId(rs.getString("id"));
