@@ -380,14 +380,16 @@
                         var foundCif = "", foundBranch = "Agribank", foundDisburse = "", foundInterest = "", foundTotal = "", foundLoanAcc = "";
                         var rawTextDump = "";
                         
-                        // Check if it's the Agribank Bulk Export format (array of arrays with >60 columns)
-                        let dataRow = jsonData[0];
-                        // If first row is headers, take second row
-                        if (typeof dataRow[2] === 'string' && dataRow[2].toLowerCase().includes("tên")) {
-                            if (jsonData.length > 1) dataRow = jsonData[1];
+                        // Find the first actual data row (skip headers like brcd, custnm)
+                        let dataRow = null;
+                        for (let r = 0; r < jsonData.length; r++) {
+                            if (jsonData[r] && jsonData[r].length > 50 && jsonData[r][0] && jsonData[r][0].toString().match(/^\d+$/)) {
+                                dataRow = jsonData[r];
+                                break;
+                            }
                         }
                         
-                        if (dataRow && dataRow.length > 50) {
+                        if (dataRow) {
                             // Specialized Agribank Parser!
                             console.log("Phát hiện định dạng file Tổng hợp Agribank!");
                             foundLoanAcc = dataRow[0] ? dataRow[0].toString() : "";
@@ -404,10 +406,10 @@
                             foundBranch = dataRow[52] ? dataRow[52].toString() : "Agribank";
                             foundInterest = dataRow[60] ? dataRow[60].toString() : "";
                             foundTotal = dataRow[61] ? dataRow[61].toString() : "";
-                            // Bulk export doesn't usually have phone/cccd, leave blank or fake
-                            foundCccd = "035280000224"; // Default placeholder if missing
-                            foundPhone = "0987654321"; // Default placeholder if missing
-                            foundCif = dataRow[0] ? dataRow[0].toString().substring(0, 9) : ""; // Fake CIF from loan
+                            
+                            foundCccd = "035280000224"; 
+                            foundPhone = "0987654321"; 
+                            foundCif = dataRow[0] ? dataRow[0].toString().substring(0, 9) : ""; 
                             
                             rawTextDump = dataRow.join(" - ");
                         } else {

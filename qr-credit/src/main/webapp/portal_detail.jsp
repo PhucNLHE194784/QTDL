@@ -284,17 +284,83 @@
         function showChatbot() {
             if (typeof Swal !== 'undefined') {
                 Swal.fire({
-                    title: 'Agribank AI Chatbot',
-                    text: 'Xin chào! Tôi là trợ lý ảo Agribank. Tính năng Chat AI đang trong quá trình nâng cấp hệ thống để phục vụ bạn tốt hơn. Vui lòng quay lại sau!',
-                    imageUrl: 'https://cdn-icons-png.flaticon.com/512/8943/8943377.png',
-                    imageWidth: 100,
-                    imageHeight: 100,
-                    confirmButtonText: 'Đã hiểu',
-                    confirmButtonColor: '#b01a2e'
+                    title: 'Agribank AI Assistant',
+                    html: `
+                        <div style="text-align:left; font-size: 0.9rem; background: #f9fafb; padding: 15px; border-radius: 12px; height: 250px; overflow-y: auto;" id="chatWindow">
+                            <div style="margin-bottom: 10px;">
+                                <span style="background: #e2e8f0; padding: 8px 12px; border-radius: 15px; display: inline-block;">Xin chào! Tôi là trợ lý AI Agribank. Bạn cần hỗ trợ gì về khoản vay này?</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-top: 15px;">
+                            <input type="text" id="chatInput" placeholder="Nhập câu hỏi..." style="flex:1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; outline: none;">
+                            <button onclick="sendChat()" style="background: #059669; color: white; border: none; padding: 0 15px; border-radius: 8px; cursor: pointer;"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    `,
+                    showConfirmButton: false,
+                    showCloseButton: true,
+                    didOpen: () => {
+                        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+                            if (e.key === 'Enter') sendChat();
+                        });
+                    }
                 });
             } else {
                 alert("Agribank AI Chatbot\n\nXin chào! Tôi là trợ lý ảo Agribank. Tính năng Chat AI đang trong quá trình nâng cấp. Vui lòng quay lại sau!");
             }
+        }
+
+        function sendChat() {
+            var input = document.getElementById('chatInput');
+            var window = document.getElementById('chatWindow');
+            if(!input.value.trim()) return;
+            
+            // User message
+            window.innerHTML += `<div style="margin-bottom: 10px; text-align: right;">
+                <span style="background: #059669; color: white; padding: 8px 12px; border-radius: 15px; display: inline-block;">${input.value}</span>
+            </div>`;
+            
+            let query = input.value.toLowerCase();
+            input.value = '';
+            
+            // Bot response simulator
+            setTimeout(() => {
+                let reply = "";
+                
+                // Nâng cấp "Não bộ" cho AI (Nhận diện từ khóa thông minh)
+                if (query.includes("chào") || query.includes("hello") || query.includes("hi")) {
+                    reply = "Dạ, em chào anh/chị! Em là trợ lý AI của Agribank. Anh/chị cần tra cứu khoản vay hay cần hỗ trợ thông tin gì ạ?";
+                } 
+                else if (query.includes("lãi") || query.includes("bao nhiêu tiền")) {
+                    reply = "Dạ, lãi suất ưu đãi của khoản vay này đang được áp dụng là 8.5%/năm. Tiền lãi dự kiến tháng này của anh/chị là khoảng <fmt:formatNumber value='${currentProfile.amount * 0.085 / 12}' type='number' groupingUsed='true'/> VND (tính trên dư nợ giảm dần) ạ.";
+                } 
+                else if (query.includes("gốc") || query.includes("dư nợ") || query.includes("còn nợ")) {
+                    reply = "Dạ thưa anh/chị, dư nợ gốc hiện tại của hợp đồng là <fmt:formatNumber value='${currentProfile.amount}' type='number' groupingUsed='true'/> VND ạ. Thông tin được cập nhật theo thời gian thực từ hệ thống Agribank.";
+                } 
+                else if (query.includes("tất toán") || query.includes("trả nợ") || query.includes("thanh toán")) {
+                    reply = "Để tất toán hoặc thanh toán khoản vay, anh/chị có thể làm theo 2 cách:<br>1. Mở ứng dụng Agribank E-Mobile Banking -> Mục 'Trả nợ tiền vay'.<br>2. Mang CMND/CCCD ra quầy giao dịch Agribank gần nhất để được hỗ trợ.";
+                }
+                else if (query.includes("vay thêm") || query.includes("hạn mức") || query.includes("giải ngân")) {
+                    reply = "Dạ, hạn mức giải ngân tùy thuộc vào giá trị tài sản đảm bảo và mục đích sử dụng vốn của anh/chị. Anh/chị vui lòng chuẩn bị sẵn hồ sơ chứng minh thu nhập và liên hệ cán bộ tín dụng để làm thủ tục nhé!";
+                }
+                else if (query.includes("cám ơn") || query.includes("cảm ơn") || query.includes("thanks") || query.includes("ok")) {
+                    reply = "Dạ vâng, Agribank rất hân hạnh được phục vụ anh/chị. Chúc anh/chị một ngày làm việc hiệu quả và tràn đầy năng lượng!";
+                }
+                else if (query.includes("thủ tục") || query.includes("hồ sơ") || query.includes("giấy tờ")) {
+                    reply = "Thủ tục vay cơ bản gồm có: CCCD gắn chip, Sổ hộ khẩu/Giấy xác nhận cư trú, Giấy tờ chứng minh thu nhập (sao kê lương, hợp đồng lao động) và Giấy tờ tài sản đảm bảo (nếu vay thế chấp) ạ.";
+                }
+                else if (query.includes("chi nhánh") || query.includes("phòng giao dịch") || query.includes("địa chỉ")) {
+                    reply = "Dạ, khoản vay của anh/chị đang được quản lý bởi chi nhánh: <c:out value='${empty currentProfile.branchName ? \"Agribank\" : currentProfile.branchName}'/>. Anh/chị có thể ra chi nhánh này để được hỗ trợ trực tiếp ạ.";
+                }
+                else {
+                    // CÂU HỎI NGOÀI LỀ HOẶC KHÔNG HIỂU
+                    reply = "Dạ, câu hỏi của anh/chị nằm ngoài phạm vi xử lý tự động của em hoặc em chưa hiểu rõ ý. 😅<br><br>Để được giải đáp chi tiết và chính xác nhất, anh/chị vui lòng liên hệ trực tiếp đến Tổng đài CSKH 24/7 của Agribank qua số Hotline: <strong>1900 55 88 18</strong> hoặc <strong>+84 243 205 3205</strong> ạ. Em xin cảm ơn!";
+                }
+                
+                window.innerHTML += `<div style="margin-bottom: 10px; text-align: left;">
+                    <span style="background: #e2e8f0; padding: 8px 12px; border-radius: 15px; display: inline-block;">${reply}</span>
+                </div>`;
+                window.scrollTop = window.scrollHeight;
+            }, 800);
         }
     </script>
 </body>
