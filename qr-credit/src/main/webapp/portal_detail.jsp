@@ -5,163 +5,122 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Khoản Vay - Cổng Khách Hàng</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Agribank Mobile App - Khoản Vay</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f4f6f9; color: #333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .header { background-color: #A51A29; color: white; padding: 20px 0; border-bottom: 5px solid #d4a373; }
-        .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; overflow: hidden; }
-        .card-header-custom { background-color: #fff; border-bottom: 2px solid #f0f0f0; padding: 15px 20px; font-weight: 600; color: #A51A29; }
-        .info-label { color: #6c757d; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-        .info-value { font-size: 1.1rem; font-weight: 600; color: #212529; }
-        .table-custom { margin-bottom: 0; }
-        .table-custom thead th { background-color: #f8f9fa; color: #495057; font-weight: 600; border-bottom: 2px solid #dee2e6; padding: 12px; }
-        .table-custom tbody td { padding: 12px; vertical-align: middle; border-bottom: 1px solid #f0f0f0; }
-        .amount-positive { color: #28a745; font-weight: 600; }
-        .amount-negative { color: #dc3545; font-weight: 600; }
+        body { background-color: #e9ecef; margin: 0; font-family: 'Inter', sans-serif; }
+        .app-container {
+            max-width: 414px;
+            margin: 0 auto;
+            background-color: #f5f7fa;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.15);
+            overflow-x: hidden;
+            padding-bottom: 80px; /* space for bottom nav */
+        }
+        /* HEADER SECTION */
+        .app-header {
+            background: linear-gradient(135deg, #b01a2e 0%, #8E1521 100%);
+            color: white;
+            padding: 20px 20px 40px 20px;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            position: relative;
+        }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .logo-box { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.5px; }
+        .logo-box i { color: #f1c40f; font-size: 1.5rem; }
+        .header-icons i { font-size: 1.2rem; margin-left: 15px; position: relative; }
+        .notification-dot { position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: #f1c40f; border-radius: 50%; }
+        
+        .balance-title { font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; opacity: 0.9; display: flex; justify-content: space-between; }
+        .balance-amount { font-size: 1.8rem; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 10px;}
+        .eye-btn { font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; padding: 3px 10px; cursor: pointer; }
+        
+        .security-badge {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+            border-radius: 12px;
+            padding: 10px 15px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .security-text { font-size: 0.75rem; line-height: 1.4; }
+        .security-text strong { color: #4ade80; }
+        
+        /* QUICK ACTIONS */
+        .quick-actions { display: flex; gap: 10px; padding: 0 20px; margin-top: -20px; position: relative; z-index: 10; }
+        .action-btn {
+            background: white; border-radius: 12px; padding: 15px 10px; text-align: center; flex: 1;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); font-size: 0.75rem; font-weight: 600; color: #333;
+            border: 1px solid #f0f0f0; transition: 0.2s;
+        }
+        .action-btn:active { transform: scale(0.95); }
+        .action-btn i { font-size: 1.5rem; color: #10b981; margin-bottom: 8px; display: block; }
+        .action-btn.active-tab { border: 2px solid #10b981; background: #f0fdf4; }
+        
+        .assistant-banner {
+            margin: 20px; background: #fff; border-radius: 12px; padding: 15px; display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;
+        }
+        .assistant-info { display: flex; align-items: center; gap: 15px; }
+        .assistant-icon { width: 40px; height: 40px; background: #e0f2fe; color: #0284c7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .assistant-text h6 { margin: 0; font-weight: 700; font-size: 0.9rem; color: #333; }
+        .assistant-text p { margin: 0; font-size: 0.7rem; color: #666; }
+        .btn-chat { background: #059669; color: white; border: none; border-radius: 20px; padding: 6px 15px; font-size: 0.75rem; font-weight: 600; }
+        
+        /* LIST SECTION */
+        .section-header { padding: 0 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .section-title { font-size: 0.85rem; font-weight: 700; color: #666; letter-spacing: 0.5px; }
+        .section-subtitle { font-size: 0.7rem; color: #999; font-style: italic; }
+        
+        .tabs { display: flex; margin: 0 20px 20px; border-bottom: 2px solid #e5e7eb; }
+        .tab { flex: 1; text-align: center; padding-bottom: 10px; font-size: 0.85rem; font-weight: 600; color: #6b7280; position: relative; cursor: pointer; }
+        .tab.active { color: #059669; }
+        .tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background: #059669; border-radius: 2px; }
+        
+        /* LOAN CARD */
+        .loan-card { margin: 0 20px 20px; background: white; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; overflow: hidden; position: relative; }
+        .loan-card-accent { position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: #059669; }
+        .loan-card-body { padding: 20px; padding-left: 26px; }
+        .loan-title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
+        .loan-title { font-weight: 800; color: #b01a2e; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+        .badge-safe { background: #d1fae5; color: #059669; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; }
+        .loan-id { font-size: 0.75rem; color: #6b7280; margin-bottom: 15px; }
+        
+        .loan-purpose { background: #f8fafc; padding: 10px 15px; border-radius: 8px; font-size: 0.75rem; color: #475569; margin-bottom: 15px; line-height: 1.4; border-left: 2px solid #cbd5e1; }
+        
+        .data-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .data-label { font-size: 0.75rem; color: #6b7280; }
+        .data-val { font-size: 0.85rem; font-weight: 700; color: #1f2937; }
+        .data-val.red { color: #b01a2e; font-size: 1rem;}
+        .data-val.green { color: #059669; }
+        
+        .progress-box { margin-top: 15px; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 0.7rem; color: #6b7280; margin-bottom: 5px; }
+        .progress { height: 6px; background-color: #e5e7eb; border-radius: 10px; }
+        .progress-bar { background-color: #059669; border-radius: 10px; }
+        
+        .loan-footer { border-top: 1px dashed #e5e7eb; padding: 12px 20px; text-align: center; }
+        .loan-footer a { color: #b01a2e; font-size: 0.75rem; font-weight: 700; text-decoration: none; }
+        .loan-footer a i { margin-left: 5px; }
+        
+        /* BOTTOM NAV */
+        .bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; background: white; display: flex; padding: 10px 0 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); border-top-left-radius: 20px; border-top-right-radius: 20px; }
+        .nav-item { flex: 1; text-align: center; color: #9ca3af; font-size: 0.65rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .nav-item i { font-size: 1.3rem; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: #b01a2e; }
+        .nav-item.scan-btn { position: relative; top: -15px; }
+        .nav-item.scan-btn .scan-circle { width: 50px; height: 50px; background: #059669; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 5px; box-shadow: 0 5px 15px rgba(5, 150, 105, 0.4); font-size: 1.5rem; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="container d-flex justify-content-between align-items-center">
-            <h4 class="mb-0"><i class="fas fa-university me-2"></i>Agribank LoanFlow</h4>
-            <span><i class="fas fa-user-circle me-1"></i> ${currentProfile.customerName}</span>
-        </div>
-    </div>
-
-    <div class="container mt-4">
-        <h3 class="mb-4 text-center">BẢO MẬT & CHI TIẾT TÍN DỤNG</h3>
-        
-        <!-- Bảng Thông Tin Tổng Quan -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card card-custom">
-                    <div class="card-header-custom">
-                        <i class="fas fa-file-invoice-dollar me-2"></i>THÔNG TIN HỢP ĐỒNG KHOẢN VAY (${currentProfile.id})
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="row g-4">
-                            <div class="col-md-4">
-                                <div class="info-label">Khách hàng</div>
-                                <div class="info-value text-uppercase">${currentProfile.customerName}</div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="info-label">Số tiền vay vốn (Ban đầu)</div>
-                                <div class="info-value text-danger">
-                                    <fmt:formatNumber value="${currentProfile.amount}" type="number" groupingUsed="true"/> VNĐ
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="info-label">Dư nợ hiện tại</div>
-                                <div class="info-value text-danger">
-                                    <!-- Giả lập dư nợ còn lại (ví dụ đã trả 30%) -->
-                                    <fmt:formatNumber value="${currentProfile.amount * 0.7}" type="number" groupingUsed="true"/> VNĐ
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="info-label">Ngày đến hạn HĐ</div>
-                                <div class="info-value">
-                                    <c:choose>
-                                        <c:when test="${not empty currentProfile.maturityDate}">
-                                            <fmt:formatDate value="${currentProfile.maturityDate}" pattern="dd/MM/yyyy"/>
-                                        </c:when>
-                                        <c:otherwise>27/05/2027</c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="info-label">Lãi suất (Ngắn/Dài hạn)</div>
-                                <div class="info-value">
-                                    <c:choose>
-                                        <c:when test="${not empty currentProfile.interestRate}">
-                                            ${currentProfile.interestRate}
-                                        </c:when>
-                                        <c:otherwise>10.5% / năm (Trung hạn)</c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="info-label">Cán bộ quản lý</div>
-                                <div class="info-value">
-                                    <c:choose>
-                                        <c:when test="${not empty currentProfile.officerName}">
-                                            ${currentProfile.officerName}
-                                        </c:when>
-                                        <c:otherwise>Nguyễn Lâm Phúc</c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bảng Lịch Sử Trả Lãi (Giả lập để Demo) -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card card-custom">
-                    <div class="card-header-custom d-flex justify-content-between align-items-center">
-                        <div><i class="fas fa-history me-2"></i>LỊCH SỬ THU NỢ & TRẢ LÃI</div>
-                        <span class="badge bg-success">Đã xác thực</span>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-custom table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Ngày GD</th>
-                                        <th>Kỳ tính lãi</th>
-                                        <th class="text-end">Gốc đã trả</th>
-                                        <th class="text-end">Lãi đã trả</th>
-                                        <th class="text-end">Phí GD</th>
-                                        <th class="text-end">Tổng cộng</th>
-                                        <th>Trạng thái</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <%
-                                        // Sinh dữ liệu giả lập dựa trên số tiền vay
-                                        com.qrcredit.model.Profile p = (com.qrcredit.model.Profile) request.getAttribute("currentProfile");
-                                        double baseAmount = p != null ? p.getAmount() : 100000000;
-                                        double principalPerMonth = baseAmount * 0.1; // Trả gốc 10%
-                                        double interestPerMonth = baseAmount * 0.01; // Trả lãi 1%
-                                        double fee = 22000;
-                                        
-                                        java.util.Calendar cal = java.util.Calendar.getInstance();
-                                        cal.add(java.util.Calendar.MONTH, -3); // Lùi 3 tháng
-                                        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-                                        
-                                        for(int i=0; i<3; i++) {
-                                            String dateStr = sdf.format(cal.getTime());
-                                            java.util.Calendar fromCal = (java.util.Calendar) cal.clone();
-                                            fromCal.add(java.util.Calendar.MONTH, -1);
-                                            String periodStr = sdf.format(fromCal.getTime()) + " - " + dateStr;
-                                            double total = principalPerMonth + interestPerMonth + fee;
-                                    %>
-                                    <tr>
-                                        <td><%= dateStr %></td>
-                                        <td class="text-muted small"><%= periodStr %></td>
-                                        <td class="text-end"><fmt:formatNumber value="<%= principalPerMonth %>" type="number" groupingUsed="true"/></td>
-                                        <td class="text-end"><fmt:formatNumber value="<%= interestPerMonth %>" type="number" groupingUsed="true"/></td>
-                                        <td class="text-end"><fmt:formatNumber value="<%= fee %>" type="number" groupingUsed="true"/></td>
-                                        <td class="text-end amount-positive">+<fmt:formatNumber value="<%= total %>" type="number" groupingUsed="true"/></td>
-                                        <td><span class="badge bg-success">Thành công</span></td>
-                                    </tr>
-                                    <%
-                                            cal.add(java.util.Calendar.MONTH, 1);
-                                        }
-                                    %>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="text-center mb-5 text-muted small">
             Dữ liệu được bảo mật và truyền tải qua mã hóa SSL.<br>
             Bản quyền © 2026 Agribank LoanFlow.

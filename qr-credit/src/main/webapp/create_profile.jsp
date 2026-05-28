@@ -182,6 +182,19 @@
                         <form action="profile" method="post">
                             <input type="hidden" name="action" value="create">
                             <div class="section-title"><i class="fa-solid fa-user me-2 text-primary-custom"></i>Thông Tin Khách Hàng</div>
+                            
+                            <!-- Thêm Nút Upload Excel -->
+                            <div class="mb-4 p-3 bg-light rounded border border-primary border-opacity-25">
+                                <label class="form-label text-primary-custom fw-bold"><i class="fa-solid fa-file-excel me-2"></i>Điền nhanh bằng File Excel</label>
+                                <div class="d-flex align-items-center gap-3">
+                                    <input class="form-control form-control-sm" type="file" id="excelUpload" accept=".xlsx, .xls">
+                                    <button type="button" class="btn btn-sm btn-outline-primary whitespace-nowrap" style="white-space: nowrap;" id="btnDownloadTemplate">
+                                        <i class="fa-solid fa-download me-1"></i>Tải biểu mẫu
+                                    </button>
+                                </div>
+                                <small class="text-muted d-block mt-1">Hỗ trợ trích xuất tự động: Họ tên, CCCD, SĐT, Email, Số tiền vay, Mục đích vay.</small>
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-4 mb-4">
                                     <label class="form-label">Họ và Tên</label>
@@ -271,6 +284,7 @@
     
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <script src="js/face-api.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -303,16 +317,67 @@
                 var value = $('#amountDisplay').val().replace(/\D/g, '');
                 $('#amountHidden').val(value);
                 
-                // Gom địa chỉ
-                var street = $('#street').val();
-                var wardText = $('#ward option:selected').text();
-                var districtText = $('#district option:selected').text();
-                var fullAddress = street + ", " + wardText + ", " + districtText;
+                var fullAddress = $('#street').val() + ', ' + $('#ward').val() + ', ' + $('#district option:selected').text() + ', ' + $('#province option:selected').text();
                 $('#fullAddressHidden').val(fullAddress);
                 
                 return true;
             });
             
+            // --- EXCEL LOGIC ---
+            $('#btnDownloadTemplate').click(function() {
+                var ws_data = [
+                    ['Họ và Tên', 'Số CCCD', 'Số điện thoại', 'Email', 'Số tiền vay', 'Mục đích vay'],
+                    ['Nguyễn Văn Mẫu', '012345678912', '0987654321', 'khachhang@gmail.com', '50000000', 'Vay vốn sản xuất nông nghiệp']
+                ];
+                var ws = XLSX.utils.aoa_to_sheet(ws_data);
+                var wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "HoSo");
+                XLSX.writeFile(wb, "BieuMau_HoSoVayVon.xlsx");
+            });
+
+            $('#excelUpload').on('change', function(e) {
+                var file = e.target.files[0];
+                if (!file) return;
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var data = new Uint8Array(e.target.result);
+                    var workbook = XLSX.read(data, {type: 'array'});
+                    var firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    var jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                    
+                    if (jsonData.length > 0) {
+                        var row = jsonData[0]; // Chỉ lấy dòng đầu tiên
+                        
+                        // Chuẩn hóa key để tìm kiếm linh hoạt hơn
+                        var keyMap = {};
+                        Object.keys(row).forEach(k => {
+                            keyMap[k.toLowerCase().trim()] = row[k];
+                        });
+
+                        var name = keyMap['họ tên'] || keyMap['họ và tên'] || keyMap['tên'] || keyMap['name'];
+                        var cccd = keyMap['cccd'] || keyMap['cmnd'] || keyMap['số cccd'];
+                        var phone = keyMap['sđt'] || keyMap['sdt'] || keyMap['số điện thoại'] || keyMap['phone'];
+                        var email = keyMap['email'];
+                        var amount = keyMap['số tiền'] || keyMap['số tiền vay'] || keyMap['amount'];
+                        var purpose = keyMap['mục đích'] || keyMap['mục đích vay'] || keyMap['purpose'];
+
+                        if (name) $('#customerName').val(name);
+                        if (cccd) $('input[name="cccd"]').val(cccd);
+                        if (phone) $('input[name="phone"]').val(phone);
+                        if (email) $('input[name="email"]').val(email);
+                        if (purpose) $('textarea[name="purpose"]').val(purpose);
+                        if (amount) {
+                            let num = amount.toString().replace(/\D/g, '');
+                            $('#amountHidden').val(num);
+                            $('#amountDisplay').val(num.replace(/\B(?=(\d{3})+(?!\d))/g, "."));
+                        }
+                        alert("Đã trích xuất thành công dữ liệu từ Excel!");
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            });
+
+            // Tự động set Cán bộ quản lý
             // Format Tên Tiếng Việt
             $('#customerName').on('input', function() {
                 var val = $(this).val();
