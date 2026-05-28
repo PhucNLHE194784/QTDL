@@ -111,9 +111,28 @@ public class Profile {
     public String getOtpCode() { return otpCode; }
     public void setOtpCode(String otpCode) { this.otpCode = otpCode; }
     public Date getOtpExpiry() { return otpExpiry; }
-    public void setOtpExpiry(Date otpExpiry) {
-        this.otpExpiry = otpExpiry;
-    }
+    public void setOtpExpiry(Date otpExpiry) { this.otpExpiry = otpExpiry; }
+
+    // New Fields for Bank Statement
+    private String cifNumber;
+    private String branchName;
+    private String disbursementDate;
+    private double accruedInterest;
+    private double totalPayment;
+    private String loanAccount;
+
+    public String getCifNumber() { return cifNumber; }
+    public void setCifNumber(String cifNumber) { this.cifNumber = cifNumber; }
+    public String getBranchName() { return branchName; }
+    public void setBranchName(String branchName) { this.branchName = branchName; }
+    public String getDisbursementDate() { return disbursementDate; }
+    public void setDisbursementDate(String disbursementDate) { this.disbursementDate = disbursementDate; }
+    public double getAccruedInterest() { return accruedInterest; }
+    public void setAccruedInterest(double accruedInterest) { this.accruedInterest = accruedInterest; }
+    public double getTotalPayment() { return totalPayment; }
+    public void setTotalPayment(double totalPayment) { this.totalPayment = totalPayment; }
+    public String getLoanAccount() { return loanAccount; }
+    public void setLoanAccount(String loanAccount) { this.loanAccount = loanAccount; }
 
     public String getFaceDescriptor() {
         return faceDescriptor;

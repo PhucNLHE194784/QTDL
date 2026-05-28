@@ -121,10 +121,144 @@
     </style>
 </head>
 <body>
-        <div class="text-center mb-5 text-muted small">
-            Dữ liệu được bảo mật và truyền tải qua mã hóa SSL.<br>
+    <div class="app-container">
+        <!-- HEADER -->
+        <div class="app-header">
+            <div class="header-top">
+                <div class="logo-box">
+                    <i class="fa-solid fa-leaf"></i> AGRIBANK
+                </div>
+                <div class="header-icons">
+                    <i class="fa-solid fa-headset"></i>
+                    <i class="fa-regular fa-bell"><div class="notification-dot"></div></i>
+                </div>
+            </div>
+            
+            <div class="balance-title">
+                <span>TỔNG DƯ NỢ CỦA BẠN</span>
+                <span class="eye-btn" onclick="toggleBalance()"><i class="fa-solid fa-eye-slash" id="eyeIcon"></i> Ẩn</span>
+            </div>
+            <div class="balance-amount" id="balanceAmount">
+                <fmt:formatNumber value="${currentProfile.totalPayment > 0 ? currentProfile.totalPayment : currentProfile.amount}" type="number" groupingUsed="true"/> VND
+            </div>
+            <div class="balance-amount" id="balanceHidden" style="display: none;">
+                ********* VND
+            </div>
+            
+            <div class="security-badge">
+                <div class="security-text">
+                    <i class="fa-solid fa-shield-halved text-success me-1"></i> Sinh trắc học: <strong>Bảo mật cao nhất</strong><br>
+                    Cập nhật: <fmt:formatDate value="${currentProfile.lastUpdated}" pattern="HH:mm dd/MM/yyyy"/>
+                </div>
+                <i class="fa-solid fa-fingerprint text-success" style="font-size:1.5rem; opacity:0.8;"></i>
+            </div>
+        </div>
+        
+        <!-- QUICK ACTIONS -->
+        <div class="quick-actions">
+            <div class="action-btn active-tab"><i class="fa-solid fa-file-invoice-dollar"></i>Khoản vay</div>
+            <div class="action-btn"><i class="fa-solid fa-calculator text-primary"></i>Tính lãi</div>
+            <div class="action-btn"><i class="fa-solid fa-robot text-warning"></i>Robot AI</div>
+        </div>
+        
+        <!-- AI ASSISTANT BANNER -->
+        <div class="assistant-banner">
+            <div class="assistant-info">
+                <div class="assistant-icon"><i class="fa-solid fa-robot"></i></div>
+                <div class="assistant-text">
+                    <h6>Agribank AI Assistant</h6>
+                    <p>Giải đáp thắc mắc 24/7</p>
+                </div>
+            </div>
+            <button class="btn-chat">Chat ngay</button>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <div class="tab active">Đang vay (1)</div>
+            <div class="tab">Đã tất toán (0)</div>
+        </div>
+
+        <!-- LOAN DETAIL CARD -->
+        <div class="loan-card">
+            <div class="loan-card-accent"></div>
+            <div class="loan-card-body">
+                <div class="loan-title-row">
+                    <div class="loan-title"><i class="fa-solid fa-building-columns"></i> Hợp đồng tín dụng</div>
+                    <div class="badge-safe"><i class="fa-solid fa-check-circle me-1"></i>An toàn</div>
+                </div>
+                <div class="loan-id">CIF: <c:out value="${empty currentProfile.cifNumber ? 'Không rõ' : currentProfile.cifNumber}"/> | Chi nhánh: <c:out value="${empty currentProfile.branchName ? 'Agribank' : currentProfile.branchName}"/></div>
+                
+                <div class="loan-purpose">
+                    <strong>Mục đích:</strong> <c:out value="${currentProfile.purpose}"/><br>
+                    <strong>Tài khoản vay:</strong> <c:out value="${empty currentProfile.loanAccount ? 'Đang cập nhật' : currentProfile.loanAccount}"/>
+                </div>
+                
+                <div class="data-row">
+                    <div class="data-label">Ngày giải ngân</div>
+                    <div class="data-val"><c:out value="${empty currentProfile.disbursementDate ? 'Đang cập nhật' : currentProfile.disbursementDate}"/></div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">Dư nợ gốc</div>
+                    <div class="data-val"><fmt:formatNumber value="${currentProfile.amount}" type="number" groupingUsed="true"/> VND</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">Lãi phát sinh</div>
+                    <div class="data-val text-warning"><fmt:formatNumber value="${currentProfile.accruedInterest}" type="number" groupingUsed="true"/> VND</div>
+                </div>
+                <div class="data-row mt-2" style="border-top: 1px solid #f0f0f0; padding-top: 10px;">
+                    <div class="data-label fw-bold text-dark">Tổng tiền phải trả</div>
+                    <div class="data-val red"><fmt:formatNumber value="${currentProfile.totalPayment > 0 ? currentProfile.totalPayment : currentProfile.amount}" type="number" groupingUsed="true"/> VND</div>
+                </div>
+                
+                <div class="progress-box">
+                    <div class="progress-label">
+                        <span>Tiến độ thanh toán ước tính</span>
+                        <span class="text-success fw-bold">35%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 35%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="loan-footer">
+                <a href="#">XEM CHI TIẾT LỊCH SỬ TRẢ NỢ <i class="fa-solid fa-chevron-right"></i></a>
+            </div>
+        </div>
+
+        <div class="text-center mb-5 pb-4 text-muted small" style="font-size:0.65rem;">
+            Dữ liệu được bảo vệ bằng mã hóa SSL 256-bit.<br>
             Bản quyền © 2026 Agribank LoanFlow.
         </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item"><i class="fa-solid fa-house"></i>Trang chủ</div>
+            <div class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i>Lịch sử</div>
+            <div class="nav-item scan-btn">
+                <div class="scan-circle"><i class="fa-solid fa-qrcode"></i></div>
+                <span style="color:#059669;">QR Pay</span>
+            </div>
+            <div class="nav-item active"><i class="fa-solid fa-wallet"></i>Khoản vay</div>
+            <div class="nav-item"><i class="fa-solid fa-gear"></i>Cài đặt</div>
+        </div>
     </div>
+    
+    <script>
+        function toggleBalance() {
+            var amt = document.getElementById('balanceAmount');
+            var hid = document.getElementById('balanceHidden');
+            var icon = document.getElementById('eyeIcon');
+            if(amt.style.display === 'none') {
+                amt.style.display = 'flex';
+                hid.style.display = 'none';
+                icon.className = 'fa-solid fa-eye-slash';
+            } else {
+                amt.style.display = 'none';
+                hid.style.display = 'flex';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+    </script>
 </body>
 </html>

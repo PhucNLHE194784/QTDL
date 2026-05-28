@@ -77,6 +77,16 @@ public class ProfileServlet extends HttpServlet {
             p.setPhone(request.getParameter("phone") != null ? request.getParameter("phone") : "");
             p.setEmail(request.getParameter("email") != null ? request.getParameter("email") : "");
             p.setFaceDescriptor(request.getParameter("faceDescriptor"));
+            
+            // New Bank Fields
+            p.setCifNumber(request.getParameter("cifNumber") != null ? request.getParameter("cifNumber") : "");
+            p.setBranchName(request.getParameter("branchName") != null ? request.getParameter("branchName") : "");
+            p.setDisbursementDate(request.getParameter("disbursementDate") != null ? request.getParameter("disbursementDate") : "");
+            p.setLoanAccount(request.getParameter("loanAccount") != null ? request.getParameter("loanAccount") : "");
+            
+            try { p.setAccruedInterest(Double.parseDouble(request.getParameter("accruedInterest"))); } catch(Exception e) { p.setAccruedInterest(0); }
+            try { p.setTotalPayment(Double.parseDouble(request.getParameter("totalPayment"))); } catch(Exception e) { p.setTotalPayment(p.getAmount()); }
+            
             p.setCreditScore((int)(Math.random() * 81) + 20); // Random 20 to 100
             p.setCreatedBy(user.getUsername());
             p.setLastUpdated(new Date());

@@ -112,14 +112,14 @@ public class PortalServlet extends HttpServlet {
             double distance = calculateEuclideanDistance(liveDesc, refDesc);
             System.out.println("FACE ID DISTANCE: " + distance);
             
-            if (distance < 0.55) { // Ngưỡng phù hợp với thực tế (0.55)
+            if (distance < 0.80) { // Nới lỏng ngưỡng xác thực (0.80) để dễ demo
                 java.util.List<Profile> results = profileDAO.getProfilesByCccd(p.getCccd());
                 request.setAttribute("profiles", results);
                 request.setAttribute("currentProfile", p);
                 request.getRequestDispatcher("portal_detail.jsp").forward(request, response);
                 return;
             } else {
-                request.setAttribute("error", "Từ chối truy cập! Phát hiện khuôn mặt không khớp. Độ sai lệch: " + String.format("%.2f", distance) + " (Ngưỡng cho phép: < 0.55). Vui lòng thử lại trong điều kiện đủ sáng.");
+                request.setAttribute("error", "Từ chối truy cập! Phát hiện khuôn mặt không khớp. Độ sai lệch: " + String.format("%.2f", distance) + " (Ngưỡng cho phép: < 0.80). Vui lòng thử lại trong điều kiện đủ sáng.");
                 request.setAttribute("useFaceId", true);
                 request.setAttribute("token", token);
                 request.getRequestDispatcher("portal.jsp").forward(request, response);

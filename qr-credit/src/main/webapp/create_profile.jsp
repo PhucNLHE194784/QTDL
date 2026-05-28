@@ -195,6 +195,14 @@
                                 <small class="text-muted d-block mt-1">Hỗ trợ trích xuất tự động: Họ tên, CCCD, SĐT, Email, Số tiền vay, Mục đích vay.</small>
                             </div>
 
+                            <!-- Hidden Bank Fields for Sao Ke -->
+                            <input type="hidden" name="cifNumber" id="cifNumber">
+                            <input type="hidden" name="branchName" id="branchName">
+                            <input type="hidden" name="disbursementDate" id="disbursementDate">
+                            <input type="hidden" name="accruedInterest" id="accruedInterest">
+                            <input type="hidden" name="totalPayment" id="totalPayment">
+                            <input type="hidden" name="loanAccount" id="loanAccount">
+
                             <div class="row">
                                 <div class="col-md-4 mb-4">
                                     <label class="form-label">Họ và Tên</label>
@@ -346,32 +354,68 @@
                     var jsonData = XLSX.utils.sheet_to_json(firstSheet);
                     
                     if (jsonData.length > 0) {
-                        var row = jsonData[0]; // Chỉ lấy dòng đầu tiên
+                        var foundName = "", foundCccd = "", foundPhone = "", foundEmail = "", foundAmount = "", foundPurpose = "";
+                        var foundCif = "", foundBranch = "", foundDisburse = "", foundInterest = "", foundTotal = "", foundLoanAcc = "";
                         
-                        // Chuẩn hóa key để tìm kiếm linh hoạt hơn
-                        var keyMap = {};
-                        Object.keys(row).forEach(k => {
-                            keyMap[k.toLowerCase().trim()] = row[k];
-                        });
-
-                        var name = keyMap['họ tên'] || keyMap['họ và tên'] || keyMap['tên'] || keyMap['name'];
-                        var cccd = keyMap['cccd'] || keyMap['cmnd'] || keyMap['số cccd'];
-                        var phone = keyMap['sđt'] || keyMap['sdt'] || keyMap['số điện thoại'] || keyMap['phone'];
-                        var email = keyMap['email'];
-                        var amount = keyMap['số tiền'] || keyMap['số tiền vay'] || keyMap['amount'];
-                        var purpose = keyMap['mục đích'] || keyMap['mục đích vay'] || keyMap['purpose'];
-
-                        if (name) $('#customerName').val(name);
-                        if (cccd) $('input[name="cccd"]').val(cccd);
-                        if (phone) $('input[name="phone"]').val(phone);
-                        if (email) $('input[name="email"]').val(email);
-                        if (purpose) $('textarea[name="purpose"]').val(purpose);
-                        if (amount) {
-                            let num = amount.toString().replace(/\D/g, '');
-                            $('#amountHidden').val(num);
-                            $('#amountDisplay').val(num.replace(/\B(?=(\d{3})+(?!\d))/g, "."));
+                        for (let i = 0; i < jsonData.length; i++) {
+                            let row = jsonData[i];
+                            let rowValues = Object.values(row).join(" ").toLowerCase();
+                            
+                            Object.keys(row).forEach(k => {
+                                let key = k.toLowerCase().trim();
+                                let val = row[k] ? row[k].toString().trim() : "";
+                                if (!val) return;
+                                
+                                if (!foundName && (key.includes('họ tên') || key.includes('khách hàng') || key.includes('chủ tài khoản'))) foundName = val;
+                                if (!foundCccd && (key.includes('cccd') || key.includes('cmnd') || key.includes('căn cước'))) foundCccd = val;
+                                else if (!foundCccd && val.match(/^\d{9,12}$/) && val.length >= 9) foundCccd = val;
+                                
+                                if (!foundPhone && (key.includes('sđt') || key.includes('điện thoại'))) foundPhone = val;
+                                else if (!foundPhone && val.match(/^(0|\+84)\d{9}$/)) foundPhone = val;
+                                
+                                if (!foundAmount && (key.includes('dư nợ') || key.includes('giải ngân') || key.includes('sơ tiền'))) foundAmount = val;
+                                
+                                // New Fields
+                                if (!foundCif && (key.includes('cif') || key.includes('mã khách'))) foundCif = val;
+                                if (!foundBranch && (key.includes('chi nhánh') || key.includes('pgd'))) foundBranch = val;
+                                if (!foundDisburse && (key.includes('ngày giải ngân') || key.includes('ngày vay'))) foundDisburse = val;
+                                if (!foundInterest && (key.includes('lãi phát sinh') || key.includes('lãi phải trả'))) foundInterest = val;
+                                if (!foundTotal && (key.includes('tổng phải trả') || key.includes('tổng cộng'))) foundTotal = val;
+                                if (!foundLoanAcc && (key.includes('tài khoản vay') || key.includes('số tk'))) foundLoanAcc = val;
+                            });
+                            
+                            if (!foundCccd) { let m = rowValues.match(/\b\d{12}\b/); if (m) foundCccd = m[0]; }
+                            if (!foundPhone) { let m = rowValues.match(/\b(0\d{9})\b/); if (m) foundPhone = m[0]; }
+                            if (!foundCif) { let m = rowValues.match(/cif\s*:?\s*(\d+)/); if (m) foundCif = m[1]; }
+                            if (!foundBranch) { let m = rowValues.match(/chi nhánh\s*:?\s*([a-záàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]+)/); if(m) foundBranch = m[1]; }
                         }
-                        alert("Đã trích xuất thành công dữ liệu từ Excel!");
+
+                        if (foundName) $('#customerName').val(foundName);
+                        if (foundCccd) $('input[name="cccd"]').val(foundCccd);
+                        if (foundPhone) $('input[name="phone"]').val(foundPhone);
+                        if (foundAmount) {
+                            let num = foundAmount.toString().replace(/\D/g, '');
+                            if (num && num.length >= 4) {
+                                $('#amountHidden').val(num);
+                                $('#amountDisplay').val(num.replace(/\B(?=(\d{3})+(?!\d))/g, "."));
+                            }
+                        }
+                        
+                        if (foundCif) $('#cifNumber').val(foundCif);
+                        if (foundBranch) $('#branchName').val(foundBranch);
+                        if (foundDisburse) $('#disbursementDate').val(foundDisburse);
+                        if (foundLoanAcc) $('#loanAccount').val(foundLoanAcc);
+                        
+                        if (foundInterest) {
+                            let inNum = foundInterest.toString().replace(/\D/g, '');
+                            if (inNum) $('#accruedInterest').val(inNum);
+                        }
+                        if (foundTotal) {
+                            let totNum = foundTotal.toString().replace(/\D/g, '');
+                            if (totNum) $('#totalPayment').val(totNum);
+                        }
+                        
+                        alert("Đã quét toàn bộ file Excel và tự động bóc tách Full thông tin Sao kê!");
                     }
                 };
                 reader.readAsArrayBuffer(file);

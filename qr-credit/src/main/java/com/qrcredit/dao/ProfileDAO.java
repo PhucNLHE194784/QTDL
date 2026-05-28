@@ -33,10 +33,16 @@ public class ProfileDAO {
         try { p.setOtpCode(rs.getString("otp_code")); } catch (Exception e) {}
         try { if(rs.getTimestamp("otp_expiry") != null) p.setOtpExpiry(new Date(rs.getTimestamp("otp_expiry").getTime())); } catch (Exception e) {}
         try { p.setFaceDescriptor(rs.getString("face_descriptor")); } catch (Exception e) {}
+        try { p.setCifNumber(rs.getString("cif_number")); } catch (Exception e) {}
+        try { p.setBranchName(rs.getString("branch_name")); } catch (Exception e) {}
+        try { p.setDisbursementDate(rs.getString("disbursement_date")); } catch (Exception e) {}
+        try { p.setAccruedInterest(rs.getDouble("accrued_interest")); } catch (Exception e) {}
+        try { p.setTotalPayment(rs.getDouble("total_payment")); } catch (Exception e) {}
+        try { p.setLoanAccount(rs.getString("loan_account")); } catch (Exception e) {}
         return p;
     }
     public boolean addProfile(Profile p) {
-        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, email, credit_score, created_by, is_deleted, last_updated, secret_link_token, maturity_date, interest_rate, officer_name, face_descriptor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO profiles (id, customer_name, cccd, amount, purpose, status, region, ward, phone, email, credit_score, created_by, is_deleted, last_updated, secret_link_token, maturity_date, interest_rate, officer_name, face_descriptor, cif_number, branch_name, disbursement_date, accrued_interest, total_payment, loan_account) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getId());
@@ -58,6 +64,12 @@ public class ProfileDAO {
             ps.setString(17, p.getInterestRate());
             ps.setString(18, p.getOfficerName());
             ps.setString(19, p.getFaceDescriptor());
+            ps.setString(20, p.getCifNumber());
+            ps.setString(21, p.getBranchName());
+            ps.setString(22, p.getDisbursementDate());
+            ps.setDouble(23, p.getAccruedInterest());
+            ps.setDouble(24, p.getTotalPayment());
+            ps.setString(25, p.getLoanAccount());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
