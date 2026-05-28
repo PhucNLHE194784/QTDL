@@ -61,6 +61,7 @@
             background: white; border-radius: 12px; padding: 15px 10px; text-align: center; flex: 1;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); font-size: 0.75rem; font-weight: 600; color: #333;
             border: 1px solid #f0f0f0; transition: 0.2s;
+            cursor: pointer;
         }
         .action-btn:active { transform: scale(0.95); }
         .action-btn i { font-size: 1.5rem; color: #10b981; margin-bottom: 8px; display: block; }
@@ -261,33 +262,39 @@
             }
         }
         function showInterestModal() {
-            Swal.fire({
-                title: 'Công cụ tính lãi (Mô phỏng)',
-                html: `
-                    <div style="text-align:left; font-size: 0.9rem;">
-                        <p><strong>Dư nợ gốc:</strong> <fmt:formatNumber value="${currentProfile.amount}" type="number" groupingUsed="true"/> VND</p>
-                        <p><strong>Lãi suất ưu đãi:</strong> 8.5% / năm</p>
-                        <p><strong>Kỳ hạn vay:</strong> 12 tháng</p>
-                        <hr>
-                        <p class="text-danger fw-bold">Dự kiến lãi phải trả tháng này: <br><span style="font-size: 1.2rem;"><fmt:formatNumber value="${currentProfile.amount * 0.085 / 12}" type="number" groupingUsed="true"/> VND</span></p>
-                    </div>
-                `,
-                icon: 'info',
-                confirmButtonText: 'Đóng',
-                confirmButtonColor: '#059669'
-            });
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Công cụ tính lãi (Mô phỏng)',
+                    html: '<div style="text-align:left; font-size: 0.9rem;">' +
+                          '<p><strong>Dư nợ gốc:</strong> <fmt:formatNumber value="${currentProfile.amount}" type="number" groupingUsed="true"/> VND</p>' +
+                          '<p><strong>Lãi suất ưu đãi:</strong> 8.5% / năm</p>' +
+                          '<p><strong>Kỳ hạn vay:</strong> 12 tháng</p>' +
+                          '<hr>' +
+                          '<p class="text-danger fw-bold">Dự kiến lãi phải trả tháng này: <br><span style="font-size: 1.2rem;"><fmt:formatNumber value="${currentProfile.amount * 0.085 / 12}" type="number" groupingUsed="true"/> VND</span></p>' +
+                          '</div>',
+                    icon: 'info',
+                    confirmButtonText: 'Đóng',
+                    confirmButtonColor: '#059669'
+                });
+            } else {
+                alert("Công cụ tính lãi (Mô phỏng)\n\nLãi suất: 8.5% / năm\nKỳ hạn: 12 tháng\n=> Vui lòng liên hệ quầy giao dịch để biết chi tiết lãi suất tháng này.");
+            }
         }
 
         function showChatbot() {
-            Swal.fire({
-                title: 'Agribank AI Chatbot',
-                text: 'Xin chào! Tôi là trợ lý ảo Agribank. Tính năng Chat AI đang trong quá trình nâng cấp hệ thống để phục vụ bạn tốt hơn. Vui lòng quay lại sau!',
-                imageUrl: 'https://cdn-icons-png.flaticon.com/512/8943/8943377.png',
-                imageWidth: 100,
-                imageHeight: 100,
-                confirmButtonText: 'Đã hiểu',
-                confirmButtonColor: '#b01a2e'
-            });
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Agribank AI Chatbot',
+                    text: 'Xin chào! Tôi là trợ lý ảo Agribank. Tính năng Chat AI đang trong quá trình nâng cấp hệ thống để phục vụ bạn tốt hơn. Vui lòng quay lại sau!',
+                    imageUrl: 'https://cdn-icons-png.flaticon.com/512/8943/8943377.png',
+                    imageWidth: 100,
+                    imageHeight: 100,
+                    confirmButtonText: 'Đã hiểu',
+                    confirmButtonColor: '#b01a2e'
+                });
+            } else {
+                alert("Agribank AI Chatbot\n\nXin chào! Tôi là trợ lý ảo Agribank. Tính năng Chat AI đang trong quá trình nâng cấp. Vui lòng quay lại sau!");
+            }
         }
     </script>
 </body>
