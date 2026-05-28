@@ -195,13 +195,35 @@
                                 <small class="text-muted d-block mt-1">Hỗ trợ trích xuất tự động: Họ tên, CCCD, SĐT, Email, Số tiền vay, Mục đích vay.</small>
                             </div>
 
-                            <!-- Hidden Bank Fields for Sao Ke -->
-                            <input type="hidden" name="cifNumber" id="cifNumber">
-                            <input type="hidden" name="branchName" id="branchName">
-                            <input type="hidden" name="disbursementDate" id="disbursementDate">
-                            <input type="hidden" name="accruedInterest" id="accruedInterest">
-                            <input type="hidden" name="totalPayment" id="totalPayment">
-                            <input type="hidden" name="loanAccount" id="loanAccount">
+                            <!-- Detailed Bank Fields for Sao Ke -->
+                            <div class="row mt-4">
+                                <h6 class="mb-3 text-danger"><i class="fa-solid fa-building-columns me-2"></i>Thông Tin Bổ Sung Từ Sao Kê (Điền tự động hoặc Thủ công)</h6>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label text-muted small">Mã khách hàng (CIF)</label>
+                                    <input type="text" class="form-control form-control-sm" name="cifNumber" id="cifNumber" placeholder="VD: 123456">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label text-muted small">Chi nhánh / PGD</label>
+                                    <input type="text" class="form-control form-control-sm" name="branchName" id="branchName" placeholder="VD: Agribank CN Cầu Giấy">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label text-muted small">Số Tài khoản vay</label>
+                                    <input type="text" class="form-control form-control-sm" name="loanAccount" id="loanAccount" placeholder="VD: 150029391">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label text-muted small">Ngày giải ngân</label>
+                                    <input type="text" class="form-control form-control-sm" name="disbursementDate" id="disbursementDate" placeholder="VD: 15/05/2026">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label text-muted small">Lãi phát sinh (VND)</label>
+                                    <input type="number" class="form-control form-control-sm" name="accruedInterest" id="accruedInterest" placeholder="VD: 500000">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label text-muted small">Tổng phải trả (VND)</label>
+                                    <input type="number" class="form-control form-control-sm" name="totalPayment" id="totalPayment" placeholder="Bao gồm Gốc + Lãi">
+                                </div>
+                            </div>
+                            <hr class="my-4 text-muted">
 
                             <div class="row">
                                 <div class="col-md-4 mb-4">
@@ -356,10 +378,13 @@
                     if (jsonData.length > 0) {
                         var foundName = "", foundCccd = "", foundPhone = "", foundEmail = "", foundAmount = "", foundPurpose = "";
                         var foundCif = "", foundBranch = "", foundDisburse = "", foundInterest = "", foundTotal = "", foundLoanAcc = "";
+                        var rawTextDump = "";
                         
+                        console.log("Bat dau quet tung dong Excel. Tong so dong: ", jsonData.length);
                         for (let i = 0; i < jsonData.length; i++) {
                             let row = jsonData[i];
-                            let rowValues = Object.values(row).join(" ").toLowerCase();
+                            let rowValues = Object.values(row).join(" | ").toLowerCase();
+                            rawTextDump += Object.values(row).join(" - ") + "\n";
                             
                             Object.keys(row).forEach(k => {
                                 let key = k.toLowerCase().trim();
@@ -367,55 +392,66 @@
                                 if (!val) return;
                                 
                                 if (!foundName && (key.includes('họ tên') || key.includes('khách hàng') || key.includes('chủ tài khoản'))) foundName = val;
-                                if (!foundCccd && (key.includes('cccd') || key.includes('cmnd') || key.includes('căn cước'))) foundCccd = val;
+                                if (!foundCccd && (key.includes('cccd') || key.includes('cmnd') || key.includes('căn cước') || key.includes('giấy tờ'))) foundCccd = val;
                                 else if (!foundCccd && val.match(/^\d{9,12}$/) && val.length >= 9) foundCccd = val;
                                 
-                                if (!foundPhone && (key.includes('sđt') || key.includes('điện thoại'))) foundPhone = val;
+                                if (!foundPhone && (key.includes('sđt') || key.includes('điện thoại') || key.includes('phone'))) foundPhone = val;
                                 else if (!foundPhone && val.match(/^(0|\+84)\d{9}$/)) foundPhone = val;
                                 
-                                if (!foundAmount && (key.includes('dư nợ') || key.includes('giải ngân') || key.includes('sơ tiền'))) foundAmount = val;
+                                if (!foundAmount && (key.includes('dư nợ') || key.includes('giải ngân') || key.includes('số tiền') || key.includes('phát sinh'))) foundAmount = val;
                                 
                                 // New Fields
                                 if (!foundCif && (key.includes('cif') || key.includes('mã khách'))) foundCif = val;
-                                if (!foundBranch && (key.includes('chi nhánh') || key.includes('pgd'))) foundBranch = val;
-                                if (!foundDisburse && (key.includes('ngày giải ngân') || key.includes('ngày vay'))) foundDisburse = val;
-                                if (!foundInterest && (key.includes('lãi phát sinh') || key.includes('lãi phải trả'))) foundInterest = val;
-                                if (!foundTotal && (key.includes('tổng phải trả') || key.includes('tổng cộng'))) foundTotal = val;
-                                if (!foundLoanAcc && (key.includes('tài khoản vay') || key.includes('số tk'))) foundLoanAcc = val;
+                                if (!foundBranch && (key.includes('chi nhánh') || key.includes('pgd') || key.includes('phòng gd'))) foundBranch = val;
+                                if (!foundDisburse && (key.includes('ngày giải ngân') || key.includes('ngày vay') || key.includes('chứng từ'))) foundDisburse = val;
+                                if (!foundInterest && (key.includes('lãi phát sinh') || key.includes('lãi phải trả') || key.includes('tiền lãi'))) foundInterest = val;
+                                if (!foundTotal && (key.includes('tổng phải trả') || key.includes('tổng cộng') || key.includes('thanh toán'))) foundTotal = val;
+                                if (!foundLoanAcc && (key.includes('tài khoản vay') || key.includes('số tk') || key.includes('tài khoản'))) foundLoanAcc = val;
                             });
                             
+                            // Regex scan across the whole row text if keys failed
                             if (!foundCccd) { let m = rowValues.match(/\b\d{12}\b/); if (m) foundCccd = m[0]; }
                             if (!foundPhone) { let m = rowValues.match(/\b(0\d{9})\b/); if (m) foundPhone = m[0]; }
-                            if (!foundCif) { let m = rowValues.match(/cif\s*:?\s*(\d+)/); if (m) foundCif = m[1]; }
-                            if (!foundBranch) { let m = rowValues.match(/chi nhánh\s*:?\s*([a-záàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]+)/); if(m) foundBranch = m[1]; }
+                            if (!foundCif) { let m = rowValues.match(/(?:cif|mã khách hàng)\s*:?\s*(\d+)/); if (m) foundCif = m[1]; }
+                            if (!foundAmount) { let m = rowValues.match(/(?:dư nợ|số tiền)\s*:?\s*([\d\.,]+)/); if(m) foundAmount = m[1]; }
                         }
 
-                        if (foundName) $('#customerName').val(foundName);
-                        if (foundCccd) $('input[name="cccd"]').val(foundCccd);
-                        if (foundPhone) $('input[name="phone"]').val(foundPhone);
+                        console.log("Ket qua tim thay:", { foundName, foundCccd, foundPhone, foundAmount, foundCif, foundBranch });
+
+                        let fieldsFilled = 0;
+                        if (foundName) { $('#customerName').val(foundName); fieldsFilled++; }
+                        if (foundCccd) { $('input[name="cccd"]').val(foundCccd); fieldsFilled++; }
+                        if (foundPhone) { $('input[name="phone"]').val(foundPhone); fieldsFilled++; }
                         if (foundAmount) {
                             let num = foundAmount.toString().replace(/\D/g, '');
                             if (num && num.length >= 4) {
                                 $('#amountHidden').val(num);
                                 $('#amountDisplay').val(num.replace(/\B(?=(\d{3})+(?!\d))/g, "."));
+                                fieldsFilled++;
                             }
                         }
                         
-                        if (foundCif) $('#cifNumber').val(foundCif);
-                        if (foundBranch) $('#branchName').val(foundBranch);
-                        if (foundDisburse) $('#disbursementDate').val(foundDisburse);
-                        if (foundLoanAcc) $('#loanAccount').val(foundLoanAcc);
+                        if (foundCif) { $('#cifNumber').val(foundCif); fieldsFilled++; }
+                        if (foundBranch) { $('#branchName').val(foundBranch); fieldsFilled++; }
+                        if (foundDisburse) { $('#disbursementDate').val(foundDisburse); fieldsFilled++; }
+                        if (foundLoanAcc) { $('#loanAccount').val(foundLoanAcc); fieldsFilled++; }
                         
                         if (foundInterest) {
                             let inNum = foundInterest.toString().replace(/\D/g, '');
-                            if (inNum) $('#accruedInterest').val(inNum);
+                            if (inNum) { $('#accruedInterest').val(inNum); fieldsFilled++; }
                         }
                         if (foundTotal) {
                             let totNum = foundTotal.toString().replace(/\D/g, '');
-                            if (totNum) $('#totalPayment').val(totNum);
+                            if (totNum) { $('#totalPayment').val(totNum); fieldsFilled++; }
                         }
                         
-                        alert("Đã quét toàn bộ file Excel và tự động bóc tách Full thông tin Sao kê!");
+                        if (fieldsFilled === 0) {
+                            $('textarea[name="purpose"]').val("Không trích xuất được. Dữ liệu thô:\n" + rawTextDump.substring(0, 500));
+                            alert("Không tìm thấy cấu trúc chuẩn! Đã đổ dữ liệu thô vào ô Mục đích vay để bạn tự xem.");
+                        } else {
+                            alert("Trích xuất hoàn tất! Tìm thấy " + fieldsFilled + " trường thông tin.");
+                        }
+                        
                     }
                 };
                 reader.readAsArrayBuffer(file);

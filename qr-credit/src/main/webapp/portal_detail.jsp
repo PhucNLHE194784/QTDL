@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body { background-color: #e9ecef; margin: 0; font-family: 'Inter', sans-serif; }
         .app-container {
@@ -157,8 +158,8 @@
         <!-- QUICK ACTIONS -->
         <div class="quick-actions">
             <div class="action-btn active-tab"><i class="fa-solid fa-file-invoice-dollar"></i>Khoản vay</div>
-            <div class="action-btn"><i class="fa-solid fa-calculator text-primary"></i>Tính lãi</div>
-            <div class="action-btn"><i class="fa-solid fa-robot text-warning"></i>Robot AI</div>
+            <div class="action-btn" onclick="showInterestModal()"><i class="fa-solid fa-calculator text-primary"></i>Tính lãi</div>
+            <div class="action-btn" onclick="showChatbot()"><i class="fa-solid fa-robot text-warning"></i>Robot AI</div>
         </div>
         
         <!-- AI ASSISTANT BANNER -->
@@ -170,7 +171,7 @@
                     <p>Giải đáp thắc mắc 24/7</p>
                 </div>
             </div>
-            <button class="btn-chat">Chat ngay</button>
+            <button class="btn-chat" onclick="showChatbot()">Chat ngay</button>
         </div>
 
         <!-- TABS -->
@@ -258,6 +259,35 @@
                 hid.style.display = 'flex';
                 icon.className = 'fa-solid fa-eye';
             }
+        }
+        function showInterestModal() {
+            Swal.fire({
+                title: 'Công cụ tính lãi (Mô phỏng)',
+                html: `
+                    <div style="text-align:left; font-size: 0.9rem;">
+                        <p><strong>Dư nợ gốc:</strong> <fmt:formatNumber value="${currentProfile.amount}" type="number" groupingUsed="true"/> VND</p>
+                        <p><strong>Lãi suất ưu đãi:</strong> 8.5% / năm</p>
+                        <p><strong>Kỳ hạn vay:</strong> 12 tháng</p>
+                        <hr>
+                        <p class="text-danger fw-bold">Dự kiến lãi phải trả tháng này: <br><span style="font-size: 1.2rem;"><fmt:formatNumber value="${currentProfile.amount * 0.085 / 12}" type="number" groupingUsed="true"/> VND</span></p>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Đóng',
+                confirmButtonColor: '#059669'
+            });
+        }
+
+        function showChatbot() {
+            Swal.fire({
+                title: 'Agribank AI Chatbot',
+                text: 'Xin chào! Tôi là trợ lý ảo Agribank. Tính năng Chat AI đang trong quá trình nâng cấp hệ thống để phục vụ bạn tốt hơn. Vui lòng quay lại sau!',
+                imageUrl: 'https://cdn-icons-png.flaticon.com/512/8943/8943377.png',
+                imageWidth: 100,
+                imageHeight: 100,
+                confirmButtonText: 'Đã hiểu',
+                confirmButtonColor: '#b01a2e'
+            });
         }
     </script>
 </body>
